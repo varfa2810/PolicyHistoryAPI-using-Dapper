@@ -18,6 +18,15 @@ namespace PolicyHistory_API_using_Dapper.Repository
         }
 
 
+        public async Task<List<PolicyHistory>> GetAllHistory()
+        {
+            using(var connection = _context.CreateConnection())
+            {
+                var result = await connection.QueryAsync<PolicyHistory>("select * from tblFP_PolicyHistory ");
+                return result.ToList();
+            }
+        }
+
         public async Task<List<PolicyHistory>> GetHistory(string enterpriseID, int policyNum, int historyID)
         {
             using (var connection = _context.CreateConnection())
@@ -172,8 +181,7 @@ namespace PolicyHistory_API_using_Dapper.Repository
             return mergedResults;
         }
 
-
-
+      
     }
 
 }

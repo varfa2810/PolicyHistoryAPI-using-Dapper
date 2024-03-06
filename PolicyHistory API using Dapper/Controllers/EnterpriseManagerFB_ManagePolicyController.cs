@@ -5,9 +5,8 @@ using PolicyHistory_API_using_Dapper.Services;
 
 namespace PolicyHistory_API_using_Dapper.Controllers
 {
-    [Route("api/[controller]/[action]")]
+    [Route("api/[controller]")]
     [ApiController]
-    [BindProperties]
     public class EnterpriseManagerFB_ManagePolicyController : ControllerBase
     {
         public readonly IEnterpriseManagerFB_Interface _repo;
@@ -18,6 +17,13 @@ namespace PolicyHistory_API_using_Dapper.Controllers
             _repo = repo;
         }
 
+
+        [HttpGet("Policy_History_All")]
+        public async Task<IActionResult> GetAllHistory()
+        {
+            var result = await _repo.GetAllHistory();
+            return Ok(result);
+        }
 
 
         [HttpGet("Policy_History")]
@@ -39,8 +45,7 @@ namespace PolicyHistory_API_using_Dapper.Controllers
             }
             catch (Exception ex)
             {
-                
-               /* return StatusCode(500, "An error occurred while creating the policy.");*/
+               
                 return BadRequest(ex.Message);  
             }
         }
@@ -112,5 +117,4 @@ namespace PolicyHistory_API_using_Dapper.Controllers
 
     }
 
-    /* Hello this is my controller*/
 }

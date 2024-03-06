@@ -6,6 +6,8 @@ namespace PolicyHistory_API_using_Dapper.Services
     public interface IEnterpriseManagerFB_Interface
     {
 
+       
+        Task<List<PolicyHistory>> GetAllHistory();
         Task<List<PolicyHistory>> GetHistory(string enterpriseID, int policyNum, int historyID);
 
 

@@ -1,0 +1,95 @@
+﻿@model IEnumerable<ConsumeAPI.Models.PolicyViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.StrEnterpriseID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IntPolicyNum)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IntHistoryID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IntPolStatusID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DatStartDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DatEndDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StrStartDescr)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StrEndDescr)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StrLastCapturer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DatDateModified)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CurrentStatusYN)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.StrEnterpriseID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IntPolicyNum)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IntHistoryID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IntPolStatusID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DatStartDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DatEndDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StrStartDescr)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StrEndDescr)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StrLastCapturer)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DatDateModified)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CurrentStatusYN)
+            </td>
+           @*  <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td> *@
+        </tr>
+}
+    </tbody>
+</table>

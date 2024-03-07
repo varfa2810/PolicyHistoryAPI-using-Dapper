@@ -7,31 +7,169 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ConsumeAPI.styles.css" asp-append-version="true" />
+
+    <link href="~/css/css/bootstrap.min.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/css/bootstrap-icons.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/css/datepicker.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/css/font-awesome.min.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/css/responsive.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/css/style.css" rel="stylesheet" asp-append-version="true" />
+    
+
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ConsumeAPI</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+    <header class="dashboard-header">
+        <div class="container">
+            <div class="header-inner d-flex align-items-center">
+                <div class="header-logo">
+                    <a href="">
+                        <img src="images/logo.png" alt="">
+                    </a>
+                </div>
+                <nav class="navbar-full d-flex align-items-center">
+                    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample">
+                        <div class="offcanvas-header d-flex align-items-center justify-content-end d-lg-none border-bottom">
+                            <span data-bs-dismiss="offcanvas" aria-label="Close"><i class="bi bi-x-lg"></i></span>
+                        </div>
+                        <div class="offcanvas-body">
+                            <nav>
+                                <ul class="navbar-nav">
+                                    <li class="nav-item dropdown">
+                                        <a href="" class="nav-link" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Manage Enterprise Users
+                                            <i class="bi bi-chevron-down"></i>
+                                        </a>
+                                        <ul class="dropdown-menu submenus">
+                                            <li><a href="#">Add User</a></li>
+                                            <li><a href="#">Edit User</a></li>
+                                            <li><a href="#">Delete User</a></li>
+                                            <li><a href="#">Add Login</a></li>
+                                            <li><a href="#">Reset Passwd</a></li>
+                                            <li><a href="#">Lock Out User</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="nav-item dropdown">
+                                        <a href="" class="nav-link" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Member Details <i class="bi bi-chevron-down"></i>
+                                        </a>
+                                        <ul class="dropdown-menu submenus">
+                                            <li><a href="#">Member Details</a></li>
+                                            <li><a href="#">Address &Contact</a></li>
+                                            <li><a href="#">Member Documents</a></li>
+                                            <li><a href="#">Bank Account</a></li>
+                                            <li><a href="#">Member Login</a></li>
+                                            <li><a href="#">Related Members</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="nav-item"><a href="" class="nav-link">Manage Reprots</a></li>
+                                    <li class="nav-item dropdown">
+                                        <a href="javascript:void(0)" class="nav-link" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Manage Enterprise Users <i class="bi bi-chevron-down"></i>
+                                        </a>
+                                        <ul class="dropdown-menu submenus">
+                                            <li><a href="#">Add User</a></li>
+                                            <li><a href="#">Edit User</a></li>
+                                            <li><a href="#">Delete User</a></li>
+                                            <li><a href="#">Add Login </a></li>
+                                            <li><a href="#">Reset Passwd</a></li>
+                                            <li><a href="#">Lock Out User</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="nav-item dropdown">
+                                        <a href="javascript:void(0)" class="nav-link" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Manage Policies <i class="bi bi-chevron-down"></i>
+                                        </a>
+                                        <ul class="dropdown-menu submenus">
+                                            <li><a href="#">Policy Details</a></li>
+                                            <li><a href="#">Status History</a></li>
+                                            <li><a href="#">Policy Add-Ons</a></li>
+                                            <li><a href="#">Invoices &Payment </a></li>
+                                            <li><a href="#">Member Profiles</a></li>
+                                            <li><a href="#">Beneficiary Profiles </a></li>
+                                            <li><a href="#">Claims</a></li>
+                                            <li><a href="#">Agents</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="nav-item dropdown">
+                                        <a href="javascript:void(0)" class="nav-link" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Dashboards <i class="bi bi-chevron-down"></i>
+                                        </a>
+                                        <ul class="dropdown-menu submenus">
+                                            <li class="dropdown">
+                                                <a href="javascript:void(0)" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Policies <i class="bi bi-chevron-right"></i>
+                                                </a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">Active</a></li>
+                                                    <li><a href="#">Suspended </a></li>
+                                                    <li><a href="#">Lapsed </a></li>
+                                                </ul>
+                                            </li>
+                                            <li class="dropdown">
+                                                <a href="javascript:void(0)" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Invoices<i class="bi bi-chevron-right"></i>
+                                                </a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">Issued</a></li>
+                                                    <li><a href="#">Suspended </a></li>
+                                                    <li><a href="#">Lapsed </a></li>
+                                                </ul>
+                                            </li>
+                                            <li class="dropdown">
+                                                <a href="javascript:void(0)" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Members<i class="bi bi-chevron-right"></i>
+                                                </a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">New Deceased</a></li>
+                                                    <li><a href="#">Cancelled </a></li>
+                                                </ul>
+                                            </li>
+                                            <li class="dropdown">
+                                                <a href="javascript:void(0)" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Child Members<i class="bi bi-chevron-right"></i>
+                                                </a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">Under 21</a></li>
+                                                    <li><a href="#">Over 21 </a></li>
+                                                </ul>
+                                            </li>
+                                            <li class="dropdown">
+                                                <a href="javascript:void(0)" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Agents<i class="bi bi-chevron-right"></i>
+                                                </a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">New </a></li>
+                                                    <li><a href="#">Cancelled</a></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </nav>
+                <div class="user-auth ms-auto">
+                    <div class="user-single-info">
+                        <a href="">
+                            <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
+                                <path d="M12 5V3C12 2.46957 11.7893 1.96086 11.4142 1.58579C11.0391 1.21071 10.5304 1 10 1H3C2.46957 1 1.96086 1.21071 1.58579 1.58579C1.21071 1.96086 1 2.46957 1 3V15C1 15.5304 1.21071 16.0391 1.58579 16.4142C1.96086 16.7893 2.46957 17 3 17H10C10.5304 17 11.0391 16.7893 11.4142 16.4142C11.7893 16.0391 12 15.5304 12 15V13"
+                                      stroke="#E3322C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M7 9H19M19 9L16 6M19 9L16 12" stroke="#E3322C" stroke-width="2" stroke-linecap="round"
+                                      stroke-linejoin="round" />
+                            </svg> Log out
+                        </a>
+                    </div>
+                </div>
+                <div class="toggle-button d-block d-lg-none" data-bs-toggle="offcanvas" href="#offcanvasExample">
+                    <div class="bar1 bg-white"></div>
+                    <div class="bar2 bg-white"></div>
+                    <div class="bar3 bg-white"></div>
                 </div>
             </div>
-        </nav>
+        </div>
     </header>
     <div class="container">
-        <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
@@ -44,6 +182,19 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+
+
+
+
+    <script src="c:\users\rahul.va(2836)\source\repos\policyhistory-api-using-dapper\consumeapi\wwwroot\js\js\bootstrap.bundle.js"></script>
+    <script src="c:\users\rahul.va(2836)\source\repos\policyhistory-api-using-dapper\consumeapi\wwwroot\js\js\bootstrap-datepicker.js"></script>
+    <script src="c:\users\rahul.va(2836)\source\repos\policyhistory-api-using-dapper\consumeapi\wwwroot\js\js\custom.js"></script>
+    <script src="c:\users\rahul.va(2836)\source\repos\policyhistory-api-using-dapper\consumeapi\wwwroot\js\js\jquery-3.2.1.slim.min.js"></script>
+    <script src="c:\users\rahul.va(2836)\source\repos\policyhistory-api-using-dapper\consumeapi\wwwroot\js\js\moment.min.js"></script>
+
+
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -6,21 +6,26 @@ namespace PolicyHistory_API_using_Dapper.Services
     public interface IEnterpriseManagerFB_Interface
     {
 
-       
-        Task<List<PolicyHistory>> GetAllHistory();
+
+
+        /*    Task<int> InsertList( PolicyList policylist);
+            Task<int> UpdateList( PolicyList policylist);
+
+            Task<int> Delete(string enterpriseID, int policyNum);*/
+
+        Task<List<PolicyList>> GetList(string enterpriseID, int policyNum);
+
+
+        Task<List<PolicyDetails>> GetDetails(string enterpriseID);
+
+
+
         Task<List<PolicyHistory>> GetHistory(string enterpriseID, int policyNum, int historyID);
 
 
 
-
-        Task<int> InsertList( PolicyList policylist);
-        Task<int> UpdateList( PolicyList policylist);
-
-        Task<int> Delete(string enterpriseID, int policyNum);
-
-        Task<List<PolicyList>> GetList(string enterpriseID, int policyNum);
-        
-
+        Task <int> EditValueAddedService(PolicyValueAddedService _policyValueAddedService);
+        Task<List<PolicyValueAddedService>> GetValueAddedService(string enterprisID, int policyNum, int AddOnID);
 
 
 

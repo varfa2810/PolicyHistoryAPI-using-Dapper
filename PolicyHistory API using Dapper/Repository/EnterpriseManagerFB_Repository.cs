@@ -18,14 +18,95 @@ namespace PolicyHistory_API_using_Dapper.Repository
         }
 
 
-        public async Task<List<PolicyHistory>> GetAllHistory()
+
+
+
+        /*        public async Task<int> InsertList (PolicyList policylist)
+                {
+                    using(var connection = _context.CreateConnection())
+                    {
+                        var parameters = new DynamicParameters();
+
+
+
+                        return await connection.ExecuteAsync("usp_Insert_tblFP_Policy", parameters, commandType: CommandType.StoredProcedure);
+
+                    }
+
+                }
+
+                public async Task<int> UpdateList(PolicyList policylist)
+                {
+                    using (var connection = _context.CreateConnection())
+                    {
+                        var parameters = new DynamicParameters();
+
+
+
+                        return await connection.ExecuteAsync("usp_Update_tblFP_Policy", parameters, commandType: CommandType.StoredProcedure);
+
+                    }
+                }
+
+
+                public async Task<int> Delete(string enterpriseID, int policyNum)
+                {
+                    using (var connection = _context.CreateConnection())
+                    {
+                        var parameters = new
+                        {
+                            StrEnterpriseID = enterpriseID,
+                            IntPolicyNum = policyNum
+
+                        };
+                        var records = await connection.ExecuteAsync("usp_Delete_tblFP_Policy_byEP", parameters, commandType: CommandType.StoredProcedure);
+                        return records;
+
+                    }
+
+
+
+                }*/
+
+        public async Task<List<PolicyList>> GetList(string enterpriseID, int policyNum)
         {
-            using(var connection = _context.CreateConnection())
+            using (var connection = _context.CreateConnection())
             {
-                var result = await connection.QueryAsync<PolicyHistory>("select * from tblFP_PolicyHistory ");
-                return result.ToList();
+                var parameters = new
+                {
+                    strEnterpriseID = enterpriseID,
+                    intPolicyNum = policyNum,
+
+                };
+
+                var records = await connection.QueryAsync<PolicyList>("usp_Select_tblFP_Policy_List_byEPID", parameters, commandType: CommandType.StoredProcedure);
+
+
+                return records.ToList();
+
             }
         }
+
+
+        public async Task<List<PolicyDetails>> GetDetails(string enterpriseID)
+        {
+            using(var connection = _context.CreateConnection()) {
+                var parameters = new
+                {
+                    StrEnterpriseID = enterpriseID
+                };
+
+                var result = await connection.QueryAsync < PolicyDetails > ("usp_Select_tblFP_Policy_byEID", parameters, commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            
+            }
+        }
+
+
+
+
+
+       
 
         public async Task<List<PolicyHistory>> GetHistory(string enterpriseID, int policyNum, int historyID)
         {
@@ -47,90 +128,33 @@ namespace PolicyHistory_API_using_Dapper.Repository
 
 
 
-
-
-        public async Task<int> InsertList (PolicyList policylist)
+        public async Task<int> EditValueAddedService(PolicyValueAddedService _policyValueAddedService)
         {
-            using(var connection = _context.CreateConnection())
+            using( var connection = _context.CreateConnection())
             {
-                var parameters = new DynamicParameters();
-                parameters.Add("strEnterpriseID", policylist.StrEnterpriseID);
-                parameters.Add("intPolicyNum", policylist.IntPolicyNum);
-                parameters.Add("intPlanID", policylist.IntPlanID);
-                parameters.Add("datDateOpened", policylist.DatDateOpened);
-                parameters.Add("datInceptionDate", policylist.DatInceptionDate);
-                parameters.Add("datDateClosed", policylist.DatDateClosed);
-                parameters.Add("bitTnCAcceptedYN", policylist.BitTnCAcceptedYN);
-                parameters.Add("strLastCapturer", policylist.StrLastCapturer);
-                parameters.Add("datDateModified", policylist.DatDateModified);
-
-                return await connection.ExecuteAsync("usp_Insert_tblFP_Policy", parameters, commandType: CommandType.StoredProcedure);
-
-            }
-            
-        }
-
-        public async Task<int> UpdateList(PolicyList policylist)
-        {
-            using (var connection = _context.CreateConnection())
-            {
-                var parameters = new DynamicParameters();
-                parameters.Add("strEnterpriseID", policylist.StrEnterpriseID);
-                parameters.Add("intPolicyNum", policylist.IntPolicyNum);
-                parameters.Add("intPlanID", policylist.IntPlanID);
-                parameters.Add("datDateOpened", policylist.DatDateOpened);
-                parameters.Add("datInceptionDate", policylist.DatInceptionDate);
-                parameters.Add("datDateClosed", policylist.DatDateClosed);
-                parameters.Add("bitTnCAcceptedYN", policylist.BitTnCAcceptedYN);
-                parameters.Add("strLastCapturer", policylist.StrLastCapturer);
-                parameters.Add("datDateModified", policylist.DatDateModified);
-
-                return await connection.ExecuteAsync("usp_Update_tblFP_Policy", parameters, commandType: CommandType.StoredProcedure);
-
+                var parameters = new { 
+                    policyValueAddedService = _policyValueAddedService
+                };
+                 return await connection.ExecuteAsync("usp_Update_tblFP_PolicyAddOn", parameters, commandType: CommandType.StoredProcedure);
+                
             }
         }
+        public async Task<List<PolicyValueAddedService>> GetValueAddedService(string enterpriseID, int policyNum, int AddOnID){
 
+            using(var connection = _context.CreateConnection()) {
 
-        public async Task<int> Delete(string enterpriseID, int policyNum)
-        {
-            using (var connection = _context.CreateConnection())
-            {
                 var parameters = new
                 {
-                    StrEnterpriseID = enterpriseID,
-                    IntPolicyNum = policyNum
+                    StrEnterpriseID = enterpriseID, IntPolicyNum = policyNum, IntAddOnId = AddOnID
 
                 };
-                var records = await connection.ExecuteAsync("usp_Delete_tblFP_Policy_byEP", parameters, commandType: CommandType.StoredProcedure);
-                return records;
 
+                var result = await connection.QueryAsync<PolicyValueAddedService>("usp_Select_tblFP_PolicyAddOn_byEPAID", parameters, commandType: CommandType.StoredProcedure);
+                return result.ToList();
+
+            
             }
-
-
-
         }
-
-        public async Task<List<PolicyList>> GetList(string enterpriseID, int policyNum)
-            {
-                using (var connection = _context.CreateConnection())
-                {
-                    var parameters = new
-                    {
-                        strEnterpriseID = enterpriseID,
-                        intPolicyNum = policyNum,
-
-                    };
-
-                 var records = await connection.QueryAsync<PolicyList>("usp_Select_tblFP_Policy_List_TODO", parameters, commandType: CommandType.StoredProcedure);
-
-
-                    return records.ToList();
-
-                }
-            }
-
-
-
 
 
                 

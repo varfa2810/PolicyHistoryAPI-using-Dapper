@@ -18,68 +18,54 @@ namespace PolicyHistory_API_using_Dapper.Controllers
         }
 
 
-        [HttpGet("Policy_History_All")]
-        public async Task<IActionResult> GetAllHistory()
-        {
-            var result = await _repo.GetAllHistory();
-            return Ok(result);
-        }
 
 
-        [HttpGet("Policy_History")]
-        public async Task<IActionResult> GetHistory(string enterpriseID, int policyNum, int historyID)
-        {
-            var result = await _repo.GetHistory(enterpriseID, policyNum, historyID);
-            return Ok(result);
-        }
+        /*
+                [HttpPost("Policy_List_Insert")]
+                public async Task<IActionResult> CreatePolicy([FromQuery] PolicyList policy)
+                {
+                    try
+                    {
+                        await _repo.InsertList(policy);
+                        return Ok("Policy created successfully.");
+                    }
+                    catch (Exception ex)
+                    {
+
+                        return BadRequest(ex.Message);  
+                    }
+                }
+
+                [HttpPut("Policy_List_Update")]
+                public async Task<IActionResult> UpdateList([FromQuery] PolicyList policy)
+                {
+                    try
+                    {
+                        await _repo.UpdateList(policy);
+                        return Ok("Policy updated successfully.");
+                    }
+                    catch(Exception ex) { 
+
+                    return BadRequest(ex.Message);
+                    }
+                }
 
 
-
-        [HttpPost("Policy_List_Insert")]
-        public async Task<IActionResult> CreatePolicy([FromQuery] PolicyList policy)
-        {
-            try
-            {
-                await _repo.InsertList(policy);
-                return Ok("Policy created successfully.");
-            }
-            catch (Exception ex)
-            {
-               
-                return BadRequest(ex.Message);  
-            }
-        }
-
-        [HttpPut("Policy_List_Update")]
-        public async Task<IActionResult> UpdateList([FromQuery] PolicyList policy)
-        {
-            try
-            {
-                await _repo.UpdateList(policy);
-                return Ok("Policy updated successfully.");
-            }
-            catch(Exception ex) { 
-            
-            return BadRequest(ex.Message);
-            }
-        }
-
-
-        [HttpDelete("Policy_List_Delete")]
-        public async Task<IActionResult> DeletePol(string enterpriseID, int policyNum)
-        {
-            try
-            {
-                await _repo.Delete(enterpriseID, policyNum);
-                return Ok("Deleted policy succesfully");
-            }
-            catch(Exception e) 
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        [HttpGet("Policy_List_Get")]
+                [HttpDelete("Policy_List_Delete")]
+                public async Task<IActionResult> DeletePol(string enterpriseID, int policyNum)
+                {
+                    try
+                    {
+                        await _repo.Delete(enterpriseID, policyNum);
+                        return Ok("Deleted policy succesfully");
+                    }
+                    catch(Exception e) 
+                    {
+                        return BadRequest(e.Message);
+                    }
+                }
+        */
+        [HttpGet("GetPolicyList")]
         public async Task<IActionResult> GetList(string enterpriseID, int policyNum)
         {
             try
@@ -87,17 +73,65 @@ namespace PolicyHistory_API_using_Dapper.Controllers
                 var result = await _repo.GetList(enterpriseID, policyNum);
                 return Ok(result);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-           
+
+        }
+
+        [HttpGet("GetPolicyDetails")]
+        public async Task<IActionResult> GetDetails(string enterpriseId)
+        {
+            try
+            {
+                var result = await _repo.GetDetails(enterpriseId);
+                return Ok(result);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest($"{ex.Message}");
+            }
+        }
+     
+
+
+
+
+        [HttpGet("GetPolicyHistory")]
+        public async Task<IActionResult> GetHistory(string enterpriseID, int policyNum, int historyID)
+        {
+            try
+            {
+                var result = await _repo.GetHistory(enterpriseID, policyNum, historyID);
+                return Ok(result);
+            }
+            catch( Exception ex) {
+                return BadRequest(ex.Message);
+            
+            
+            }
+            
         }
 
 
 
+        [HttpGet("GetValueAddedService")]
+        public async Task<IActionResult> GetValueAddedService(string enterpriseID, int policyNum, int AddOnID)
+        {
+            try
+            {
+                var result = await _repo.GetValueAddedService(enterpriseID, policyNum, AddOnID);
+                return Ok(result);  
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);   
+            }
+        }
+
        
-       [HttpGet("Policy_Claim")]
+       [HttpGet("GetPolicyClaims")]
        public async Task<IActionResult> GetClaims(string enterpriseID, int policyNum,int policyID)
        {
             try

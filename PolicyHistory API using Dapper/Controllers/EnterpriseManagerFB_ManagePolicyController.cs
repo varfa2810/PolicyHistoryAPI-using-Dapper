@@ -100,8 +100,16 @@ namespace PolicyHistory_API_using_Dapper.Controllers
        [HttpGet("Policy_Claim")]
        public async Task<IActionResult> GetClaims(string enterpriseID, int policyNum,int policyID)
        {
-           var result = await _repo.GetClaims(enterpriseID, policyNum, policyID);
-           return Ok(result);
+            try
+            {
+                var result = await _repo.GetClaims(enterpriseID, policyNum, policyID);
+                return Ok(result);
+            }
+            catch( Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+          
        }
 
 
@@ -109,8 +117,16 @@ namespace PolicyHistory_API_using_Dapper.Controllers
         [HttpGet("Policy_InvoiceandPayments")]
         public async Task<IActionResult> GetInvoiceandPayments(string enterpriseID, int policyNum, int invoiceNum)
         {
-            var result = await _repo.GetInvoiceandPayments(enterpriseID, policyNum, invoiceNum);
-            return Ok(result);
+            try
+            {
+                var result = await _repo.GetInvoiceandPayments(enterpriseID, policyNum, invoiceNum);
+                return Ok(result);
+            }
+            catch (Exception ex) 
+            { 
+              return BadRequest(ex.Message);
+            }
+           
 
         }
        

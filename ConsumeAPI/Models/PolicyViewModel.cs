@@ -1,17 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.ComponentModel.DataAnnotations;
-using System.Net;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ConsumeAPI.Models
 {
-    public class PolicyHistory : PageModel
-
+    public class PolicyViewModel
     {
-        public PolicyHistory()
-        {
-
-        }
-        public string Message { get; set; }
 
         [Required]
         public string StrEnterpriseID { get; set; }
@@ -31,17 +23,5 @@ namespace ConsumeAPI.Models
         public string StrLastCapturer { get; set; }
         public DateTime DatDateModified { get; set; }
         public string CurrentStatusYN { get; set; }
-
-
-
-        public void OnGet()
-        {
-
-            
-            ServicePointManager.Expect100Continue = true;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-            string json = new WebClient().DownloadString("https://raw.githubusercontent.com/aspsnippets/test/master/Customers.json");
-            this.Message = json;
-        }
     }
 }

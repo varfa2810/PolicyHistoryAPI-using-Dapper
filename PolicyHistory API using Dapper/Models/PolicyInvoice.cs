@@ -2,13 +2,12 @@
 
 namespace PolicyHistory_API_using_Dapper.Models
 {
-    public class PolicyInvoiceandPayments
+    public class PolicyInvoice
     {
-        public PolicyInvoiceandPayments() { }
+        public PolicyInvoice() { }
 
 
-
-        [Required] 
+        [Required]
         public string StrEnterpriseID { get; set; }
 
         [Required]
@@ -16,18 +15,17 @@ namespace PolicyHistory_API_using_Dapper.Models
 
         [Required]
         public int IntInvoiceNum { get; set; }
-        public int IntReceiptNum { get; set; }
-        public decimal MonAmtPaid { get; set; }
-        public DateTime DatDatePaid { get; set; }
-        public string StrRefNum { get; set; }
-        public int IntPayMethodID { get; set; }
+        public DateTime DatInvoiceDate { get; set; }
+        public decimal DecInvoiceTotal { get; set; }
+        public DateTime DatDueByDate { get; set; }
+        public int IntPurposeID { get; set; }
+        public string StrPurpose { get; set; }
+        public int IntYearID { get; set; }
         public int IntMonthID { get; set; }
-        public string StrComment { get; set; }
-        public int IntProviderID { get; set; }
-        public string StrStatusCode { get; set; }
         public string StrLastCapturer { get; set; }
         public DateTime DatDateModified { get; set; }
         public int IntAltRowID { get; set; }
+        public string StrCurrentStatus { get; set; }
 
     }
 }

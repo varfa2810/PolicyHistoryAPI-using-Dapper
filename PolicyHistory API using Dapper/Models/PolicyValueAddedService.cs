@@ -17,7 +17,7 @@ namespace PolicyHistory_API_using_Dapper.Models
 
         [Required]
         public int IntAddOnID { get; set; }
-        public string StrAddOnDescription { get; set; }
+        public string? StrAddOnDescription { get; set; }
         public int IntAddOnQty { get; set; }
         public decimal MonAddOnPrice { get; set; }
         public decimal MonLineTotal { get; set; }

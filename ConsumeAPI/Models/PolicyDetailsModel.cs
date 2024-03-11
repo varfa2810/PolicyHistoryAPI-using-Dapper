@@ -2,8 +2,8 @@
 {
     public class PolicyDetailsModel
     {
-        
-       
+
+        public string StrEnterpriseID { get; set; }
         public int IntPolicyNum { get; set; }
        
         public string StrPlanBrandName { get; set; }

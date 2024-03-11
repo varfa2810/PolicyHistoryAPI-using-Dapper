@@ -188,16 +188,69 @@
         </div>
       </div>
     </div>
-
   </div>
-  <script src="js/jquery-3.2.1.slim.min.js"></script>
+
+    <table class="table table-bordered" id="dataTable">
+        <thead>
+            <tr>
+                <th>EnterpriseID</th>
+                <th>PolicyNo.</th>
+                <th>PlanBrandName</th>
+                <th>AgentName</th>
+                <th>CommRate</th>
+                <th>DateOpened</th>
+                <th>InceptionDate</th>
+                <th>DateClosed</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+    </table>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
   <script src="js/bootstrap-datepicker.js"></script>
   <script src="js/bootstrap.bundle.js"></script>
   <script src="js/custom.js"></script>
-  <script>
-    $('#datepicker1').datepicker({
-    });
-  </script>
+
+
+    
+    <script>
+        $(document).ready(function () {
+            // Specify the EnterpriseID value
+            var enterpriseID = 'aaaa';
+
+            // AJAX call to fetch data from the API
+            $.ajax({
+                url: '/api/EnterpriseManagerFB_ManagePolicy/GetPolicyDetails?enterpriseId=' + enterpriseID,
+                method: 'GET',
+                data: { enterpriseID: enterpriseID }, // Pass EnterpriseID as a parameter
+                dataType: 'json',
+                success: function (data) {
+                    // Clear existing table rows
+                    $('#tableBody').empty();
+
+                    // Iterate through the data and append rows to the table
+                    $.each(data, function (index, item) {
+                        var row = '<tr>' +
+                            '<td>' + item.EnterpriseID + '</td>' +
+                            '<td>' + item.IntPolicyNum + '</td>' +
+                            '<td>' + item.StrPlanBrandName + '</td>' +
+                            '<td>' + item.StrAgentNameID + '</td>' +
+                            '<td>' + item.DecAgentCommRate + '</td>' +
+                            '<td>' + item.DatDateOpened + '</td>' +
+                            '<td>' + item.DatInceptionDate + '</td>' +
+                            '<td>' + item.DatDateClosed + '</td>' +
+                            '</tr>';
+
+                        $('#tableBody').append(row);
+                    });
+                },
+                error: function (error) {
+                    console.log('Error fetching data from the API:', error);
+                }
+            });
+        });
+    </script>
+
+
 </body>
 
 </html>

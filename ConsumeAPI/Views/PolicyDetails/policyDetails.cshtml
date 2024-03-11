@@ -223,6 +223,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>
+
                                                         <div class="d-flex gap-2 text-center">
                                                             <a href="" class="btn-save">
                                                                 <svg width="18" height="17" viewBox="0 0 18 17" fill="currentcolor">
@@ -256,6 +257,9 @@
                                                 </tr>
                                             </tbody>
                                         </table>
+
+                                       
+
                                     </div>
                                     <ul class="pagination justify-content-between">
                                         <li class="page-item ms-auto">
@@ -393,8 +397,12 @@
                 </div>
             </div>
         </div>
+
+
        
     </div>
+
+
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
@@ -415,42 +423,39 @@
 
     </script>
 
-
     <script>
         $(document).ready(function () {
+            // AJAX call to fetch data from the API
             $.ajax({
-                type: "GET",
-                url: "/api/StudentAPI/GetAllStudents",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
+                url: '/api/EnterpriseManagerFB_ManagePolicy/GetPolicyDetails?enterpriseId=aaaa',
+                method: 'GET',
+                dataType: 'json',
                 success: function (data) {
-                    //alert(JSON.stringify(data));
-                    $("#DIV").html('');
-                    var DIV = '';
-                    $.each(data, function (i, item) {
-                        var rows = "<tr>" +
-                            "<td id='RegdNo'>" + item.regNo + "</td>" +
-                            "<td id='Name'>" + item.name + "</td>" +
-                            "<td id='Address'>" + item.address + "</td>" +
-                            "<td id='PhoneNo'>" + item.phoneNo + "</td>" +
-                            "<td id='AdmissionDate'>" + Date(item.admissionDate,
-                                "dd-MM-yyyy") + "</td>" +
-                            "</tr>";
-                        $('#Table').append(rows);
-                    }); //End of foreach Loop
-                    console.log(data);
-                }, //End of AJAX Success function
+                    // Clear existing table rows
+                    $('#tableBody').empty();
 
-                failure: function (data) {
-                    alert(data.responseText);
-                }, //End of AJAX failure function
-                error: function (data) {
-                    alert(data.responseText);
-                } //End of AJAX error function
+                    // Iterate through the data and append rows to the table
+                    $.each(data, function (index, item) {
+                        var row = '<tr>' +
+                            '<td>' + item.IntPolicyNum + '</td>' +
+                            '<td>' + item.StrPlanBrandName + '</td>' +
+                            '<td>' + item.StrAgentNameID + '</td>' +
+                            '<td>' + item.DecAgentCommRate + '</td>' +
+                            '<td>' + item.DatDateOpened + '</td>' +
+                            '<td>' + item.DatInceptionDate + '</td>' +
+                            '<td>' + item.DatDateClosed + '</td>' +
+                            '</tr>';
 
+                        $('#tableBody').append(row);
+                    });
+                },
+                error: function (error) {
+                    console.log('Error fetching data from the API:', error);
+                }
             });
         });
     </script>
+
 </body>
 
 </html>

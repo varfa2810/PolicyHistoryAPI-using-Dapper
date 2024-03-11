@@ -231,6 +231,7 @@ namespace PolicyHistory_API_using_Dapper.Controllers
         }
 
 
+
        
        [HttpGet("GetPolicyClaims")]
        public async Task<IActionResult> GetClaims(string enterpriseID, int policyNum,int policyID)
@@ -246,6 +247,10 @@ namespace PolicyHistory_API_using_Dapper.Controllers
             }
           
        }
+
+
+
+
 
 
 
@@ -296,6 +301,31 @@ namespace PolicyHistory_API_using_Dapper.Controllers
                 return BadRequest(ex.Message);
             }
 
+        }
+
+        
+        [HttpPost("InsertInvoice")]
+        public async Task<IActionResult> InsertInvoice([FromBody]PolicyInvoice policyInvoice)
+        {
+            try
+            {
+                var result = await _repo.InsertInvoice(policyInvoice);
+                if (result > 0)
+                {
+
+                    return Ok(new { Message = "Invoice inserted successfully." });
+                }
+                else
+                {
+
+                    return NotFound(new { Message = "Invoice insertion failed." });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
 

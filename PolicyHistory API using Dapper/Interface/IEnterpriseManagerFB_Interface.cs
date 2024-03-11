@@ -8,7 +8,7 @@ namespace PolicyHistory_API_using_Dapper.Services
 
 
 
-            Task<int> InsertList( PolicyList policylist);
+            Task<int> InsertList(PolicyList policylist);
             Task<int> UpdateList(string enterpriseID, int policyNum, PolicyList policylist);
 
             Task<int> Delete(string enterpriseID, int policyNum);
@@ -44,6 +44,9 @@ namespace PolicyHistory_API_using_Dapper.Services
         Task<int> EditInvoice(PolicyInvoice policyInvoice);
 
         Task<int> DeleteInvoice(string enterpriseID, int policyNum, int invoiceNum);
+        Task<int> InsertInvoice(PolicyInvoice policyInvoice);
+
+
         Task<List<PolicyInvoice>> GetInvoice(string enterpriseID, int policyNum, int invoiceNum);
 
 

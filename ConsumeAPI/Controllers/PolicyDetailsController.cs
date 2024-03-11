@@ -2,12 +2,11 @@
 
 namespace ConsumeAPI.Controllers
 {
-    public class PolicyListController : Controller
+    public class PolicyDetailsController : Controller
     {
-       
 
-
-        public IActionResult Policylist()
+      
+        public IActionResult policyDetails()
         {
             return View();
         }

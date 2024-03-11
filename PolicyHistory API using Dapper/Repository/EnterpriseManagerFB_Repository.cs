@@ -282,6 +282,14 @@ namespace PolicyHistory_API_using_Dapper.Repository
             }
         }
 
+        public async Task<int> InsertInvoice(PolicyInvoice policyInvoice)
+        {
+            using( var connection = _context.CreateConnection()) {
+
+               return await connection.ExecuteAsync("usp_Insert_tblFP_PolicyInvoice", policyInvoice, commandType: CommandType.StoredProcedure);
+            
+            }
+        }
 
         public async Task<List<PolicyInvoice>> GetInvoice(string enterpriseID, int policyNum, int invoiceNum)
         {

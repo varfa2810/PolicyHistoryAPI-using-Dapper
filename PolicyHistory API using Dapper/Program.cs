@@ -4,10 +4,18 @@ using PolicyHistory_API_using_Dapper.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+
 
 builder.Services.AddControllers();
 
+builder.Services.AddCors(option =>
+{
+
+    option.AddPolicy(name: "mypolicy", option =>
+    {
+        option.WithOrigins("https://localhost:7280").AllowAnyHeader().AllowAnyMethod();
+    });
+});
 
 builder.Services.AddTransient<DapperContext>();
 
@@ -34,4 +42,5 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.UseCors("mypolicy");
 app.Run();

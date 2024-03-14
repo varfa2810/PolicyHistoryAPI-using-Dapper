@@ -1,0 +1,16 @@
+1. Identify the Sage 300 version and any customization or integrations.
+2. What is the current size of your Sage data? Do you have any specific requirements or preferences 
+for how the data migration should be carried out?
+2. Migration - Transfer the data to Azure. You can use Azure Blob Storage, Azure SQL Database, or another suitable data 
+storage solution.
+4. For the 5 Azure Virtual Machines for users, what operating systems and software applications need to be installed? Any specific performance or security requirements
+ for these VMs?
+5. Ensure that your Sage 300 licenses are compatible with the Azure environment.
+6. Could you clarify the user roles and permissions that should be configured on the Azure resources? 
+Do you have any specific identity and access management policies in place?
+7. Preferred backup and disaster recovery solutions for Sage 300 in Azure, such as Azure Backup or Azure Site Recovery.
+
+TO do
+
+1. Install Sage 300 on the Azure VM(s).
+2. Configure the application settings and connect it to the migrated data.

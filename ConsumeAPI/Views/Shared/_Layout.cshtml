@@ -4,17 +4,30 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ConsumeAPI</title>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ConsumeAPI.styles.css" asp-append-version="true" />
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/bootstrap-icons.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/datepicker.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/font-awesome.min.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/responsive.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/style.css" rel="stylesheet" asp-append-version="true" />
 
-    <link href="~/css/css/bootstrap.min.css" rel="stylesheet" asp-append-version="true" />
-    <link href="~/css/css/bootstrap-icons.css" rel="stylesheet" asp-append-version="true" />
-    <link href="~/css/css/datepicker.css" rel="stylesheet" asp-append-version="true" />
-    <link href="~/css/css/font-awesome.min.css" rel="stylesheet" asp-append-version="true" />
-    <link href="~/css/css/responsive.css" rel="stylesheet" asp-append-version="true" />
-    <link href="~/css/css/style.css" rel="stylesheet" asp-append-version="true" />
-    
+
+
+
+ @*    KENDO UI  *@
+  
+    <link href="~/Content/themes/base/all.css" rel="stylesheet" />
+    <link href="~/Content/css/kendo.common.min.css" rel="stylesheet" />
+    <script src="~/Content/js/kendo.all.min.js"></script>
+    <link href="~/Content/css/kendo.blueopal.min.css" rel="stylesheet" />
+    <link href="~/Content/css/jquery-ui.css" rel="stylesheet" />
+    <script src="~/Content/js/jquery.min.js"></script>
+    <script src="~/Content/js/kendo.all.min.js"></script>
+
 
 </head>
 <body>
@@ -179,22 +192,22 @@
             &copy; 2024 - ConsumeAPI - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+
+  
+   <script src="~/Content/js/jquery-1.9.1.min.js"></script> 
+    <script src="~/Content/js/kendo.all.min.js"></script>
 
 
+  @*   <!-- jQuery Unobtrusive for AJAX -->
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
 
+ *@
 
-
-    <script src="c:\users\rahul.va(2836)\source\repos\policyhistory-api-using-dapper\consumeapi\wwwroot\js\js\bootstrap.bundle.js"></script>
-    <script src="c:\users\rahul.va(2836)\source\repos\policyhistory-api-using-dapper\consumeapi\wwwroot\js\js\bootstrap-datepicker.js"></script>
-    <script src="c:\users\rahul.va(2836)\source\repos\policyhistory-api-using-dapper\consumeapi\wwwroot\js\js\custom.js"></script>
-    <script src="c:\users\rahul.va(2836)\source\repos\policyhistory-api-using-dapper\consumeapi\wwwroot\js\js\jquery-3.2.1.slim.min.js"></script>
-    <script src="c:\users\rahul.va(2836)\source\repos\policyhistory-api-using-dapper\consumeapi\wwwroot\js\js\moment.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-
-
+    <script src="~/js/bootstrap.bundle.js"></script>
+    <script src="~/js/bootstrap-datepicker.js"></script>
+    <script src="~/js/custom.js"></script>
+   
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

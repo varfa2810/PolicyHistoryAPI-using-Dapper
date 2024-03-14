@@ -1,0 +1,95 @@
+
+ @media screen and (max-width:1170px) {
+   .container {
+  width: 98%;
+}
+.login-form.onlylogin .intro-text {
+    width: 100%;
+}
+.login-form .intro-text {
+    width: 100%;
+}
+ }
+ 
+  @media screen and (max-width:767px) {
+    .logo {
+  float: none;
+  margin: auto;
+  max-width: 190px;
+}
+.sign-box {
+  float: none;
+  text-align: center;
+}
+.sign-box ul li {
+ 
+  padding: 0 10px;
+}
+.sign-box ul {
+  padding: 10px 0 0;
+}
+.header-top {
+  padding: 10px 0;
+}
+.intro-text {
+  max-width: 100%;
+}
+.container.main-box {
+  padding: 0;
+}
+.login-form {
+
+  padding: 30px 0;
+}
+
+  }
+ @media screen and (max-width:1170px) {
+   .container {
+  width: 98%;
+}
+.login-form.onlylogin .intro-text {
+    width: 100%;
+}
+.login-form .intro-text {
+    width: 100%;
+}
+ }
+ 
+  @media screen and (max-width:767px) {
+    .logo {
+  float: none;
+  margin: auto;
+  max-width: 190px;
+}
+.sign-box {
+  float: none;
+  text-align: center;
+}
+.sign-box ul li {
+ 
+  padding: 0 10px;
+}
+.sign-box ul {
+  padding: 10px 0 0;
+}
+.header-top {
+  padding: 10px 0;
+}
+.intro-text {
+  max-width: 100%;
+}
+.container.main-box {
+  padding: 0;
+}
+.login-form {
+
+  padding: 30px 0;
+}
+.main-box-holder {
+    padding: 10px 0;
+}
+.inline-filter ul li {
+    display: inline-block;
+    padding: 5px 3px;
+}
+  }

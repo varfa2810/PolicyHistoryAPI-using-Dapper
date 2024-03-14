@@ -1,7 +1,19 @@
+using AspNetCore.Unobtrusive.Ajax;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddUnobtrusiveAjax();
+
+
+
+
+
+
+builder.Services.AddRazorPages()
+    .AddRazorRuntimeCompilation();
 
 var app = builder.Build();
 
@@ -19,6 +31,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.UseUnobtrusiveAjax();
 
 app.MapControllerRoute(
     name: "default",

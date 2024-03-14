@@ -8,11 +8,10 @@ namespace PolicyHistory_API_using_Dapper.Services
 
 
 
-            Task<int> InsertList(PolicyList policylist);
-            Task<int> UpdateList(string enterpriseID, int policyNum, PolicyList policylist);
+        Task<int> InsertList(PolicyList policylist);
+        Task<int> UpdateList(string enterpriseID, int policyNum, PolicyList policylist);
 
-            Task<int> Delete(string enterpriseID, int policyNum);
-
+        Task<int> Delete(string enterpriseID, int policyNum);
         Task<List<PolicyList>> GetList(string enterpriseID, int policyNum);
 
 

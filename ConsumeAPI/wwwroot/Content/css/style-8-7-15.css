@@ -1,0 +1,366 @@
+@import url('https://fonts.googleapis.com/css?family=Raleway:100,200,400,500,600,700');
+
+* {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+}
+body {
+	background: #e6e6e6;
+	font-size: 15px;
+	/*font-family: 'Open Sans', sans-serif;*/
+	font-family: 'Raleway', sans-serif;
+	color: #000000;
+	line-height: 22px;
+	width: 100%;
+	overflow-x: hidden;
+}
+input:focus {
+	box-shadow: none;
+	outline: none;
+}
+ul {
+	list-style: none;
+}
+a {
+	color: #646464;
+	text-decoration: none;
+	/*transition: all 0.3s ease-out 0s;*/
+}
+a:hover {
+	color: #333;
+	text-decoration: none;
+}
+a:focus {
+	outline: none;
+	text-decoration: none;
+}
+h1 {
+	font-size: 24px;
+}
+h2 {
+	font-size: 20px;
+}
+h3 {
+	font-size: 18px;
+}
+h4 {
+	font-size: 16px;
+	font-weight: 600;
+}
+h5 {
+	font-size: 14px;
+	color: #00a6aa;
+}
+h6 {
+	font-size: 13px;
+}
+input:focus {
+	outline: none;
+	box-shadow: none;
+}
+img {
+	border: none;
+	outline: 0;
+	vertical-align: middle;
+	max-width: 100%;
+	height: auto;
+}
+button,
+input[type="submit"] {
+	background: #00cfff none repeat scroll 0 0;
+	border: medium none;
+	color: #ffffff;
+	display: inline-block;
+	font-size: 16px;
+	font-weight: 600;
+	line-height: 34px;
+	min-width: 115px;
+	padding: 0 10px;
+	text-align: center;
+}
+button:hover,
+input[type="submit"]:hover {
+	background: #000000;
+	color: #fff;
+}
+/*default css end*/
+.container{
+	width:90%;
+}
+
+.header-top {
+  background: #000 none repeat scroll 0 0;
+  color: #fff;
+  padding: 20px 0;
+}
+.header-top a{
+	color:#fff;
+}
+
+.logo {
+  float: left;
+  max-width: 290px;
+}
+.sign-box{
+	float:right;
+}
+.sign-box ul li {
+  display: inline-block;
+  font-size: 15px;
+  padding-left: 15px;
+}
+.sign-box ul {
+  margin: 0;
+  padding: 20px 0 0;
+}
+.main-nav {
+  background: #b60202 none repeat scroll 0 0;
+}
+.main-nav li {
+  border-right: 1px solid rgba(255, 255, 255, 0.3);
+  float: left;
+  font-size: 14px;
+  padding: 0px 6px;
+  text-transform: uppercase;
+}
+/*.main-nav li:first-child{
+	padding-left:0;
+}
+*/
+.main-nav li a {
+  color: #fff;
+  display: block;
+  font-weight: 500;
+  padding: 14px 20px;
+}
+.main-nav li:hover{
+	background:#af0606;
+}
+.intro-text{
+	/*max-width:60%;*/
+}
+.main-box{
+	background:#fff;
+	min-height:500px;
+}
+.footer-main{
+	background:#000;
+	text-align:center;
+	padding:15px;
+	color:#fff;
+	font-weight:600;
+	font-size:13px;
+}
+.footer-main a{
+	color:#fff;
+}
+
+/*=============================Login============================*/
+/*.login-form.onlylogin .intro-text {
+    margin: 0 auto;
+    width: 30%;
+}
+.login-form .intro-text {
+    margin: 0 auto;
+    width: 40%;
+}*/
+.login-form .intro-text h1{
+
+}
+.form-box-input input {
+    width: 100%;
+    height: 50px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+input[type=checkbox] + label {
+  display: inline-block;
+  margin: 0.2em;
+  cursor: pointer;
+  padding: 0.2em;
+}
+/*
+input[type=checkbox] {
+  display: none;
+}
+*/
+input[type=checkbox] + label:before {
+  content: "\2714";
+border: 0.1em solid #000;
+border-radius: 0.2em;
+display: inline-block;
+width: 20px;
+height: 20px;
+padding-left: 0px;
+padding-bottom: 5px;
+margin-right: 10px;
+vertical-align: bottom;
+color: transparent;
+transition: .2s;
+}
+
+input[type=checkbox] + label:active:before {
+  transform: scale(0);
+}
+
+input[type=checkbox]:checked + label:before {
+ background-color: MediumSeaGreen;
+border-color: MediumSeaGreen;
+color: #fff;
+line-height: 15px;
+text-align: center;
+}
+
+input[type=checkbox]:disabled + label:before {
+  transform: scale(1);
+  border-color: #aaa;
+}
+
+input[type=checkbox]:checked:disabled + label:before {
+  transform: scale(1);
+  background-color: #bfb;
+  border-color: #bfb;
+}
+.social-login {
+  line-height: 0.5;
+  text-align: center;
+}
+.social-login span {
+  display: inline-block;
+  position: relative;  
+}
+.border-sp:before,
+.border-sp:after {
+  content: "";
+  position: absolute;
+  height: 5px;
+  border-bottom: 1px solid #000;
+  border-top: 1px solid #000;
+  top: 0;
+width: 150px;
+}
+.border-sp:before {
+  right: 100%;
+  margin-right: 15px;
+}
+.border-sp:after {
+  left: 100%;
+  margin-left: 15px;
+}
+.social-login {
+    text-align: center;
+}
+.btn-box {
+    margin: 40px 0;
+}
+.social-icons {
+    margin: 40px 0;
+}
+.social-login ul li {
+
+    display: inline-block;
+    padding: 15px;
+
+}
+.fb-btn {
+    background: #4464b2;
+    color: #fff;
+   padding: 10px 20px;
+    border-radius: 3px;
+
+}
+.tw-btn{
+	background:#28a9db;
+	color: #fff;
+    padding: 10px 20px;
+    border-radius: 3px;
+}
+.go-btn{
+	background:#da4735;
+	color: #fff;
+   padding: 10px 20px;
+    border-radius: 3px;
+}
+.social-icons ul li a > span {
+    margin-right: 10px;
+}
+.btn-login {
+    padding: 7px 60px;
+    background: #b60202;
+    border-radius: 3px;
+}
+.login-form .intro-text h1 {
+    text-align: center;
+    margin: 30px;
+}
+.check-box a {
+    color: #8f8d8d;
+    font-weight: 700;
+}
+.check-box {
+	color: #000;
+    font-weight: 700;
+}
+.login-form{
+	max-width:600px;
+	margin:auto;
+	padding:50px 0;
+}
+.login-form input[type="text"], .login-form input[type="email"], .login-form input[type="password"]{
+	border-radius:0;
+	border:solid 1px #666;
+	height:42px;
+}
+.form-horizontal .control-label {
+  padding-right: 5px;
+  text-align: left;
+}
+.btn-cmn, .login-form  .btn {
+  background: #b60202 none repeat scroll 0 0;
+  border-radius: 3px;
+  padding: 7px 60px;
+}
+.checkbox input[type="checkbox"] {
+  margin: 4px 0 0;
+  vertical-align: middle;
+}
+.usr-rge {
+  
+  font-weight: bold;
+  padding: 10px 0;
+}
+.usr-rge a{
+	color: #B60202;
+}
+/*===================Ragister============================*/
+
+/*menu css*/
+
+.toggleMenu { display: none; background: #666; padding: 10px 15px; color: #fff; }
+.nav { list-style: none;  *zoom: 1;
+ }
+.nav:before, .nav:after { content: " "; display: table; }
+.nav:after { clear: both; }
+.nav ul { list-style: none; width: 200px; }
+.nav a { color: #fff; }
+.nav li { position: relative; }
+.nav  li  li{padding:0; float:none;}
+.nav > li > .parent { background-image: url("../images/downArrow.png"); background-repeat: no-repeat; background-position: right; }
+.nav > li > a { display: block; }
+.nav li ul { position: absolute; left: -9999px; background:#B60202;}
+.nav > li.hover > ul { left: 0; }
+.nav li li.hover ul { left: 100%; top: 0; }
+.nav li li a { display: block;  position: relative; z-index: 100; border-top: 1px solid rgba(255, 255, 255, .2); padding:5px 10px;}
+.nav li li li a {  z-index: 200; border-top: 1px solid rgba(255, 255, 255, .2); padding:5px 10px;}
+.nav > li > a:focus, .nav > li > a:hover {
+ background:none;
+}
+ @media screen and (max-width: 768px) {
+.active { display: block; }
+.nav > li { float: none; }
+.nav > li > .parent { background-position: 95% 50%; }
+.nav li li .parent { background-image: url("../images/downArrow.png"); background-repeat: no-repeat; background-position: 95% 50%; }
+.nav ul { display: block; width: 100%; }
+.nav > li.hover > ul, .nav li li.hover ul { position: static; }
+}

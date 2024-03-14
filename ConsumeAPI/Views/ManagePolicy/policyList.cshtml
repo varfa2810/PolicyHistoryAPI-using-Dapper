@@ -14,9 +14,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
-  
+   @*  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script> *@
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ @*    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script> *@
+    <script src="https://kendo.cdn.telerik.com/2022.1.301/js/kendo.all.min.js"></script>
+
+
     <title>Funeralbiz</title>
 </head>
 
@@ -191,6 +194,87 @@
             </div>
         </div>
     </div>
+
+    <div id="ordersGrid" style="margin-top:20px;"></div>
+    <script>
+        $(function () {
+            // var GetData = @Html.Raw(Json.Serialize(Model));
+          
+            var gridDataSource = new kendo.data.DataSource({
+                transport: {
+                    read: {
+                        url: "/ManagePolicy/policyDetails",
+                        datatype: "json",
+                        type: "GET"
+                    }
+                },
+                error: function (e) {
+                    alert("Status: " + e.status + "; Error message: " + e.errorThrown);
+                },
+                pageSize: 7,
+                batch: true,
+                schema: {
+                    model: {
+                        id: "strEnterpriseID",
+                        fields: {
+                            strEnterpriseID: { type: "string" },
+                            intPolicyNum: { type: "number" },
+                            strPlanBrandName: { type: "string" },
+                            strAgentNameID: { type: "string" },
+                            decAgentCommRate: { type: "number" },
+                            datDateOpened: { type: "date" },
+                            datInceptionDate: { type: "date" },
+                            datDateClosed: { type: "date" },
+                            strAgentID: { type: "string" },
+                        }
+                    }
+                }
+            });
+
+            console.log(gridDataSource);
+
+            $("#ordersGrid").kendoGrid({
+                editable: "inline",
+                toolbar: ["pdf", "excel", "create"],
+                pdf: {
+                    allPages: true,
+                    avoidLinks: true,
+                    paperSize: "A4",
+                    margin: { top: "2cm", left: "1cm", right: "1cm", bottom: "1cm" },
+                    landscape: true,
+                    repeatHeaders: true,
+                    template: $("#page-template").html(),
+                    scale: 0.5
+                },
+                excel: {
+                    fileName: "Kendo UI Grid Export.xlsx",
+                    proxyURL: "https://demos.telerik.com/kendo-ui/service/export",
+                    filterable: true
+                },
+                dataSource: gridDataSource,
+                height: 300,
+                sortable: true,
+                filterable: true,
+                resizable: true,
+                scrollable: true,
+                columns: [
+                    { field: "strEnterpriseID", title: "EID" },
+                    { field: "intPolicyNum", title: "Policy Num." },
+                    { field: "strPlanBrandName", title: "Plan Brand Name" },
+                    { field: "strAgentNameID", title: "Agent Name" },
+                    { field: "decAgentCommRate", title: "AgentCommRate" },
+                    { field: "datDateOpened", title: "Date Opened", format: "{0:dd-MMMM-yyyy}" },
+                    { field: "datInceptionDate", title: "Inception Date", format: "{0:dd-MMMM-yyyy}" },
+                    { field: "datDateClosed", title: "Date Closed", format: "{0:dd-MMMM-yyyy}" },
+                    { field: "strAgentID", title: "Agent ID" },
+                    { command: ["edit", "destroy"], title: "&nbsp;", width: "250px" },
+                ],
+                editable: "inline",
+            });
+        });
+
+
+    </script>
 
 
 

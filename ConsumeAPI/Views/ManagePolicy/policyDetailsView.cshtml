@@ -402,25 +402,23 @@
     </div>
 
     <div id="ordersGrid" style="margin-top:20px;"></div>
+ 
     <script>
         $(function () {
-            var GetData = @Html.Raw(Json.Serialize(Model));
+            // var GetData = @Html.Raw(Json.Serialize(Model));
+
             var gridDataSource = new kendo.data.DataSource({
                 transport: {
-                    read: function (e) {
-                        // On success.
-                        e.success(GetData);
-                        // On failure.
-                        e.error("XHR response", "status code", "error message");
+                    read: {
+                        url: "/ManagePolicy/GetpolicyMembers",
+                        datatype: "json",
+                        type: "GET"
                     },
-                    create: function (e) {
-                        // Assuming sampleData is your actual data source, push the new data to it.
-                        sampleData.push(e.data);
-                        // On success.
-                        e.success(e.data);
-                        // On failure.
-                        e.error("XHR response", "status code", "error message");
-                    },
+                    create: {
+                        url: "/ManagePolicy/policyDetails",
+                        datatype: "json",
+                        type: "POST"
+                    }
                 },
                 error: function (e) {
                     alert("Status: " + e.status + "; Error message: " + e.errorThrown);
@@ -431,15 +429,13 @@
                     model: {
                         id: "strEnterpriseID",
                         fields: {
-                            strEnterpriseID: { type: "string" },
-                            intPolicyNum: { type: "number" },
-                            strPlanBrandName: { type: "string" },
-                            strAgentNameID: { type: "string" },
-                            decAgentCommRate: { type: "number" },
-                            datDateOpened: { type: "date" },
-                            datInceptionDate: { type: "date" },
-                            datDateClosed: { type: "date" },
-                            strAgentID: { type: "string" },
+                            intMemberTypeID: { type: "number" },
+                            strIDPPNum: { type: "string" },
+                            strMemberName: { type: "string" },
+                            datBirthDate: { type: "date" },
+                            intAgeToday: { type: "number" },
+                            monPremiumAmt: { type: "number" },
+                            monCoverAmt: { type: "number" },
                         }
                     }
                 }
@@ -472,15 +468,13 @@
                 resizable: true,
                 scrollable: true,
                 columns: [
-                    { field: "strEnterpriseID", title: "EID" },
-                    { field: "intPolicyNum", title: "Policy Num." },
-                    { field: "strPlanBrandName", title: "Plan Brand Name" },
-                    { field: "strAgentNameID", title: "Agent Name" },
-                    { field: "decAgentCommRate", title: "AgentCommRate" },
-                    { field: "datDateOpened", title: "Date Opened", format: "{0:dd-MMMM-yyyy}" },
-                    { field: "datInceptionDate", title: "Inception Date", format: "{0:dd-MMMM-yyyy}" },
-                    { field: "datDateClosed", title: "Date Closed", format: "{0:dd-MMMM-yyyy}" },
-                    { field: "strAgentID", title: "Agent ID" },
+                    { field: "intMemberTypeID", title: "Member Type ID", type: "number"},
+                    { field: "strIDPPNum", title: "IDPP Number", type: "string" },
+                    { field: "strMemberName", title: "Member Name", type: "string" },
+                    { field: "datBirthDate", title: "Birth Date", type: "date", format: "{0:dd/MMMM/yyyy}" },
+                    { field: "intAgeToday", title: "Age", type: "number" },
+                    { field: "monPremiumAmt", title: "Premium Amount", type: "number" },
+                    { field: "monCoverAmt", title: "Cover Amount", type: "number" },
                     { command: ["edit", "destroy"], title: "&nbsp;", width: "250px" },
                 ],
                 editable: "inline",
@@ -489,11 +483,8 @@
 
 
 
-           
+
     </script>
-
-
-
     
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 

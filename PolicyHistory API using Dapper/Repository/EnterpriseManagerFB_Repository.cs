@@ -135,8 +135,21 @@ namespace PolicyHistory_API_using_Dapper.Repository
         }
 
 
+        public async Task<List<PolicyMember>> GetPolicyMembers(string enterpriseID, int policyNum)
+        {
+            using(var connection = _context.CreateConnection())
+            {
+                 var parameters = new
+                {
+                    strEnterpriseID = enterpriseID,
+                    intPolicyNum = policyNum
+                };
 
-       
+                var result = await connection.QueryAsync<PolicyMember>("usp_Select_tblFP_PolicyMember_byEPID", parameters, commandType: CommandType.StoredProcedure);
+                return result.ToList(); 
+            }
+        }
+
 
         public async Task<List<PolicyHistory>> GetHistory(string enterpriseID, int policyNum, int historyID)
         {

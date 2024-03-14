@@ -18,7 +18,7 @@ namespace PolicyHistory_API_using_Dapper.Services
         Task<int> InsertPolicyDetails(string enterpriseID,  int policyNum,int planID,DateTime dateOpened,DateTime inceptionDate, DateTime dateClosed, bool tnCAcceptedYN, string lastCapturer, DateTime dateModified);
         Task<List<PolicyDetails>> GetDetails(string enterpriseID);
 
-
+        Task<List<PolicyMember>> GetPolicyMembers(string enterpriseID, int policyNum);
 
         Task<List<PolicyHistory>> GetHistory(string enterpriseID, int policyNum, int historyID);
 

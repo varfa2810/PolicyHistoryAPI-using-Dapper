@@ -129,7 +129,23 @@ namespace PolicyHistory_API_using_Dapper.Controllers
                 return BadRequest($"{ex.Message}");
             }
         }
-     
+
+
+
+        [HttpGet("GetPolicyMembers")]
+        public async Task<IActionResult> GetPolicyMembers(string enterpriseId, int policyNum)
+        {
+            try
+            {
+                var result = await _repo.GetPolicyMembers(enterpriseId, policyNum);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"{ex.Message}");
+            }
+        }
+
 
 
 

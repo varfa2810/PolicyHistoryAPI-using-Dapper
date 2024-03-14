@@ -24,16 +24,13 @@ namespace ConsumeAPI.Controllers
 
 
 
+     
 
-
-        public IActionResult policyList()
+        public IActionResult policyDetailsView()
         {
             return View();
         }
-
-
-
-        public async Task<IActionResult> policyDetails()
+       /* public async Task<IActionResult> policyDetails()
         {
             var enterpriseId1 = "aaaa";
             try
@@ -46,7 +43,43 @@ namespace ConsumeAPI.Controllers
                     string data = await response.Content.ReadAsStringAsync();
                     policies = JsonConvert.DeserializeObject<List<PolicyDetailsModel>>(data);
                 }
-                return View(policies);
+               
+
+                return Json(policies);
+            }
+
+            catch (JsonException ex)
+            {
+
+                Console.WriteLine($"JSON Deserialization failed: {ex.Message}");
+                return StatusCode(500, "Error processing data from the external service.");
+            }
+            catch (Exception ex)
+            {
+                // Handle other types of exceptions
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return StatusCode(500, "An unexpected error occurred.");
+            }
+
+        }*/
+
+        public async Task<IActionResult> GetpolicyMembers()
+        {
+            var enterpriseId = "aaaa";
+            var policyNum = 1;
+            try
+            {
+                List<PolicyMembersModel> policies = new List<PolicyMembersModel>();
+                HttpResponseMessage response = await _httpClient.GetAsync($"{baseAddress}/EnterpriseManagerFB_ManagePolicy/GetPolicyMembers?enterpriseId={enterpriseId}&policyNum={policyNum}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string data = await response.Content.ReadAsStringAsync();
+                    policies = JsonConvert.DeserializeObject<List<PolicyMembersModel>>(data);
+                }
+
+
+                return Json(policies);
             }
 
             catch (JsonException ex)

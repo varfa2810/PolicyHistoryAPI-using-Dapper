@@ -8,7 +8,6 @@ namespace PolicyHistory_API_using_Dapper.Models
         {
         }
 
-        [Required]
         public string StrAgentID {  get; set; }
 
         public string StrAgentNameID { get; set; }

@@ -2,9 +2,9 @@
 
 namespace PolicyHistory_API_using_Dapper.Models
 {
-    public class PolicyMember
+    public class PolicyMembers
     {
-        public PolicyMember()
+        public PolicyMembers()
         {
         }
 

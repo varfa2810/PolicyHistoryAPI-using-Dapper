@@ -20,10 +20,31 @@ namespace PolicyHistory_API_using_Dapper.Repository
         }
 
 
+        public async Task<List<PolicyAgentList>> GetPolicyAgentList()
+        {
+            using(var connection = _context.CreateConnection())
+            {
+                var result = await connection.QueryAsync<PolicyAgentList>("usp_Select_tblFP_Agent_List", commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+        }
+
+        public async Task<List<PlanBrandNameList>> GetPlanBrandList(string enterpriseID)
+        {
+            using (var connection = _context.CreateConnection())
+            {
+                var parameters = new
+                {
+                    StrEnterpriseID = enterpriseID
+                };
+                var result = await connection.QueryAsync<PlanBrandNameList>("usp_Select_tblFB_PlanBrandName_List", parameters, commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+        }
 
 
 
-       public async Task<int> InsertList (PolicyList policylist)
+        public async Task<int> InsertList (PolicyList policylist)
         {
             using(var connection = _context.CreateConnection())
             {
@@ -135,7 +156,7 @@ namespace PolicyHistory_API_using_Dapper.Repository
         }
 
 
-        public async Task<List<PolicyMember>> GetPolicyMembers(string enterpriseID, int policyNum)
+        public async Task<List<PolicyMembers>> GetPolicyMembers(string enterpriseID, int policyNum)
         {
             using(var connection = _context.CreateConnection())
             {
@@ -145,10 +166,19 @@ namespace PolicyHistory_API_using_Dapper.Repository
                     intPolicyNum = policyNum
                 };
 
-                var result = await connection.QueryAsync<PolicyMember>("usp_Select_tblFP_PolicyMember_byEPID", parameters, commandType: CommandType.StoredProcedure);
+                var result = await connection.QueryAsync<PolicyMembers>("usp_Select_tblFP_PolicyMember_byEPID", parameters, commandType: CommandType.StoredProcedure);
                 return result.ToList(); 
             }
         }
+
+        public async Task<int> InsertPolicyMembers(PolicyMemberInsert policymemberinsert)
+        {
+            using(var connection = _context.CreateConnection())
+            {
+                return await connection.ExecuteAsync("usp_Insert_tblFP_PolicyMember", policymemberinsert, commandType:CommandType.StoredProcedure);
+            }
+        }
+
 
 
         public async Task<List<PolicyHistory>> GetHistory(string enterpriseID, int policyNum, int historyID)

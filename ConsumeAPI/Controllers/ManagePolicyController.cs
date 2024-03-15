@@ -4,6 +4,7 @@ using Kendo.Mvc.UI;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Net.NetworkInformation;
+using System.Text;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
@@ -30,30 +31,41 @@ namespace ConsumeAPI.Controllers
         {
             return View();
         }
-       /* public async Task<IActionResult> policyDetails()
+
+        [HttpPost]
+        public ActionResult Create(PolicyDetailsModel emp)
         {
-            var enterpriseId1 = "aaaa";
+            if (ModelState.IsValid)
+            {
+                TempData["emp"] = emp;
+                return Redirect("/ManagePolicy/policyList");
+            }
+            else
+            {
+                return View(emp);
+            }
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetPlanBrandList()
+        {
+            var enterpriseId = "aaaa";
             try
             {
-                List<PolicyDetailsModel> policies = new List<PolicyDetailsModel>();
-                HttpResponseMessage response = await _httpClient.GetAsync($"{baseAddress}/EnterpriseManagerFB_ManagePolicy/GetPolicyDetails?enterpriseId={enterpriseId1}");
+                List<PlanBrandList> policies = new List<PlanBrandList>();
+                HttpResponseMessage response = await _httpClient.GetAsync($"{baseAddress}/EnterpriseManagerFB_ManagePolicy/GetPlanBrand?enterpriseID={enterpriseId}");
 
                 if (response.IsSuccessStatusCode)
                 {
                     string data = await response.Content.ReadAsStringAsync();
-                    policies = JsonConvert.DeserializeObject<List<PolicyDetailsModel>>(data);
+                    policies = JsonConvert.DeserializeObject<List<PlanBrandList>>(data);
                 }
-               
+
 
                 return Json(policies);
             }
 
-            catch (JsonException ex)
-            {
-
-                Console.WriteLine($"JSON Deserialization failed: {ex.Message}");
-                return StatusCode(500, "Error processing data from the external service.");
-            }
             catch (Exception ex)
             {
                 // Handle other types of exceptions
@@ -61,9 +73,40 @@ namespace ConsumeAPI.Controllers
                 return StatusCode(500, "An unexpected error occurred.");
             }
 
-        }*/
+        }
 
-        public async Task<IActionResult> GetpolicyMembers()
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetPolicyAgentList()
+        {
+           
+            try
+            {
+                List<PolicyAgentList> policies = new List<PolicyAgentList>();
+                HttpResponseMessage response = await _httpClient.GetAsync($"{baseAddress}/EnterpriseManagerFB_ManagePolicy/GetPolicyAgent");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string data = await response.Content.ReadAsStringAsync();
+                    policies = JsonConvert.DeserializeObject<List<PolicyAgentList>>(data);
+                }
+
+
+                return Json(policies);
+            }
+
+            catch (Exception ex)
+            {
+                // Handle other types of exceptions
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return StatusCode(500, "An unexpected error occurred.");
+            }
+
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Getpolicymembers()
         {
             var enterpriseId = "aaaa";
             var policyNum = 1;
@@ -82,12 +125,6 @@ namespace ConsumeAPI.Controllers
                 return Json(policies);
             }
 
-            catch (JsonException ex)
-            {
-
-                Console.WriteLine($"JSON Deserialization failed: {ex.Message}");
-                return StatusCode(500, "Error processing data from the external service.");
-            }
             catch (Exception ex)
             {
                 // Handle other types of exceptions
@@ -97,6 +134,34 @@ namespace ConsumeAPI.Controllers
 
         }
 
+
+
+        [HttpPost]
+        public async Task<IActionResult> Insertpolicymember([FromBody] PolicyMemberInsert policymemberinsert)
+        {
+            try
+            {
+               
+                var json = JsonConvert.SerializeObject(policymemberinsert);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await _httpClient.PostAsync($"{baseAddress}/EnterpriseManagerFB_ManagePolicy/InsertPolicyMember", content);
+
+                
+                if (response.IsSuccessStatusCode)
+                {
+                    return Ok("Policy member inserted successfully.");
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, "Failed to insert policy member.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return StatusCode(500, "An unexpected error occurred.");
+            }
+        }
 
 
 

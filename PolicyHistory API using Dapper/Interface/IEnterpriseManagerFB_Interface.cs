@@ -6,7 +6,8 @@ namespace PolicyHistory_API_using_Dapper.Services
     public interface IEnterpriseManagerFB_Interface
     {
 
-
+        Task<List<PolicyAgentList>> GetPolicyAgentList();
+        Task<List<PlanBrandNameList>> GetPlanBrandList(string enterpriseID);
 
         Task<int> InsertList(PolicyList policylist);
         Task<int> UpdateList(string enterpriseID, int policyNum, PolicyList policylist);
@@ -18,7 +19,9 @@ namespace PolicyHistory_API_using_Dapper.Services
         Task<int> InsertPolicyDetails(string enterpriseID,  int policyNum,int planID,DateTime dateOpened,DateTime inceptionDate, DateTime dateClosed, bool tnCAcceptedYN, string lastCapturer, DateTime dateModified);
         Task<List<PolicyDetails>> GetDetails(string enterpriseID);
 
-        Task<List<PolicyMember>> GetPolicyMembers(string enterpriseID, int policyNum);
+        Task<List<PolicyMembers>> GetPolicyMembers(string enterpriseID, int policyNum);
+
+        Task<int> InsertPolicyMembers(PolicyMemberInsert policyMembersinsert);
 
         Task<List<PolicyHistory>> GetHistory(string enterpriseID, int policyNum, int historyID);
 

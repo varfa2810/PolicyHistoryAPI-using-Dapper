@@ -1,10 +1,12 @@
 ﻿
-@model List<PolicyDetailsModel>
+
+@model ConsumeAPI.Models.PolicyDetailsModel
 
 @{
     ViewData["Title"] = "policyDetails";
 }
-@addTagHelper *, Kendo.Mvc
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 
 <!doctype html>
@@ -20,11 +22,17 @@
     <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2022.1.301/styles/kendo.default.min.css">
     <title>Funeralbiz</title>
 
+    
     <style>
-        #ordersGrid th {
-            background-color: ;
-            
-            font-weight:bold;   
+        /* Custom CSS for Kendo DatePicker */
+        .k-datepicker .k-input {
+            height: 40px;
+            line-height: 20px; 
+        }
+
+        .k-dropdown-wrap .k-input {
+            height: 40px;
+            line-height: 40px; 
         }
     </style>
 
@@ -91,29 +99,72 @@
                                     <div class="table-caption-top text-white mb-3">
                                         <h3 class="heading02 text-center">Policies Details</h3>
                                     </div>
-                                    <div class="card card-globel p-4 border-0 mb-4">
+                                 
+                                    <form asp-controller="ManagePolicy" asp-action="policyDetailsView" method="post" id="policyForm">
+                                        <div class="card card-globel p-4 border-0 mb-4">
                                         <div class="row">
                                             <div class="col-xl-3 col-md-6 my-2">
                                                 <div class="form-group">
-                                                    <label class="form-label">Policy Number:*</label>
-                                                    <input type="email" class="form-control" placeholder="">
+
+                                                    <label asp-for="IntPolicyNum" class="form-label">Policy Number:<strong style="color:red">*</strong></label>
+                                                    <input asp-for="IntPolicyNum" class="form-control" placeholder="">
+                                                    <span asp-validation-for="IntPolicyNum" class="text-danger"></span>
                                                 </div>
                                             </div>
                                             <div class="col-xl-3 col-md-6 my-2">
                                                 <div class="form-group">
-                                                    <label class="form-label">Plan Brand Name:*</label>
-                                                    <select class="form-select">
-                                                        <option value="1">Select Plan Brand Name</option>
-                                                    </select>
-                                                </div>
+                                                    <label class="form-label" for="Planbrandname">Plan Brand Name:<strong style="color:red">*</strong></label>
+                                                    <option id="Planbrandname" style="width: 100%;"></option>
+                                                    </div>
+
+                                                    <script>
+                                                        let encode2 = kendo.htmlEncode;
+                                                        $("#Planbrandname").kendoDropDownList({
+                                                            rounded: "large",
+                                                            optionLabel: 'Select Plan Brand',
+                                                            dataTextField: "strPlanBrandName",
+                                                            dataValueField: "strPlanBrandName",
+                                                            footerTemplate: ({ instance }) => `Total <strong>${encode2(instance.dataSource.total())}</strong> items found`,
+                                                            dataSource: {
+                                                                transport: {
+                                                                    read: {
+                                                                        url: "/ManagePolicy/GetPlanBrandList",
+                                                                        dataType: "json",
+                                                                        type: "GET"
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
+
+                                                    </script>
                                             </div>
-                                            <div class="col-xl-3 col-md-6 my-2">
+                                            <div class="col-xl-3 col-md-7 my-2">
                                                 <div class="form-group">
-                                                    <label class="form-label">Agent</label>
-                                                    <select class="form-select">
-                                                        <option value="1">Select Agent</option>
-                                                    </select>
+                                                    <label for="agentDropdown" class="form-label">Agent</label>
+                                                    <option id="agentDropdown" style="width: 100%;"></option>
                                                 </div>
+
+                                                <script>
+                                                    let encode = kendo.htmlEncode;
+                                                   $("#agentDropdown").kendoDropDownList({
+                                                       rounded: "large",
+                                                       optionLabel: 'Select Agent', 
+                                                       dataTextField: "strAgentNameID",
+                                                       dataValueField: "strAgentNameID",
+                                                       footerTemplate: ({ instance }) => `Total <strong>${encode(instance.dataSource.total())}</strong> items found`,
+                                                       dataSource: {
+                                                           transport: {
+                                                               read: {
+                                                                   url: "/ManagePolicy/GetPolicyAgentList",
+                                                                   dataType: "json",
+                                                                   type: "GET"
+                                                               }
+                                                           }
+                                                       }   
+                                                   });
+                                                    
+                                                </script>
+
                                             </div>
                                             <div class="col-xl-3 col-md-6 my-2">
                                                 <div class="form-group">
@@ -121,30 +172,72 @@
                                                     <input type="email" class="form-control" placeholder="">
                                                 </div>
                                             </div>
-                                            <div class="col-xl-3 col-md-6 my-2">
+                                            <div class="col-xl-3 col-md-5 my-2">
                                                 <div class="form-group position-relative">
-                                                    <label class="form-label">Date Opened:*</label>
-                                                    <input type="text" class="form-control filed-datepicker" id="datepicker1">
+                                                    <label  for="datepicker1" class="form-label">Date Opened:<strong style="color:red">*</strong></label>
+                                                    <input  class="form-control" id="datepicker1" style="width: 100%;" />
+                                                    
                                                 </div>
                                             </div>
-                                            <div class="col-xl-3 col-md-6 my-2">
-                                                <div class="form-group">
-                                                    <label class="form-label">Inception Data:*</label>
-                                                    <input type="text" class="form-control filed-datepicker" id="datepicker2">
+                                            <script>
+                                                $(document).ready(function () {
+                                                    $("#datepicker1").kendoDatePicker({
+                                                        animation: false,
+                                                        size: "large",
+                                                        innerWidth: "20px",
+                                                        format: "yyyy-MM-dd",
+                                                        value: new Date(),
+                                                            height: 20
+
+                                                        });
+                                                });
+                                            </script>
+
+                                            <div class="col-xl-3 col-md-5 my-2">
+                                                <div class="form-group position-relative">
+                                                   <label asp-for="DatInceptionDate" for="datepicker2" class="form-label">Inception Date:<strong style="color:red">*</strong></label>
+                                                   <input asp-for="DatInceptionDate"  class="form-control" id="datepicker2" style="width: 100%;" />
+                                                   <span asp-validation-for="DatInceptionDate" class="text-danger"></span>
                                                 </div>
                                             </div>
-                                            <div class="col-xl-3 col-md-6 my-2">
-                                                <div class="form-group">
-                                                    <label class="form-label">Date Closed:</label>
-                                                    <input type="text" class="form-control filed-datepicker" id="datepicker3">
+                                            <script>
+                                                $(document).ready(function () {
+                                                    $("#datepicker2").kendoDatePicker({
+                                                        animation: false,
+                                                        size: "large",
+                                                        format: "yyyy-MM-dd" // Example format, adjust as needed
+
+                                                    });
+                                                });
+                                            </script>
+
+
+                                            <div class="col-xl-3 col-md-5 my-2">
+                                                <div class="form-group position-relative">
+                                                    <label for="datepicker3" class="form-label">Date Closed:<strong style="color:red">*</strong></label>
+                                                    <input class="form-control" id="datepicker3" style="width: 100%;" />
                                                 </div>
                                             </div>
-                                        </div>
+                                            <script>
+                                                $(document).ready(function () {
+                                                    
+                                                    $("#datepicker3").kendoDatePicker({
+                                                        animation: false,
+                                                        size: "large",
+                                                        format: "yyyy-MM-dd"// Example format, adjust as needed
+
+                                                    });
+                                                });
+                                            </script>                                          
+                                        </div>                                     
                                     </div>
+                                    </form>
+
+
                                     <div class="page-header">
                                         <div class="d-lg-flex">
                                             <div class="flex-grow-1">
-                                                <h2 class="heading01 mb-3 mb-lg-0 text-lg-start text-center">Policies Member</h2>
+                                                <h2 class=" font-weight-bold mb-3 mb-lg-0 text-lg-start text-center">Policies Member</h2>
                                             </div>
                                             <div class="col-auto">
                                                 <div class="d-flex flex-column flex-lg-row align-items-center justify-content-center justify-content-lg-end">
@@ -159,112 +252,116 @@
                                                             <li><a href="" class="dropdown-item">Something else here</a></li>
                                                         </ul>
                                                     </div>
-                                                    <div class="d-flex flex-column flex-lg-row align-items-stretch top-search-area ms-lg-4">
+                                                   @*  <div class="d-flex flex-column flex-lg-row align-items-stretch top-search-area ms-lg-4">
                                                         <input type="text" class="form-control" placeholder="Search Policy">
-                                                    </div>
+                                                    </div> *@
+
+                                                    <div id="grid"></div>
+
+
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="table-responsive">
-                                        <table class="table table-striped table-bordered table-main">
-                                            <thead>
-                                                <tr>
-                                                    <th>&nbsp;</th>
-                                                    <th>Member Type</th>
-                                                    <th>ID/Passport No*</th>
-                                                    <th>Member Name</th>
-                                                    <th>Date of Birth</th>
-                                                    <th>Age</th>
-                                                    <th>Premium*</th>
-                                                    <th>Cover*</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <div class="d-flex gap-2">
-                                                            <a href="" class="icon-pencil"><i class="fa fa-pencil-square-o"></i></a>
-                                                            <a href="" class="icon-delete"><i class="fa fa-trash"></i></a>
-                                                        </div>
-                                                    </td>
-                                                    <td>Main Member</td>
-                                                    <td>16027225351081</td>
-                                                    <td>Taylor JT</td>
-                                                    <td>1977-07-23</td>
-                                                    <td>46</td>
-                                                    <td>R70.00</td>
-                                                    <td>R10,000.00</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div class="d-flex gap-2">
-                                                            <a href="" class="icon-pencil"><i class="fa fa-pencil-square-o"></i></a>
-                                                            <a href="" class="icon-delete"><i class="fa fa-trash"></i></a>
-                                                        </div>
-                                                    </td>
-                                                    <td>Spouse Member</td>
-                                                    <td>16027225351081</td>
-                                                    <td>Taylor AM</td>
-                                                    <td>1977-07-23</td>
-                                                    <td>41</td>
-                                                    <td>R0.00</td>
-                                                    <td>R1,000.00</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div class="d-flex gap-2">
-                                                            <a href="" class="icon-pencil"><i class="fa fa-pencil-square-o"></i></a>
-                                                            <a href="" class="icon-delete"><i class="fa fa-trash"></i></a>
-                                                        </div>
-                                                    </td>
-                                                    <td>Child Member</td>
-                                                    <td>16027225351081</td>
-                                                    <td>Taylor BL</td>
-                                                    <td>1977-07-23</td>
-                                                    <td>07</td>
-                                                    <td>R0.00</td>
-                                                    <td>R1,000.00</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div class="d-flex gap-2 text-center">
-                                                            <a href="" class="btn-save">
-                                                                <svg width="18" height="17" viewBox="0 0 18 17" fill="currentcolor">
-                                                                    <path d="M3.89685 3.6C3.89685 4.566 4.68085 5.35 5.64685 5.35H11.6468C12.111 5.35 12.5561 5.16563 12.8843 4.83744C13.2125 4.50925 13.3968 4.06413 13.3968 3.6V0.276001C13.3968 0.124001 13.5208 7.91924e-07 13.6728 7.91924e-07C13.745 -0.000127599 13.8163 0.015357 13.8819 0.0453919C13.9475 0.0754268 14.0058 0.1193 14.0528 0.174001L17.0159 3.629C17.4262 4.10775 17.6406 4.72391 17.6159 5.354L17.2739 14.098C17.2485 14.7434 16.9744 15.3539 16.5089 15.8017C16.0435 16.2495 15.4227 16.4997 14.7768 16.5H14.3978C14.2652 16.5 14.1381 16.4473 14.0443 16.3536C13.9505 16.2598 13.8978 16.1326 13.8978 16V11C13.8978 10.5359 13.7135 10.0908 13.3853 9.76256C13.0571 9.43437 12.612 9.25 12.1479 9.25H5.14785C4.91795 9.24987 4.69028 9.29504 4.47785 9.38293C4.26541 9.47081 4.07237 9.5997 3.90977 9.76221C3.74716 9.92473 3.61816 10.1177 3.53016 10.3301C3.44215 10.5425 3.39685 10.7701 3.39685 11V16C3.39685 16.1326 3.34417 16.2598 3.2504 16.3536C3.15664 16.4473 3.02946 16.5 2.89685 16.5H2.75985C2.17788 16.5001 1.61586 16.288 1.17904 15.9034C0.742215 15.5189 0.460569 14.9883 0.38685 14.411C-0.106936 10.553 -0.128092 6.64914 0.32385 2.786L0.38385 2.266C0.456894 1.64178 0.756658 1.06613 1.2262 0.648391C1.69575 0.230647 2.30237 -9.14573e-05 2.93085 7.91924e-07H3.39685C3.52946 7.91924e-07 3.65664 0.0526793 3.7504 0.146447C3.84417 0.240216 3.89685 0.367393 3.89685 0.500001V3.6Z"
-                                                                          fill="currentcolor" />
-                                                                    <path d="M5.25 16C5.25 16.1326 5.30268 16.2598 5.39645 16.3536C5.49021 16.4473 5.61739 16.5 5.75 16.5H12.25C12.3826 16.5 12.5098 16.4473 12.6036 16.3536C12.6973 16.2598 12.75 16.1326 12.75 16V11C12.75 10.9337 12.7237 10.8701 12.6768 10.8232C12.6299 10.7763 12.5663 10.75 12.5 10.75H5.5C5.4337 10.75 5.37011 10.7763 5.32322 10.8232C5.27634 10.8701 5.25 10.9337 5.25 11V16ZM12.25 0.5C12.25 0.367392 12.1973 0.240215 12.1036 0.146447C12.0098 0.0526785 11.8826 0 11.75 0H6.25C6.11739 0 5.99021 0.0526785 5.89645 0.146447C5.80268 0.240215 5.75 0.367392 5.75 0.5V3.6C5.75 3.738 5.862 3.85 6 3.85H12C12.0663 3.85 12.1299 3.82366 12.1768 3.77678C12.2237 3.72989 12.25 3.6663 12.25 3.6V0.5Z"
-                                                                          fill="currentcolor" />
-                                                                </svg>
-                                                            </a>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="table-select">
-                                                            <select class="form-select">
-                                                                <option value="1">Select Member Type</option>
-                                                            </select>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="table-select">
-                                                            <select class="form-select">
-                                                                <option value="1">Select Member ID/PP</option>
-                                                            </select>
-                                                        </div>
-                                                    </td>
-                                                    <td>&nbsp;</td>
-                                                    <td>&nbsp;</td>
-                                                    <td>&nbsp;</td>
-                                                    <td>&nbsp;</td>
-                                                    <td>&nbsp;</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                  
+
+                                    <div id="ordersGrid" style="margin-top:20px;"></div>
+
+                                    <script>
+                                        $(function () {
+                                            var gridDataSource = new kendo.data.DataSource({
+                                                transport: {
+                                                    read: {
+                                                        url: "/ManagePolicy/Getpolicymembers",
+                                                        datatype: "json",
+                                                        type: "GET"
+                                                    }
+                                                },
+                                                error: function (e) {
+                                                    alert("Status: " + e.status + "; Error message: " + e.errorThrown);
+                                                },
+                                                pageSize: 7,
+                                                batch: true,
+                                                schema: {
+                                                    model: {
+                                                        id: "strEnterpriseID",
+                                                        fields: {
+                                                            intMemberTypeID: { type: "number" },
+                                                            strIDPPNum: { type: "string" },
+                                                            strMemberName: { type: "string" },
+                                                            datBirthDate: { type: "date" },
+                                                            intAgeToday: { type: "number" },
+                                                            monPremiumAmt: { type: "number" },
+                                                            monCoverAmt: { type: "number" },
+                                                            datDateEnrolled: { type: "date" },
+                                                            coverStatus: { type: "string" },
+                                                            strRelationshipToMainMember: { type: "string" },
+                                                            strBeneficiaryNameID: { type: "string" },
+                                                            strBenRelationshipToPolMember: { type: "string" },
+                                                            bitConsentRecvdYN: { type: "boolean" }
+                                                        }
+                                                    }
+                                                }
+                                            });
+
+                                            $("#ordersGrid").kendoGrid({
+                                                editable: "inline",
+                                                toolbar: ["pdf", "excel", "create", "search"],
+                                                pdf: {
+                                                    allPages: true,
+                                                    avoidLinks: true,
+                                                    paperSize: "A4",
+                                                    margin: { top: "2cm", left: "1cm", right: "1cm", bottom: "1cm" },
+                                                    landscape: true,
+                                                    repeatHeaders: true,
+                                                    template: $("#page-template").html(),
+                                                    scale: 0.5
+                                                },
+                                                excel: {
+                                                    fileName: "Kendo UI Grid Export.xlsx",
+                                                    proxyURL: "https://demos.telerik.com/kendo-ui/service/export",
+                                                    filterable: true
+                                                },
+                                                dataSource: gridDataSource,
+                                                height: 300,
+                                                sortable: true,
+                                                filterable: true,
+                                                resizable: true,
+                                                scrollable: true,
+                                                columns: [
+                                                    { field: "intMemberTypeID", title: "Member Type ID", type: "number", width: "200px" },
+                                                    { field: "strIDPPNum", title: "IDPP Number", type: "string", width: "200px" },
+                                                    { field: "strMemberName", title: "Member Name", type: "string", width: "200px" },
+                                                    { field: "datBirthDate", title: "Birth Date", type: "date", format: "{0:dd/MMMM/yyyy}", width: "200px" },
+                                                    { field: "intAgeToday", title: "Age Today", type: "number", width: "200px" },
+                                                    { field: "monPremiumAmt", title: "Premium Amount", type: "number", width: "200px" },
+                                                    { field: "monCoverAmt", title: "Cover Amount", type: "number", width: "200px" },
+                                                    { field: "datDateEnrolled", title: "Date Enrolled", type: "date", format: "{0:dd/MMMM/yyyy}", width: "200px" },
+                                                    { field: "coverStatus", title: "Cover Status", type: "string", width: "200px" },
+                                                    { field: "strRelationshipToMainMember", title: "Relationship Main Member", type: "string", width: "200px" },
+                                                    { field: "strBeneficiaryNameID", title: "Beneficiary Name ID", type: "string", width: "200px" },
+                                                    { field: "strBenRelationshipToPolMember", title: "Beneficiary Relationship", type: "string", width: "200px" },
+                                                    { field: "bitConsentRecvdYN", title: "Consent Received", type: "boolean", width: "200px" },
+                                                    { command: ["edit", "destroy"], title: "&nbsp;", width: "200px", width: "250px" },
+                                                ]
+                                            });
+
+                                            $("#searchInput").on("input", function () {
+                                                var value = $(this).val().toLowerCase();
+                                                $("#ordersGrid").data("kendoGrid").dataSource.filter({
+                                                    logic: "or",
+                                                    filters: [
+                                                        { field: "strMemberName", operator: "contains", value: value }
+                                                    ]
+                                                });
+                                            });
+                                        });
+                                    </script>
+
+
                                     <ul class="pagination justify-content-between">
                                         <li class="page-item ms-auto">
-                                            <a href="#" class="btnNext">
+                                            <a href="#" id="btnNext">
                                                 <span class="me-2">Next</span>
                                                 <svg width="32" height="24" viewBox="0 0 32 24" fill="currentColor"
                                                      xmlns="http://www.w3.org/2000/svg">
@@ -273,8 +370,26 @@
                                                 </svg>
                                             </a>
                                         </li>
+                                        <script>
+                                            document.getElementById('btnNext').addEventListener('click', function (event) {
+                                                var form = document.getElementById('policyForm');
+
+                                               
+                                                if (!form.checkValidity()) {
+                                                    event.preventDefault();
+                                                    event.stopPropagation();
+                                                }
+
+                                                
+                                            });
+                                        </script>
                                     </ul>
+                                    
+
+
                                 </div>
+                             
+
                                 <div class="tab-pane fade" id="Tab-2">
                                     <p>Tab-2</p>
                                     <p>
@@ -401,96 +516,18 @@
         </div>  
     </div>
 
-    <div id="ordersGrid" style="margin-top:20px;"></div>
- 
-    <script>
-        $(function () {
-            // var GetData = @Html.Raw(Json.Serialize(Model));
+    
 
-            var gridDataSource = new kendo.data.DataSource({
-                transport: {
-                    read: {
-                        url: "/ManagePolicy/GetpolicyMembers",
-                        datatype: "json",
-                        type: "GET"
-                    },
-                    create: {
-                        url: "/ManagePolicy/policyDetails",
-                        datatype: "json",
-                        type: "POST"
-                    }
-                },
-                error: function (e) {
-                    alert("Status: " + e.status + "; Error message: " + e.errorThrown);
-                },
-                pageSize: 7,
-                batch: true,
-                schema: {
-                    model: {
-                        id: "strEnterpriseID",
-                        fields: {
-                            intMemberTypeID: { type: "number" },
-                            strIDPPNum: { type: "string" },
-                            strMemberName: { type: "string" },
-                            datBirthDate: { type: "date" },
-                            intAgeToday: { type: "number" },
-                            monPremiumAmt: { type: "number" },
-                            monCoverAmt: { type: "number" },
-                        }
-                    }
-                }
-            });
-
-            console.log(gridDataSource);
-
-            $("#ordersGrid").kendoGrid({
-                editable: "inline",
-                toolbar: ["pdf", "excel", "create"],
-                pdf: {
-                    allPages: true,
-                    avoidLinks: true,
-                    paperSize: "A4",
-                    margin: { top: "2cm", left: "1cm", right: "1cm", bottom: "1cm" },
-                    landscape: true,
-                    repeatHeaders: true,
-                    template: $("#page-template").html(),
-                    scale: 0.5
-                },
-                excel: {
-                    fileName: "Kendo UI Grid Export.xlsx",
-                    proxyURL: "https://demos.telerik.com/kendo-ui/service/export",
-                    filterable: true
-                },
-                dataSource: gridDataSource,
-                height: 300,
-                sortable: true,
-                filterable: true,
-                resizable: true,
-                scrollable: true,
-                columns: [
-                    { field: "intMemberTypeID", title: "Member Type ID", type: "number"},
-                    { field: "strIDPPNum", title: "IDPP Number", type: "string" },
-                    { field: "strMemberName", title: "Member Name", type: "string" },
-                    { field: "datBirthDate", title: "Birth Date", type: "date", format: "{0:dd/MMMM/yyyy}" },
-                    { field: "intAgeToday", title: "Age", type: "number" },
-                    { field: "monPremiumAmt", title: "Premium Amount", type: "number" },
-                    { field: "monCoverAmt", title: "Cover Amount", type: "number" },
-                    { command: ["edit", "destroy"], title: "&nbsp;", width: "250px" },
-                ],
-                editable: "inline",
-            });
-        });
-
-
-
-
-    </script>
     
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
     <script src="https://kendo.cdn.telerik.com/2022.1.301/js/kendo.all.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+
+   @*  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script> *@
+
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/mvc/5.2.3/jquery.validate.unobtrusive.min.js"></script>
 
    
 

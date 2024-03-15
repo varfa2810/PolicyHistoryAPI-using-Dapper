@@ -18,9 +18,41 @@ namespace PolicyHistory_API_using_Dapper.Controllers
         }
 
 
+        [HttpGet("GetPolicyAgent")]
+        public async Task<IActionResult> GetPolicyAgentList()
+        {
+            try
+            {
+                var result = await _repo.GetPolicyAgentList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
 
 
-        
+
+        [HttpGet("GetPlanBrand")]
+        public async Task<IActionResult> GetPlanBrandList(string enterpriseID)
+        {
+            try
+            {
+                var result = await _repo.GetPlanBrandList(enterpriseID);
+                return Ok(result);
+            }
+            
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+
+
         [HttpPost("InsertPolicy")]
         public async Task<IActionResult> CreatePolicy([FromBody] PolicyList policy)
                 {
@@ -147,6 +179,34 @@ namespace PolicyHistory_API_using_Dapper.Controllers
         }
 
 
+        [HttpPost("InsertPolicyMembers")]
+        public async Task<IActionResult> InsertPolicyMembers( [FromBody] PolicyMemberInsert policymemberinsert)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var result = await _repo.InsertPolicyMembers(policymemberinsert);
+                if (result > 0)
+                {
+
+                    return Ok(new { Message = "Member inserted successfully." });
+                }
+                else
+                {
+
+                    return NotFound(new { Message = "No such member found Added Service not found." });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
 
 

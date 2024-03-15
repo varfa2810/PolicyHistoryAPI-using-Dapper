@@ -11,5 +11,15 @@
         public decimal MonPremiumAmt { get; set; }
 
         public decimal MonCoverAmt { get; set; }
+
+
+
+
+        public DateTime DatDateEnrolled { get; set; }
+        public string CoverStatus { get; set; }
+        public string StrRelationshipToMainMember { get; set; }
+        public string StrBeneficiaryNameID { get; set; }
+        public string StrBenRelationshipToPolMember { get; set; }
+        public bool BitConsentRecvdYN { get; set; }
     }
 }

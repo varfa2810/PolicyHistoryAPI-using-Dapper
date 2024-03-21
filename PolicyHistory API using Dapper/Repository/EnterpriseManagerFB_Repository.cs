@@ -42,7 +42,42 @@ namespace PolicyHistory_API_using_Dapper.Repository
             }
         }
 
+        public async Task<List<PolicyDeathList>> GetPolicyDeathList()
+        {
+            using (var connection = _context.CreateConnection())
+            {
+                var result = await connection.QueryAsync<PolicyDeathList>("usp_Select_tblFP_DeathCause_List", commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+        }
 
+        public async Task<List<PolicyMemberTypeList>> GetMemberTypeList()
+        {
+            using (var connection = _context.CreateConnection())
+            {
+                var result = await connection.QueryAsync<PolicyMemberTypeList>("usp_Select_tblFP_MemberType_List", commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+        }
+
+        public async Task<List<PolicyRelationshipList>> GetRelationshipList()
+        {
+            using (var connection = _context.CreateConnection())
+            {
+                var result = await connection.QueryAsync<PolicyRelationshipList>("usp_Select_tblFB_Relationship_List", commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+        }
+
+
+        public async Task<List<PolicyIDPPNumberList>> GetIDPPNumberList()
+        {
+            using (var connection = _context.CreateConnection())
+            {
+                var result = await connection.QueryAsync<PolicyIDPPNumberList>("usp_Select_tblFP_IDPPnumber_List", commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+        }
 
         public async Task<int> InsertList (PolicyList policylist)
         {
@@ -141,6 +176,8 @@ namespace PolicyHistory_API_using_Dapper.Repository
                 return await connection.ExecuteAsync("usp_Insert_tblFP_Policy", parameters, commandType: CommandType.StoredProcedure);
             }
         }
+
+
         public async Task<List<PolicyDetails>> GetDetails(string enterpriseID)
         {
             using(var connection = _context.CreateConnection()) {
@@ -407,7 +444,7 @@ namespace PolicyHistory_API_using_Dapper.Repository
             }
         }
 
-       
+      
     }
 
 }

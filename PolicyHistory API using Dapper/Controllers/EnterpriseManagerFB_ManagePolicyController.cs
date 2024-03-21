@@ -52,6 +52,70 @@ namespace PolicyHistory_API_using_Dapper.Controllers
         }
 
 
+        [HttpGet("GetPolicyDeathList")]
+        public async Task<IActionResult> GetPolicyDeathList()
+        {
+            try
+            {
+                var result = await _repo.GetPolicyDeathList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+
+        [HttpGet("GetMemberTypeList")]
+        public async Task<IActionResult> GetMemberTypeList()
+        {
+            try
+            {
+                var result = await _repo.GetMemberTypeList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        [HttpGet("GetRelationshipList")]
+        public async Task<IActionResult> GetRelationshipList()
+        {
+            try
+            {
+                var result = await _repo.GetRelationshipList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+
+
+        [HttpGet("GetIDPPNumberList")]
+        public async Task<IActionResult> GetIDPPNumberList()
+        {
+            try
+            {
+                var result = await _repo.GetIDPPNumberList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+
 
         [HttpPost("InsertPolicy")]
         public async Task<IActionResult> CreatePolicy([FromBody] PolicyList policy)

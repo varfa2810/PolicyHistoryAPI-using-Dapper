@@ -8,6 +8,12 @@ namespace PolicyHistory_API_using_Dapper.Services
 
         Task<List<PolicyAgentList>> GetPolicyAgentList();
         Task<List<PlanBrandNameList>> GetPlanBrandList(string enterpriseID);
+        Task<List<PolicyDeathList>> GetPolicyDeathList();
+        Task<List<PolicyMemberTypeList>> GetMemberTypeList();
+
+        Task<List<PolicyRelationshipList>> GetRelationshipList();
+        Task<List<PolicyIDPPNumberList>> GetIDPPNumberList();
+
 
         Task<int> InsertList(PolicyList policylist);
         Task<int> UpdateList(string enterpriseID, int policyNum, PolicyList policylist);

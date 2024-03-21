@@ -12,7 +12,9 @@ namespace ConsumeAPI.Models
         [Range(1, 3, ErrorMessage = "Enter a valid Policy Number")]
         public int IntPolicyNum { get; set; }
 
-        public string StrPlanBrandName { get; set; }
+
+        [Required(ErrorMessage = "Select Plan Brand")]
+        public string? StrPlanBrandName { get; set; }
 
         public string StrAgentNameID { get; set; }
 
@@ -25,9 +27,29 @@ namespace ConsumeAPI.Models
         [RegularExpression(@"^\d{4}-\d{2}-\d{2}$", ErrorMessage = "The Inception Date field must be in the format yyyy-MM-dd.")]
         public DateTime DatInceptionDate { get; set; }
 
-        public DateTime DatDateClosed { get; set; }
+
+
+        [Required(ErrorMessage = "The Date closed field is required.")]
+        [DataType(DataType.Date)]
+        [RegularExpression(@"^\d{4}-\d{2}-\d{2}$", ErrorMessage = "The Date close field must be in the format yyyy-MM-dd.")]
+        public DateTime? DatDateClosed { get; set; }
+
 
         public string StrAgentID { get; set; }
+
+
+        public int IntMemberTypeID { get; set; }
+        public string StrMemberType { get; set; }
+
+
+        public int IntRelationshipId { get; set; }
+        public string StrRelationship { get; set; }
+
+
+/*        FOR IDPP NUMBER LIST*/
+        public int IntProfileID { get; set; }
+        public string StrName { get; set; }
+        public string StrIDPPNum { get; set; }
     }
 
 }

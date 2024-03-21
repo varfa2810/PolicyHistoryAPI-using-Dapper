@@ -18,9 +18,9 @@ namespace PolicyHistory_API_using_Dapper.Models
 
         [Required]
         public int IntHistoryID { get; set; }
-
-   
         public int IntPolStatusID { get; set; }
+        public string StrPolicyStatus { get; set; }  
+       
         public DateTime DatStartDate { get; set; }
         public DateTime DatEndDate { get; set; }
         public string StrStartDescr { get; set; }

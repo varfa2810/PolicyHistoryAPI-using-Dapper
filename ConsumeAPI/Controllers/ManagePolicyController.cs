@@ -4,7 +4,9 @@ using Kendo.Mvc.UI;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Newtonsoft.Json;
+using System.Net;
 using System.Net.NetworkInformation;
+using System.Reflection;
 using System.Text;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -44,27 +46,53 @@ namespace ConsumeAPI.Controllers
             return View();
         }
 
+
+
         [HttpPost]
         public async Task<IActionResult> CreatePolicyMember(PolicyMemberInsert model)
         {
             if (!ModelState.IsValid)
             {
-              
-                return BadRequest(ModelState);
+                var errors = ModelState.Values
+               .SelectMany(v => v.Errors)
+               .Select(e => e.ErrorMessage);
+                return Json(new { success = false, errors = errors });
             }
+
+            PolicyMemberInsert policyMember = new PolicyMemberInsert()
+            {
+                strEnterpriseID = "aaaa",
+                intPolicyNum = 1,
+                intProfileID = model.intProfileID,
+                intMemberTypeID = model.intMemberTypeID,
+                monPremiumAmt = 0,
+                monCoverAmt = model.monCoverAmt,
+                intRelationshipID = model.intRelationshipID,
+                intAgeToday = model.intAgeToday,
+                datDateEnrolled = model.datDateEnrolled,
+                intBenProfileID = model.intBenProfileID,
+                bitConsentRecvdYN = model.bitConsentRecvdYN,
+                intBenRelationshipID = model.intBenRelationshipID
+            };
 
             try
             {
-                HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"{baseAddress}/EnterpriseManagerFB_ManagePolicy/InsertPolicyMembers", model);
+                string data = JsonConvert.SerializeObject(policyMember);
+                StringContent content = new StringContent(data, Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = await _httpClient.PostAsync($"{baseAddress}/EnterpriseManagerFB_ManagePolicy/InsertPolicyMembers", content);
 
                 if (response.IsSuccessStatusCode)
                 {
-                   
+                    string data_list = response.Content.ReadAsStringAsync().Result;
+                    var MemberBasic = JsonConvert.DeserializeObject<PolicyMemberInsert>(data_list);
+
+
+                    return Json(MemberBasic);
                     return Ok("Policy member created successfully");
                 }
                 else
                 {
-                    
                     return StatusCode((int)response.StatusCode, $"An error occurred: {response.ReasonPhrase}");
                 }
             }
@@ -73,6 +101,48 @@ namespace ConsumeAPI.Controllers
                 return StatusCode(500, $"An error occurred: {ex.Message}");
             }
         }
+
+
+
+        //[HttpPost]
+        //public async Task<IActionResult> CreatePolicyMember([FromBody] PolicyMemberInsert model)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        var errors = ModelState.Values
+        //                       .SelectMany(v => v.Errors)
+        //                       .Select(e => e.ErrorMessage);
+        //        return BadRequest(new { success = false, errors = errors });
+        //    }
+
+        //    try
+        //    {
+        //        HttpResponseMessage response = await _httpClient.PostAsJsonAsync($"{baseAddress}/EnterpriseManagerFB_ManagePolicy/InsertPolicyMembers", model);
+
+        //        if (response.IsSuccessStatusCode)
+        //        {
+        //            // Data posted successfully
+        //            return Ok(new { success = true, message = "Data posted successfully" });
+        //        }
+        //        else
+        //        {
+        //            // API call failed
+        //            string errorMessage = await response.Content.ReadAsStringAsync();
+        //            return StatusCode((int)response.StatusCode, new { success = false, message = errorMessage });
+        //        }
+        //    }
+        //    catch (HttpRequestException ex)
+        //    {
+        //        // HTTP request failed
+        //        return StatusCode(500, new { success = false, message = "HTTP request failed", error = ex.Message });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Other exceptions
+        //        return StatusCode(500, new { success = false, message = "An error occurred", error = ex.Message });
+        //    }
+        //}
+
 
 
         [HttpGet]
@@ -253,22 +323,39 @@ namespace ConsumeAPI.Controllers
         }
 
 
-        [HttpPost]
-        public ActionResult Create(PolicyDetailsModel emp)
+
+       [HttpGet]
+        public async Task<IActionResult> GetAddOnDescriptionList()
         {
-            if (ModelState.IsValid)
+
+            try
             {
-                TempData["emp"] = emp;
-                return Redirect("/ManagePolicy/policyList");
+                List<PolicyValueAddedService> Addondescriptionlist = new List<PolicyValueAddedService>();
+                HttpResponseMessage response = await _httpClient.GetAsync($"{baseAddress}/EnterpriseManagerFB_ManagePolicy/GetAddOnDescriptionList");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string data = await response.Content.ReadAsStringAsync();
+                    Addondescriptionlist = JsonConvert.DeserializeObject<List<PolicyValueAddedService>>(data);
+                }
+
+
+                return Json(Addondescriptionlist);
             }
-            else
+
+            catch (Exception ex)
             {
-                return View(emp);
+
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return StatusCode(500, "An unexpected error occurred.");
             }
+
         }
 
 
-        
+
+
+
 
         [HttpGet]
         public async Task<IActionResult> Getpolicymembers()
@@ -369,34 +456,147 @@ namespace ConsumeAPI.Controllers
 
 
 
-        [HttpGet]
-        public async Task<IActionResult> Getclaims()
+
+        [HttpPost]
+        public async Task<IActionResult> CreateValueAddedService()
         {
-            
-            try
+            if (!ModelState.IsValid)
             {
-                List<PolicyClaim> policies2 = new List<PolicyClaim>();
-                HttpResponseMessage response = await _httpClient.GetAsync($"{baseAddress}/EnterpriseManagerFB_ManagePolicy/GetPolicyDeathList");
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage);
+                return Json(new { success = false, errors = errors });
+            }
 
-                if (response.IsSuccessStatusCode)
+            using (StreamReader reader = new StreamReader(Request.Body))
+            {
+                string body = await reader.ReadToEndAsync();
+
+                Console.WriteLine($"Request body: {body}");
+
+                if (!string.IsNullOrEmpty(body))
                 {
-                    string data = await response.Content.ReadAsStringAsync();
-                    policies2 = JsonConvert.DeserializeObject<List<PolicyClaim>>(data);
+                    try
+                    {
+                        PolicyValueAddedServiceInsert obj = JsonConvert.DeserializeObject<PolicyValueAddedServiceInsert>(body);
+                        PolicyValueAddedServiceInsert policyValueAddedService = new PolicyValueAddedServiceInsert()
+                        {
+                            strEnterpriseID = "aaaa",
+                            intPolicyNum = 1,
+                            intAddOnID = 3,
+                            intAddOnQty = obj.intAddOnQty,
+                            monAddOnPrice = obj.monAddOnPrice,
+                            datStartDate = obj.datStartDate,
+                            datEndDate = obj.datEndDate,
+                            intAOStatusID = 1,
+                            strLastCapturer = "hello from here",
+                            datDateModified = DateTime.Now
+                        };
+                        string jsonData = JsonConvert.SerializeObject(policyValueAddedService);
+                        StringContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+                        HttpResponseMessage response = await _httpClient.PostAsync($"{baseAddress}/EnterpriseManagerFB_ManagePolicy/InsertValueAddedService", content);
+
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string data1 = await response.Content.ReadAsStringAsync();
+                            var createdRecord = JsonConvert.DeserializeObject<PolicyValueAddedServiceInsert>(data1);
+                            return Json(createdRecord);
+                        }
+                        else
+                        {
+                            // Return an appropriate error response if the request fails
+                            return StatusCode((int)response.StatusCode, $"An error occurred: {response.ReasonPhrase}");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Return an appropriate error response if an exception occurs
+                        return StatusCode(500, $"An error occurred: {ex.Message}");
+                    }
                 }
-
-
-                return Json(policies2);
             }
 
-            catch (Exception ex)
-            {
-
-                Console.WriteLine($"An error occurred: {ex.Message}");
-                return StatusCode(500, "An unexpected error occurred.");
-            }
-
+            // Return a default response if none of the conditional blocks are executed
+            return StatusCode(500, "An unexpected error occurred.");
         }
 
 
-    }
-}
+
+        //[HttpPost]
+        //public async Task<IActionResult> CreateValueAddedService([FromBody] PolicyValueAddedServiceInsert model)
+        //{
+        //    try
+        //    {
+        //        // You can access the properties of 'model' directly here
+        //        model.strEnterpriseID = "aaaa";
+        //        model.intPolicyNum = 1;
+        //        model.intAOStatusID = 1;
+                
+        //        model.strLastCapturer = "hello from here";
+        //        model.datDateModified = DateTime.Now;
+
+                
+        //        string jsonData = JsonConvert.SerializeObject(model);
+
+
+        //        StringContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+        //        HttpResponseMessage response = await _httpClient.PostAsync($"{baseAddress}/EnterpriseManagerFB_ManagePolicy/InsertValueAddedService", content);
+
+        //        if (response.IsSuccessStatusCode)
+        //        {
+        //            string data1 = await response.Content.ReadAsStringAsync();
+        //            var createdRecord = JsonConvert.DeserializeObject<PolicyValueAddedServiceInsert>(data1);
+        //            return Json(createdRecord);
+        //        }
+        //        else
+        //        {
+        //            // Return an appropriate error response if the request fails
+        //            return StatusCode((int)response.StatusCode, $"An error occurred: {response.ReasonPhrase}");
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Return an appropriate error response if an exception occurs
+        //        return StatusCode(500, $"An error occurred: {ex.Message}");
+        //    }
+        //}
+
+
+
+
+
+
+
+
+        [HttpGet]
+                public async Task<IActionResult> Getclaims()
+                {
+
+                    try
+                    {
+                        List<PolicyClaim> policies2 = new List<PolicyClaim>();
+                        HttpResponseMessage response = await _httpClient.GetAsync($"{baseAddress}/EnterpriseManagerFB_ManagePolicy/GetPolicyDeathList");
+
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string data = await response.Content.ReadAsStringAsync();
+                            policies2 = JsonConvert.DeserializeObject<List<PolicyClaim>>(data);
+                        }
+
+
+                        return Json(policies2);
+                    }
+
+                    catch (Exception ex)
+                    {
+
+                        Console.WriteLine($"An error occurred: {ex.Message}");
+                        return StatusCode(500, "An unexpected error occurred.");
+                    }
+
+                }
+
+
+            }
+        }
+

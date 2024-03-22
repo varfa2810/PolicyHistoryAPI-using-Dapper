@@ -116,6 +116,21 @@ namespace PolicyHistory_API_using_Dapper.Controllers
         }
 
 
+        [HttpGet("GetAddOnDescriptionList")]
+        public async Task<IActionResult> GetAddOnDescriptionList()
+        {
+            try
+            {
+                var result = await _repo.GetAddOnDescriptionList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
 
         [HttpPost("InsertPolicy")]
         public async Task<IActionResult> CreatePolicy([FromBody] PolicyList policy)
@@ -332,8 +347,8 @@ namespace PolicyHistory_API_using_Dapper.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> InsertValueAddedService(PolicyValueAddedService policyValueAddedService) 
+        [HttpPost("InsertValueAddedService")]
+        public async Task<IActionResult> InsertValueAddedService( [FromBody] PolicyValueAddedServiceInsert policyValueAddedService) 
         {
             try
             {
@@ -357,11 +372,11 @@ namespace PolicyHistory_API_using_Dapper.Controllers
         }
 
         [HttpGet("GetValueAddedService")]
-        public async Task<IActionResult> GetValueAddedService(string enterpriseID, int policyNum, int AddOnID)
+        public async Task<IActionResult> GetValueAddedService(string enterpriseID, int policyNum)
         {
             try
             {
-                var result = await _repo.GetValueAddedService(enterpriseID, policyNum, AddOnID);
+                var result = await _repo.GetValueAddedService(enterpriseID, policyNum);
                 return Ok(result);  
             }
             catch(Exception e)

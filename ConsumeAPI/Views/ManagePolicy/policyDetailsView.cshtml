@@ -88,9 +88,15 @@
            
             overflow-y: scroll !important;
         }
-           
- 
 
+        .k-list-filter {
+            width: 150px; /* Adjust the width as needed */
+        }
+
+        .k-list {
+            max-height: 200px; 
+            overflow-y: auto;
+        }
     </style>
    
 </head>
@@ -328,6 +334,7 @@
 
 
                                     <div id="policydetails" style="margin-top:20px;"></div>
+                                    <div id="aggregateResults">Total Count: <span id="totalCount"></span></div>
 
                                     <script>
                                         $(function () {
@@ -339,10 +346,10 @@
                                                         type: "GET"
                                                     },
                                                     create: {
-                                                        url: "/ManagePolicy/CreatePolicyMember",
-                                                        dataType: "json", 
+                                                        url: "/ManagePolicy/CreatePolicyMember",    
                                                         type: "POST" ,
-                                                        contentType: "application/json"
+                                                        contentType: "application/json",
+                                                        dataType: "json"
                                                     }
                                                 },
                                                 pageSize: 7,
@@ -363,6 +370,7 @@
                                                             strRelationshipToMainMember: { type: "string" },
                                                             strBeneficiaryNameID: { type: "string" },
                                                             strBenRelationshipToPolMember: { type: "string" },
+                                                            intBenRelationshipID: {type: "number"},
                                                             bitConsentRecvdYN: { type: "boolean" },
                                                             intRelationshipId: { type: "number" },
                                                             strRelationship: { type: "string" },
@@ -376,6 +384,9 @@
                                                 }
                                             });
 
+                                           
+
+
                                            var grid =  $("#policydetails").kendoGrid({
                                                 dataSource: gridDataSource,
                                                 height: 300,
@@ -383,6 +394,8 @@
                                                 filterable: true,
                                                 editable: "inline",
                                                 scrollable: true,
+                                               
+                                                aggregate: [{ field: "intAgeToday", aggregate: "count" }],
                                                 columns: [
                                                     {
                                                         command: [
@@ -447,37 +460,36 @@
 
 
 
-                                                    { field: "strIDPPNum", title: "IDPP Number", type: "string", width: "300px" 
-                                                        // editor: function (container, options) {
+                                                    { field: "strIDPPNum", title: "IDPP Number", type: "string", width: "400px" ,
+                                                        editor: function (container, options) {
                                                            
-                                                        //     $('<input data-bind="value:' + options.field + '"/>')
-                                                        //         .appendTo(container)
-                                                        //         .kendoDropDownList({
-                                                        //             rounded: "large",
-                                                        //             optionLabel: 'Select Relationship Type',
-                                                        //             dataTextField: "strName",
-                                                        //             dataValueField: "intProfileID",
-                                                        //             template: '<span>#: data.strName # - #: data.strIDPPNum #</span>',
-                                                                    
-                                                        //             dataSource: {
-                                                        //                 transport: {
-                                                        //                     read: {
-                                                        //                         url: "/ManagePolicy/GetIDPPNumberList",
-                                                        //                         dataType: "json"
-                                                        //                     }
-                                                        //                 },
-                                                        //                 pageSize: 10,
-                                                        //                 serverPaging: true,
-                                                        //                 serverFiltering: true
-                                                        //             }
+                                                            $('<input data-bind="value:' + options.field + '"/>')
+                                                                .appendTo(container)
+                                                                .kendoDropDownList({
+                                                                    rounded: "large",
+                                                                    optionLabel: 'Select Relationship Type',
+                                                                    dataTextField: "strIDPPNum",
+                                                                    dataValueField: "intProfileID",
+                                                                    template: '<span>#: data.strName # - #: data.strIDPPNum #</span>',
+                                                                    filter: "contains",                                                     
+                                                                    dataSource: {
+                                                                        transport: {
+                                                                            read: {
+                                                                                url: "/ManagePolicy/GetIDPPNumberList",
+                                                                                dataType: "json"
+                                                                            }
+                                                                        },
+                                                                        pageSize: 1000,
+                                                                        
+                                                                    }
 
 
-                                                        //         });
-                                                        // }
+                                                                });
+                                                        }
                                                     },
                                                     { field: "strMemberName", title: "Member Name", type: "string", width: "200px", editable: false },
                                                     { field: "datBirthDate", title: "Birth Date", type: "date", format: "{0:dd-MMMM-yyyy}", width: "200px", editable: false },
-                                                    { field: "intAgeToday", title: "Age Today", type: "number", width: "200px", editable: false },
+                                                    { field: "intAgeToday", title: "Age Today", type: "number", width: "200px", editable: false, aggregates: ["sum"], groupHeaderColumnTemplate: "Sum: #=sum#" },
                                                     { field: "monPremiumAmt", title: "Premium Amount", type: "number", width: "200px" },
                                                     { field: "monCoverAmt", title: "Cover Amount", type: "number", width: "200px" },
                                                     { field: "datDateEnrolled", title: "Date Enrolled", type: "date", format: "{0:dd-MMMM-yyyy}", width: "200px" },
@@ -516,7 +528,33 @@
 
 
                                                     
-                                                    { field: "strBeneficiaryNameID", title: "Beneficiary Name ID", type: "string", width: "200px" },
+                                                    { field: "strBeneficiaryNameID", title: "Beneficiary Name ID", type: "string", width: "270px",
+                                                       editor: function(container, options) {
+
+                                                            $('<input data-bind="value:' + options.field + '"/>')
+                                                                .appendTo(container)
+                                                                .kendoDropDownList({
+                                                                    rounded: "large",
+                                                                    optionLabel: 'Select Beneficiary',
+                                                                    dataTextField: "strName",
+                                                                    dataValueField: "intProfileID",
+                                                                    filter: "contains",
+                                                                    dataSource: {
+                                                                        transport: {
+                                                                            read: {
+                                                                                url: "/ManagePolicy/GetIDPPNumberList",
+                                                                                dataType: "json"
+                                                                            }
+                                                                        },
+                                                                        pageSize: 1000,
+
+                                                                    }
+
+
+                                                                });
+                                                        }
+                                                    
+                                                    },
 
 
                                                     { field: "strBenRelationshipToPolMember", title: "Beneficiary Relationship", type: "string", width: "280px" ,
@@ -528,7 +566,7 @@
                                                                     rounded: "large",
                                                                     optionLabel: 'Select Benf. Relationship Type',
                                                                     dataTextField: "strRelationship",
-                                                                    dataValueField: "intRelationshipId",
+                                                                    dataValueField: "intBenRelationshipID",
                                                                     footerTemplate: ({ instance }) => `Total <strong>${encode(instance.dataSource.total())}</strong> items found`,
                                                                     dataSource: {
                                                                         transport: {
@@ -542,8 +580,9 @@
                                                                    
                                                                 });
                                                         }
-                                                    },
+                                                    }
                                                 ],
+                                                
                                                 toolbar: [
                                                     {
                                                         name: "create",
@@ -552,11 +591,14 @@
                                                 ],
                                                 save: function (e) {
                                                     if (e.model.isNew()) {
-                                                        gridDataSource.sync(); 
+                                                        gridDataSource.sync().then(function () {
+                                                            console.log("New record data:", e.model.toJSON());
+                                                        });
                                                     }
                                                 }
                                             }).data("kendoGrid")
 
+                                           
 
                                             $("#searchInput").on("input", function () {
                                                 var value = $(this).val().toLowerCase();
@@ -571,7 +613,7 @@
                                     </script>
 
 
-
+                                 
 
 
                                    @*  <ul class="pagination justify-content-between">
@@ -595,7 +637,7 @@
                                         </div>
                                     </div>
 
-                                    <script>
+                                   @*  <script>
                                         $(document).ready(function () {
                                             $('#submitButton').click(function (e) {
                                                 e.preventDefault(); 
@@ -613,7 +655,7 @@
                                                 }
                                             });
                                         });
-                                    </script>
+                                    </script> *@
                                   
 
                                 </div>

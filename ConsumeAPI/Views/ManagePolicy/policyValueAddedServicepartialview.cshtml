@@ -19,16 +19,34 @@
                         url: "/ManagePolicy/Getpolicyvalueaddedservice",
                         datatype: "json",
                         type: "GET"
+                    },
+                    create: {
+
+                        url: "/ManagePolicy/CreateValueAddedService",
+                        type: "POST",
+                        contentType: "application/json",
+                        dataType: "json"
                     }
                 },
+              
+
                 pageSize: 7,
                 schema: {
                     model: {
+                        id: "intAddOnID",
                         fields: {
+                           
+                            intAddOnID: {type : "number"},
                             strAddOnDescription: { type: "string" },
                             monAddOnPrice: { type: "number" },
-                            intAddOnQty: { type: "number" },
-                            monLineTotal: { type: "number" },
+                            intAddOnQty: {
+                                type: "number", validation: {
+                                    required: {
+                                        message: "Custom required validation message"
+                                    }
+                                }
+                            },
+                            monLineTotal: { type: "number", editable: false },
                             datStartDate: { type: "date" },
                             datEndDate: { type: "date" },
                             strAddOnStatus: { type: "string" }
@@ -42,31 +60,78 @@
                 height: 300,
                 sortable: true,
                 filterable: true,
+                editable: "inline",
                 columns: [
                     {
                         command: [
                             {
                                 name: "edit",
-                                template: '<a class="k-grid-edit"><span class="k-icon k-i-edit" mr-3></span></a>'
+                                template: "<a class='icon-pencil k-button-icontext k-grid-edit fa-lg' ><i class='fa fa-pencil-square-o '></i></a>",
+                                iconClass: { update: "fa fa-save fa-xl", cancel: "fa fa-close fa-lg" },
                             },
                             {
                                 name: "destroy",
-                                template: '<a class="k-grid-delete"><span class="k-icon k-i-delete" ml-3></span></a>'
+                                template: "<a class='icon-delete k-button-icontext k-grid-delete fa-lg'><i class='fa fa-trash'></i></a>"
                             }
                         ],
+
                         title: "&nbsp;",
-                        width: "100px"
+                        width: "150px"
                     },
-                    { field: "strAddOnDescription", title: "Description" },
+                    {
+                        field: "strAddOnDescription",
+                        title: "Description",
+                        type : "string",
+                        width : "270px",
+                        template: "#= strAddOnDescription #",
+                        editor: function (container, options) {
+                            let encode = kendo.htmlEncode;
+                            $('<input data-bind="value:' + options.field + '"/>')
+                                .appendTo(container)
+                                .kendoDropDownList({
+                                    rounded: "large",
+                                    optionLabel: 'Select Description Type',
+                                    dataTextField: "strAddOnDescription", 
+                                    dataValueField: "intAddOnID", 
+                                    footerTemplate: ({ instance }) => `Total <strong>${encode(instance.dataSource.total())}</strong> items found`,
+                                    dataSource: {
+                                        transport: {
+                                            read: {
+                                                url: "/ManagePolicy/GetAddOnDescriptionList",
+                                                dataType: "json"
+                                            }
+                                        }
+                                    }
+                                });
+                        }
+                    },
+
                     { field: "monAddOnPrice", title: "Price", format: "{0:c}" },
                     { field: "intAddOnQty", title: "Quantity" },
                     { field: "monLineTotal", title: "Line Total", format: "{0:c}" },
-                    { field: "datStartDate", title: "Start Date", format: "{0:dd/MM/yyyy}" },
-                    { field: "datEndDate", title: "End Date", format: "{0:dd/MM/yyyy}" },
-                    { field: "strAddOnStatus", title: "Status" }
+                    { field: "datStartDate", title: "Start Date", format: "{0:dd/MM/yyyy}", width:"200px" },
+                    { field: "datEndDate", title: "End Date", format: "{0:dd/MM/yyyy}", width: "200px"  },
+                    { field: "strAddOnStatus", title: "Status", width: "160px" }
 
-                ]
+                ],
+                toolbar: [
+                    {
+                        name: "create",
+                        template: "<a class='k-button k-button-icontext k-grid-add' style='background-color: darkorange;'><i class='fa fa-plus'></i>Add New Record</a>"
+                    }
+                ],
+
+                save: function (e) {
+                    if (e.model.isNew()) {
+                        gridDataSource2.sync().then(function () {
+                            console.log("New record data:", e.model.toJSON());
+                        });
+                    }
+                }
+
             });
+
+
         });
     </script>
 

@@ -79,6 +79,17 @@ namespace PolicyHistory_API_using_Dapper.Repository
             }
         }
 
+
+        public async Task<List<PolicyAddOnDescriptionList>> GetAddOnDescriptionList()
+        {
+            using (var connection = _context.CreateConnection())
+            {
+                var result = await connection.QueryAsync<PolicyAddOnDescriptionList>("usp_Select_tblFP_AddoOnDescription_List", commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+        }
+
+
         public async Task<int> InsertList (PolicyList policylist)
         {
             using(var connection = _context.CreateConnection())
@@ -278,24 +289,24 @@ namespace PolicyHistory_API_using_Dapper.Repository
             }
         }
 
-        public async Task<int> InsertValueAddedService(PolicyValueAddedService policyValueAddedService)
+        public async Task<int> InsertValueAddedService(PolicyValueAddedServiceInsert policyValueAddedService)
         {
             using( var connection = _context.CreateConnection())
             {
                 return await connection.ExecuteAsync("usp_Insert_tblFP_PolicyAddOn", policyValueAddedService, commandType: CommandType.StoredProcedure);
             }
         }
-        public async Task<List<PolicyValueAddedService>> GetValueAddedService(string enterpriseID, int policyNum, int AddOnID){
+        public async Task<List<PolicyValueAddedService>> GetValueAddedService(string enterpriseID, int policyNum){
 
             using(var connection = _context.CreateConnection()) {
 
                 var parameters = new
                 {
-                    StrEnterpriseID = enterpriseID, IntPolicyNum = policyNum, IntAddOnId = AddOnID
+                    StrEnterpriseID = enterpriseID, IntPolicyNum = policyNum
 
                 };
 
-                var result = await connection.QueryAsync<PolicyValueAddedService>("usp_Select_tblFP_PolicyAddOn_byEPAID", parameters, commandType: CommandType.StoredProcedure);
+                var result = await connection.QueryAsync<PolicyValueAddedService>("usp_Select_tblFP_PolicyAddOn_byEPID", parameters, commandType: CommandType.StoredProcedure);
                 return result.ToList();
 
             

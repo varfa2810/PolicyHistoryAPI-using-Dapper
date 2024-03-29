@@ -97,6 +97,10 @@
             max-height: 200px; 
             overflow-y: auto;
         }
+
+        .errormessage {
+            border: 1px solid red; /* Example border color */
+        }
     </style>
    
 </head>
@@ -334,7 +338,7 @@
 
 
                                     <div id="policydetails" style="margin-top:20px;"></div>
-                                    <div id="aggregateResults">Total Count: <span id="totalCount"></span></div>
+                                  
 
                                     <script>
                                         $(function () {
@@ -360,11 +364,11 @@
                                                             intMemberTypeID: { type: "number" },
                                                             strMemberType: { type: "string" },
                                                             strIDPPNum: { type: "string" },
-                                                            strMemberName: { type: "string", editable: false, nullable: true },
-                                                            datBirthDate: { type: "date", editable: false, nullable: true },
-                                                            intAgeToday: { type: "number", editable: false, nullable: true },
-                                                            monPremiumAmt: { type: "number", editable: false, nullable: true },
-                                                            monCoverAmt: { type: "number" },
+                                                            strMemberName: { type: "string",/*  editable: false, nullable: true */ },
+                                                            datBirthDate: { type: "date", /* editable: false, nullable: true */ },
+                                                            intAge_Calc: { type: "number", /* editable: false, nullable: true */ },
+                                                            monPremiumAmt: { type: "number", /* editable: false, nullable: true */ },
+                                                            monCoverAmt: { type: "number", /* editable: false, nullable: true  */},
                                                             datDateEnrolled: { type: "date" },
                                                             coverStatus: { type: "string", editable: false, nullable: true },
                                                             strRelationshipToMainMember: { type: "string" },
@@ -422,6 +426,7 @@
                                                         editor: function(container, options) {
                                                             let encode = kendo.htmlEncode;
                                                             $('<input data-bind="value:' + options.field + '"/>')
+                                                                .attr('id', 'strMemberType')
                                                                 .appendTo(container)
                                                                 .kendoDropDownList({
                                                                     rounded: "large",
@@ -436,6 +441,10 @@
                                                                                 dataType: "json"
                                                                             }
                                                                         }
+                                                                    },
+                                                                    change: function () {
+                                                                        // Call the function to fetch corresponding data based on the selected value
+                                                                        fetchDataAndUpdateOtherFields();
                                                                     }
                                                                 });
                                                         }
@@ -464,6 +473,7 @@
                                                         editor: function (container, options) {
                                                            
                                                             $('<input data-bind="value:' + options.field + '"/>')
+                                                                .attr('id', 'strIDPPNum')
                                                                 .appendTo(container)
                                                                 .kendoDropDownList({
                                                                     rounded: "large",
@@ -481,6 +491,10 @@
                                                                         },
                                                                         pageSize: 1000,
                                                                         
+                                                                    },
+                                                                    change: function () {
+                                                                       
+                                                                        fetchDataAndUpdateOtherFields();
                                                                     }
 
 
@@ -489,7 +503,7 @@
                                                     },
                                                     { field: "strMemberName", title: "Member Name", type: "string", width: "200px", editable: false },
                                                     { field: "datBirthDate", title: "Birth Date", type: "date", format: "{0:dd-MMMM-yyyy}", width: "200px", editable: false },
-                                                    { field: "intAgeToday", title: "Age Today", type: "number", width: "200px", editable: false, aggregates: ["sum"], groupHeaderColumnTemplate: "Sum: #=sum#" },
+                                                    { field: "intAge_Calc", title: "Age", type: "number", width: "200px", editable: false },
                                                     { field: "monPremiumAmt", title: "Premium Amount", type: "number", width: "200px" },
                                                     { field: "monCoverAmt", title: "Cover Amount", type: "number", width: "200px" },
                                                     { field: "datDateEnrolled", title: "Date Enrolled", type: "date", format: "{0:dd-MMMM-yyyy}", width: "200px" },
@@ -610,13 +624,64 @@
                                                 });
                                             });
                                         });
+
+                                        $(document).ready(function () {
+                                            $("#strMemberType, #strIDPPNum").change(fetchDataAndUpdateOtherFields);
+                                        });
+
+                                        function fetchDataAndUpdateOtherFields() {
+                                            var selectedMemberTypeID = $("#strMemberType").val();
+                                            var selectedProfileID = $("#strIDPPNum").val();
+
+                                            console.log(selectedMemberTypeID);
+                                            console.log(selectedProfileID);
+
+                                            if (selectedMemberTypeID !== null && selectedProfileID !== null) {
+                                                $.ajax({
+                                                    url: "/ManagePolicy/GetCorrespondingData",
+                                                    type: "GET",
+                                                    data: { memberTypeID: selectedMemberTypeID, profileID: selectedProfileID },
+                                                    dataType: "json",
+                                                    success: function (data) {
+                                                        console.log("Received data:", data);
+
+                                                        var grid = $("#grid").data("kendoGrid");
+                                                        if (grid) {
+                                                            grid.dataSource.data(data);
+                                                            var rowData = data[0];
+                                                            grid.editRow(grid.tbody.find(">tr:first"));
+                                                            grid.tbody.find("input[name='strMemberName']").val(rowData.fullName);
+                                                            grid.tbody.find("input[name='datBirthDate']").val(rowData.birthDate);
+                                                            grid.tbody.find("input[name='intAgeToday']").val(rowData.age);
+                                                            grid.tbody.find("input[name='monPremiumAmt']").val(rowData.monPremiumAmtMU);
+                                                            grid.tbody.find("input[name='monCoverAmt']").val(rowData.monCoverAmtMU);
+                                                            grid.closeCell();
+                                                        } else {
+                                                            console.error("Grid not found or initialized.");
+                                                        }
+                                                    },
+                                                    error: function (xhr, status, error) {
+                                                        console.error("Error fetching data:", error);
+                                                    }
+                                                });
+                                            } else {
+                                                console.error("Selected member type ID or profile ID is empty.");
+                                            }
+                                        }
+
+
+
+
+
+
+
                                     </script>
 
 
                                  
 
 
-                                   @*  <ul class="pagination justify-content-between">
+                                    <ul class="pagination justify-content-between">
                                         <li class="page-item ms-auto">
                                             <a href="#" class="btnNext">
                                                 <span class="me-2">Next</span>
@@ -627,15 +692,15 @@
                                                 </svg>
                                             </a>
                                         </li>
-                                    </ul> *@
+                                    </ul>
 
-                                    <div class="container">
+                                 @*    <div class="container">
                                         <div class="row justify-content-end">
                                             <div class="col-auto">
                                                 <button type="button" class="btn btn-primary btnNext" id="submitButton">NEXT</button>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> *@
 
                                    @*  <script>
                                         $(document).ready(function () {

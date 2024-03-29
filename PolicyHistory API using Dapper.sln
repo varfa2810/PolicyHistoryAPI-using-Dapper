@@ -5,7 +5,7 @@ VisualStudioVersion = 17.9.34607.119
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PolicyHistory API using Dapper", "PolicyHistory API using Dapper\PolicyHistory API using Dapper.csproj", "{5053D878-7CB0-412F-A612-7F0CF5FCE902}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsumeAPI", "ConsumeAPI\ConsumeAPI.csproj", "{E306A61C-D011-4BC1-8D21-9D572B063991}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsumeAPI", "ConsumeAPI\ConsumeAPI.csproj", "{E306A61C-D011-4BC1-8D21-9D572B063991}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

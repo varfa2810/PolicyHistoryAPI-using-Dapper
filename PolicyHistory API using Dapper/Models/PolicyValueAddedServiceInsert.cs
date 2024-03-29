@@ -15,7 +15,7 @@ namespace PolicyHistory_API_using_Dapper.Models
         public int IntAddOnID { get; set; }
 
         public int IntAddOnQty { get; set; }
-        public decimal MonAddOnPrice { get; set; }
+        public int MonAddOnPrice { get; set; }
 
         public DateTime DatStartDate { get; set; }
         public DateTime DatEndDate { get; set; }

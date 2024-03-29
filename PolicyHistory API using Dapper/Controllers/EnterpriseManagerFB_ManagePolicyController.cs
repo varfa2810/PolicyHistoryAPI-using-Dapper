@@ -99,6 +99,23 @@ namespace PolicyHistory_API_using_Dapper.Controllers
         }
 
 
+        [HttpGet("GetPolicyDetailsCorrespondingDetails")]
+        public async Task<IActionResult> GetPolicyDetailsCorrespondingDetails(int membertypeID, int profileID)
+        {
+            try
+            {
+                var result = await _repo.GetPolicyDetailsCorrespondingDetails(membertypeID, profileID);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+
+
 
         [HttpGet("GetIDPPNumberList")]
         public async Task<IActionResult> GetIDPPNumberList()
@@ -130,6 +147,26 @@ namespace PolicyHistory_API_using_Dapper.Controllers
             }
 
         }
+
+
+        [HttpGet("GetPolicyStatusList")]
+        public async Task<IActionResult> GetPolicyStatusList()
+        {
+            try
+            {
+                var result = await _repo.GetPolicyStatusList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+
+
+
 
 
         [HttpPost("InsertPolicy")]
@@ -324,11 +361,11 @@ namespace PolicyHistory_API_using_Dapper.Controllers
         }
 
         [HttpDelete("DeleteValueAddedService")]
-        public async Task<IActionResult> DeleteValueAddedService(string enterpriseID, int policyNum)
+        public async Task<IActionResult> DeleteValueAddedService(string enterpriseID, int policyNum, int addonID)
         {
             try
             {
-                var result = await _repo.DeleteValueAddedService(enterpriseID, policyNum);
+                var result = await _repo.DeleteValueAddedService(enterpriseID, policyNum, addonID);
                 if (result > 0) 
                 {
                   
@@ -389,11 +426,11 @@ namespace PolicyHistory_API_using_Dapper.Controllers
 
        
        [HttpGet("GetPolicyClaims")]
-       public async Task<IActionResult> GetClaims(string enterpriseID, int policyNum,int policyID)
+       public async Task<IActionResult> GetClaims(string enterpriseID, int policyNum)
        {
             try
             {
-                var result = await _repo.GetClaims(enterpriseID, policyNum, policyID);
+                var result = await _repo.GetClaims(enterpriseID, policyNum);
                 return Ok(result);
             }
             catch( Exception ex)

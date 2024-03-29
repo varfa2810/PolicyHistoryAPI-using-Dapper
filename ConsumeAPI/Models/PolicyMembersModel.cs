@@ -6,7 +6,9 @@
         public string StrIDPPNum { get; set; }
         public string StrMemberName { get; set; }
         public DateTime DatBirthDate { get; set; }
-         public int IntProfileID { get; set; }  
+         public int IntProfileID { get; set; }
+
+        public int IntAge_Calc { get; set; }
         public int IntAgeToday { get; set; }
         public decimal MonPremiumAmt { get; set; }
 

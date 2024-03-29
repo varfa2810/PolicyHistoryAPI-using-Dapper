@@ -4,27 +4,26 @@
 *@
 
 @model ConsumeAPI.Models.PolicyClaim
-
+@{
+    Layout = null;
+}
 
 <div class="tab-pane fade" id="Tab-5">
 
     <div class="table-caption-top text-white mb-3">  <h3 class="heading02 text-center">Claims</h3> </div>
 
-    <div id="claimgrid" style="margin-top:5px;"> </div>
+    <div id="limitedGrid"></div>
+    <div id="claimgrid2"></div>
 
-    <div id="claimgrid2" style="margin-top:5px;"> </div>
 
-    <div id="grid" style="margin-top:5px;"> </div>
+    
+       
+    
 
-   @*  <div class="form-group">
-        <label for="deathlist" class="form-label">Death</label>
+   @* 
+        <script>
+            $(function () {
 
-        <select id="deathlist" style="width: 100%;"></select>
-    </div>
-     *@
-
-    <script>
-        $(function () {
             var gridDataSource = new kendo.data.DataSource({
                 transport: {
                     read: {
@@ -32,223 +31,223 @@
                         datatype: "json",
                         type: "GET"
                     }
+                   
                 },
                 pageSize: 7,
                 schema: {
                     model: {
-                        id: "strEnterpriseID",
+                        id: "intProfileID",
                         fields: {
                             intMemberTypeID: { type: "number" },
+                            strMemberType: { type: "string" },
                             strIDPPNum: { type: "string" },
-                            strMemberName: { type: "string" },
-                            datBirthDate: { type: "date" },
-                            intAgeToday: { type: "number" },
-                            monPremiumAmt: { type: "number" },
-                            monCoverAmt: { type: "number" },
-                            datDateEnrolled: { type: "date" },
-                            // coverStatus: { type: "string" },
-                            // strRelationshipToMainMember: { type: "string" },
-                            // strBeneficiaryNameID: { type: "string" },
-                            // strBenRelationshipToPolMember: { type: "string" },
-                            // bitConsentRecvdYN: { type: "boolean" },
-                            // strDeathCause: { type: "string" }
-                            strDeathCause: { type: "string" }
+                            strMemberName: { type: "string",/*  editable: false, nullable: true */ },
+                          
+                            intAge_Calc: { type: "number", /* editable: false, nullable: true */ },
+                            
+                            monCoverAmt: { type: "number", /* editable: false, nullable: true  */ },
+                           
+                            coverStatus: { type: "string", editable: false, nullable: true },
+                           
+                            strBenRelationshipToPolMember: { type: "string" },
+                            intBenRelationshipID: { type: "number" },
+                           
+                            intProfileID: { type: "number" },
+                            strName: { type: "string" },
+                           
+
+
                         }
                     }
                 }
             });
 
-           
 
-            $("#claimgrid").kendoGrid({
+
+                $("#limitedGrid").kendoGrid({
+                    dataSource: gridDataSource,
+                    height: 300,
+                    sortable: true,
+                    filterable: true,
+                    scrollable: true,
+                   
+                    columns: [
+                    { field: "strMemberName", title: "Member Name", type: "string", width: "100px" },
+                    { field: "strIDPPNum", title: "IDPP Number", type: "string", width: "110px" },
+                    { field: "monCoverAmt", title: "Cover Amount", type: "number", width: "70px" },
+                    { field: "intAge_Calc", title: "Age", type: "string", width: "40px" },
+                    { field: "coverStatus", title: "Cover Status", type: "string", width: "90px" },
+                    { field: "strBenRelationshipToPolMember", title: "beneficiary", type: "string", width: "90px" },
+                   
+                    ]
+                    
+                  
+                });
+
+
+            $("#limitedGrid").kendoGrid({
                 dataSource: gridDataSource,
                 height: 300,
                 sortable: true,
                 filterable: true,
-                editable: true,
+                scrollable: true,
+
                 columns: [
-                    { field: "intMemberTypeID", title: "Member Type ID", type: "number", width: "200px" },
-                    { field: "strIDPPNum", title: "IDPP Number", type: "string", width: "200px" },
-                    { field: "strMemberName", title: "Member Name", type: "string", width: "200px" },
-                    { field: "datBirthDate", title: "Birth Date", type: "date", format: "{0:dd-MMMM-yyyy}", width: "200px" },
-                    { field: "intAgeToday", title: "Age Today", type: "number", width: "200px" },
-                    { field: "monPremiumAmt", title: "Premium Amount", type: "number", width: "200px" },
-                    { field: "monCoverAmt", title: "Cover Amount", type: "number", width: "200px" },
-                    { field: "datDateEnrolled", title: "Date Enrolled", type: "date", format: "{0:dd-MMMM-yyyy}", width: "200px" },
-                    // { field: "coverStatus", title: "Cover Status", type: "string", width: "200px" },
-                    // { field: "strRelationshipToMainMember", title: "Relationship Main Member", type: "string", width: "200px" },
-                    // { field: "strBeneficiaryNameID", title: "Beneficiary Name ID", type: "string", width: "200px" },
-                    // { field: "strBenRelationshipToPolMember", title: "Beneficiary Relationship", type: "string", width: "200px" },
-                    // { field: "bitConsentRecvdYN", title: "Consent Received", type: "boolean", width: "200px" },
-                   
+                    { field: "strMemberName", title: "Member Name", type: "string", width: "100px" },
+                    { field: "strIDPPNum", title: "IDPP Number", type: "string", width: "110px" },
+                    { field: "monCoverAmt", title: "Cover Amount", type: "number", width: "70px" },
+                    { field: "intAge_Calc", title: "Age", type: "string", width: "40px" },
+                    { field: "coverStatus", title: "Cover Status", type: "string", width: "90px" },
+                    { field: "strBenRelationshipToPolMember", title: "beneficiary", type: "string", width: "90px" },
+
                 ]
+
+
             });
-        });
-    </script>
-
-
-
-
-   @*  <script>
-        $(function () {
-            $("#claimgrid2").kendoGrid({
-                editable: {
-                    mode: "inline",
-                    create: true
-                },
-                toolbar: ["create"],
-                dataSource: {
-                    schema: {
-                        model: {
-                            fields: {
-                               
-                                strDeathCause: { type: "string" }
-                            }
-                        }
-                    }
-                },
-                columns: [
-                    {
-                        command: ["edit", "destroy"],
-                        title: "&nbsp;",
-                        width: "150px"
-                    },
-                    {
-                        field: "strDeathCause",
-                        title: "Role",
-                        template: "#= strDeathCause #",
-                        editor: roleDropDownEditor
-                    },
-                   
-                ]
             });
-
-            // Function to fetch data from the API endpoint
-            function getPolicyDeathList(container, options) {
-                $.ajax({
-                    url: "/ManagePolicy/GetPolicyDeathList",
-                    type: "GET",
-                    success: function (data) {
-                        roleDropDownEditor(container, options, data);
-                    },
-                    error: function () {
-                        $("#result").text("Error occurred while fetching data.");
-                    }
-                });
-            }
-
-            // Function to populate the dropdown list
-            function roleDropDownEditor(container, options, mtypes) {
-                $('<input data-bind="value:' + options.field + '"/>')
-                    .appendTo(container)
-                    .kendoDropDownList({
-                        dataTextField: "strDeathCause",
-                        dataValueField: "intDeathCauseID",
-                        dataSource: mtypes
-                    });
-            }
-
-            // Call the function to fetch data
-            getPolicyDeathList();
-        });
-    </script> *@
+        </script> *@
+    
 
 
     <script>
         $(function () {
-            $("#grid").kendoGrid({
-                editable: {
-                    mode: "inline",
-                    create: true
-                },
-                toolbar: ["create"],
-                dataSource: {
-                    transport: {
-                        create: {
-                            url: "/ManagePolicy/CreatePolicyDeath", 
-                            type: "POST", 
-                            dataType: "json"
-                        }
-                    },
-                    schema: {
-                        model: {
-                            id: "intDeathCauseID", 
-                            fields: {
-                                intDeathCauseID: { type: "number", editable: false }, 
-                                strDeathCause: { type: "string" }
-                            }
-                        }
+            var gridDataSource5 = new kendo.data.DataSource({
+                transport: {
+                    read: {
+                        url: "/ManagePolicy/Getpolicyclaims",
+                        datatype: "json",
+                        type: "GET"
                     }
                 },
-                columns: [
-                    {
-                        command: ["edit", "destroy"],
-                        title: "&nbsp;",
-                        width: "150px"
-                    },
-                    {
-                        field: "strDeathCause",
-                        title: "Death cause",
-                        template: "#= strDeathCause #",
-                        editor: roleDropDownEditor
-                    },
-                    
-                ]
-            });
-
-
-            function roleDropDownEditor(container, options) {
-                let encode = kendo.htmlEncode;
-                $('<input data-bind="value:' + options.field + '"/>')
-                    .appendTo(container)
-                    .kendoDropDownList({
-                        rounded: "large",
-                        optionLabel: 'Select Agent',
-                        dataTextField: "strDeathCause",
-                        dataValueField: "intDeathCauseID",
-                        footerTemplate: ({ instance }) => `Total <strong>${encode(instance.dataSource.total())}</strong> items found`,
-                        dataSource: {
-                            transport: {
-                                read: {
-                                    url: "/ManagePolicy/GetPolicyDeathList",
-                                    dataType: "json"
-                                }
-                            }
-                        }
-                    });
-            }
-        });
-
-    </script>
-
-
-  
-
-    @* <script>
-        $(function () {
-            let encode = kendo.htmlEncode;
-            $("#deathlist").kendoDropDownList({
-                rounded: "medium",
-                optionLabel: 'Select Agent',
-                dataTextField: "strDeathCause",
-                dataValueField: "intDeathCauseID",
-                footerTemplate: ({ instance }) => `Total <strong>${encode(instance.dataSource.total())}</strong> items found`,
-                dataSource: {
-                    transport: {
-                        read: {
-                            url: "/ManagePolicy/GetPolicyDeathList",
-                            dataType: "json",
-                            type: "GET"
+                pageSize: 7,
+                schema: {
+                    model: {
+                        id: "intProfileID",
+                        fields: {
+                            strEnterpriseID: { type: "string" },
+                            intPolicyNum: { type: "number" },
+                            intProfileID: { type: "number" },
+                            strMemberName: { type: "string", editable: false, nullable: true },
+                            strIDPPNum: { type: "string", editable: false, nullable: true },
+                            intAge: { type: "number", editable: false, nullable: true },
+                            monCoverAmt: { type: "number", editable: false, nullable: true },
+                            strMemberType: { type: "string", editable: false, nullable: true },
+                            datClaimDate: { type: "date" },
+                            monClaimAmt: { type: "number" },
+                            intClaimMethodID: { type: "number" },
+                            strClaimMethod: { type: "string" },
+                            intDeathCauseID: { type: "number" },
+                            strDeathCause: { type: "string" },
+                            datDeathDate: { type: "date" },
+                            bitDeathCertReceived: { type: "boolean" },
+                            strRefNum: { type: "string" },
+                            bitApprovedYN: { type: "boolean" },
+                            datPayOutDate: { type: "date" },
+                            strLastCapturer: { type: "string" },
+                            datDateModified: { type: "date" },
+                            coverStatus: { type: "string", editable: false, nullable: true }
                         }
                     }
                 }
             });
-        }); *@
-           
 
-    </script>
+            $("#claimgrid2").kendoGrid({
+                dataSource: gridDataSource5,
+                height: 400,
+                // sortable: true,
+                // filterable: true,
+                editable: "inline",
+                columns: [
+                    {
+                        command: [
+                            {
+                                name: "edit",
+                                template: "<a class='icon-pencil k-button-icontext k-grid-edit fa-lg' ><i class='fa fa-pencil-square-o '></i></a>",
+                                iconClass: { update: "fa fa-save fa-xl", cancel: "fa fa-close fa-lg" },
+                            },
+                            
+                        ],
+
+                        title: "&nbsp;",
+                        width: "150px"
+                    },
+                    { field: "strMemberName", title: "Member Name", width: 200 },
+                    { field: "strIDPPNum", title: "IDPP Number", width: 200 },
+                    { field: "intAge", title: "Age", width: 100 },
+                    { field: "monCoverAmt", title: "Cover Amount", width: 200 },
+                    { field: "coverStatus", title: "Cover Status", width: 200 },
+                    { field: "strMemberType", title: "Member Type", width: 200 },
+                    { field: "datClaimDate", title: "Claim Date", width: 200, format: "{0:dd-MMMM-yyyy}" },
+                    { field: "monClaimAmt", title: "Claim Amount", width: 200 },
+                   
+                    { field: "strClaimMethod", title: "Claim Method", width: 200 },
+                   
+                    {
+                        field: "strDeathCause", title: "Death Cause", width: 250, 
+                        
+                        editor: function (container, options) {
+                            let encode = kendo.htmlEncode;
+                            $('<input data-bind="value:' + options.field + '"/>')
+                                .appendTo(container)
+                                .kendoDropDownList({
+                                    rounded: "large",
+                                    optionLabel: 'Select Death Cause',
+                                    dataTextField: "strDeathCause",
+                                    dataValueField: "strDeathCauseID",
+                                    filter: "contains",
+                                    footerTemplate: ({ instance }) => `Total <strong>${encode(instance.dataSource.total())}</strong> items found`,
+                                    dataSource: {
+                                        transport: {
+                                            read: {
+                                                url: "/ManagePolicy/GetPolicyDeathList",
+                                                dataType: "json"
+                                            }
+                                        }
+                                    },
+                                    
+
+
+                                });
+                        }
+                    },
+                    { field: "datDeathDate", title: "Death Date", width: 200, format: "{0:dd-MMMM-yyyy}" },
+                    {
+                        field: "bitDeathCertReceived", title: "Death Certificate Received", width: 200, template: function (dataItem) {
+
+                            return '<div class="form-check form-switch">' +
+                                '<input class="form-check-input" type="checkbox" ' + (dataItem.bitDeathCertReceived ? 'checked' : '') + ' disabled>' +
+                                '<label class="form-check-label" for="flexSwitchCheckDefault2"></label>' +
+                                '</div>';
+                        },
+                        editor: function (container, options) {
+
+                            $('<div class="form-check form-switch">' + '<input class="form-check-input" type="checkbox" name="' + options.field + '" data-type="boolean" />' + '<label class="form-check-label" for="flexSwitchCheckDefault2"></label>' +
+                                '</div>').appendTo(container);
+                        }
+                    },
+                    { field: "strRefNum", title: "Reference Number", width: 200 },
+                    {
+                        field: "bitApprovedYN", title: "Approved", width: 200, template: function (dataItem) {
+
+                            return '<div class="form-check form-switch">' +
+                                '<input class="form-check-input" type="checkbox" ' + (dataItem.bitApprovedYN ? 'checked' : '') + ' disabled>' +
+                                '<label class="form-check-label" for="flexSwitchCheckDefault2"></label>' +
+                                '</div>';
+                        },
+                        editor: function (container, options) {
+
+                            $('<div class="form-check form-switch">' + '<input class="form-check-input" type="checkbox" name="' + options.field + '" data-type="boolean" />' + '<label class="form-check-label" for="flexSwitchCheckDefault2"></label>' +
+                                '</div>').appendTo(container);
+                        }
+                    },
+                    { field: "datPayOutDate", title: "Pay Out Date", width: 200, format: "{0:dd-MMMM-yyyy}" },
  
+                ]
+            });
 
+          
+        });
+    </script>
 
 
 

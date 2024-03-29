@@ -2,16 +2,20 @@
 {
     public class PolicyValueAddedServiceInsert
     {
-        public string strEnterpriseID { get; set; }
-        public int intPolicyNum { get; set; }
-        public int intAddOnID { get; set; }
-        public string strAddOnDescription { get; set; }
-        public int intAddOnQty { get; set; }
-        public decimal monAddOnPrice { get; set; }
-        public DateTime datStartDate { get; set; }
-        public DateTime datEndDate { get; set; }
-        public int intAOStatusID { get; set; }
-        public string strLastCapturer { get; set; }
-        public DateTime datDateModified { get; set; }
+        public string StrEnterpriseID { get; set; }
+
+        public int IntPolicyNum { get; set; }
+
+        public int IntAddOnID { get; set; }
+
+        public int IntAddOnQty { get; set; }
+        public int MonAddOnPrice { get; set; }
+
+        public DateTime DatStartDate { get; set; }
+        public DateTime DatEndDate { get; set; }
+        public int IntAOStatusID { get; set; }
+
+        public string StrLastCapturer { get; set; }
+        public DateTime DatDateModified { get; set; }
     }
 }

@@ -90,6 +90,35 @@ namespace PolicyHistory_API_using_Dapper.Repository
         }
 
 
+
+        public async Task<List<PolicyStatusList>> GetPolicyStatusList()
+        {
+            using (var connection = _context.CreateConnection())
+            {
+                var result = await connection.QueryAsync<PolicyStatusList>("usp_Select_tblFP_AddOnStatus_List", commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+        }
+
+
+
+        public async Task<List<PolicyDetailsCorrespondingDetails>> GetPolicyDetailsCorrespondingDetails(int membertypeID, int profileID)
+        {
+            using (var connection = _context.CreateConnection())
+            {
+                var parameters = new
+                {
+                    intProfileID = profileID,
+                    intMemberTypeID = membertypeID
+
+                };
+                var result = await connection.QueryAsync<PolicyDetailsCorrespondingDetails>("usp_select_tblFP_PolicyMemberExtraList", parameters, commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+        }
+
+
+
         public async Task<int> InsertList (PolicyList policylist)
         {
             using(var connection = _context.CreateConnection())
@@ -274,17 +303,18 @@ namespace PolicyHistory_API_using_Dapper.Repository
             }
         }
 
-        public async Task<int> DeleteValueAddedService(string enterpriseID, int policyNum)
+        public async Task<int> DeleteValueAddedService(string enterpriseID, int policyNum, int addonID)
         {
             using(var connection = _context.CreateConnection())
             {
                 var parameters = new
                 {
                     strEnterpriseID = enterpriseID,
-                    intPolicyNum = policyNum
+                    intPolicyNum = policyNum,
+                    intAddOnID= addonID
 
                 };
-                return await connection.ExecuteAsync("usp_Delete_tblFP_PolicyAddOn_byEPID", parameters, commandType: CommandType.StoredProcedure);
+                return await connection.ExecuteAsync("usp_Delete_tblFP_PolicyAddOn_byEPAID", parameters, commandType: CommandType.StoredProcedure);
                
             }
         }
@@ -319,7 +349,7 @@ namespace PolicyHistory_API_using_Dapper.Repository
 
 
                 
-        public async Task<List<PolicyClaim>> GetClaims(string enterpriseID, int policyNum, int profileID)
+        public async Task<List<PolicyClaim>> GetClaims(string enterpriseID, int policyNum)
            {
       
                using (var connection = _context.CreateConnection())
@@ -328,10 +358,10 @@ namespace PolicyHistory_API_using_Dapper.Repository
                    {
                        strEnterpriseID = enterpriseID,
                        intPolicyNum = policyNum,
-                       intProfileID = profileID
+                      
                    };
       
-                   var records = await connection.QueryAsync<PolicyClaim>("usp_Select_tblFP_PolicyMemberClaim_byEPPID",  parameters,commandType:   CommandType.StoredProcedure);
+                   var records = await connection.QueryAsync<PolicyClaim>("usp_Select_tblFP_PolicyMemberClaim_byEPID",  parameters,commandType:   CommandType.StoredProcedure);
                    return records.ToList();
                }
       

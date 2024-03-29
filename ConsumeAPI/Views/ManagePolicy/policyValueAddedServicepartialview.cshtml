@@ -15,47 +15,91 @@
         $(function () {
             var gridDataSource2 = new kendo.data.DataSource({
                 transport: {
-                    read: {
-                        url: "/ManagePolicy/Getpolicyvalueaddedservice",
-                        datatype: "json",
-                        type: "GET"
-                    },
-                    create: {
+                    read: function (options) {
+                        console.log("Reading data from the server...");
 
-                        url: "/ManagePolicy/CreateValueAddedService",
-                        type: "POST",
-                        contentType: "application/json",
-                        dataType: "json"
+                        $.ajax({
+                            url: '/ManagePolicy/Getpolicyvalueaddedservice',
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (response) {
+                                console.log("Data received from server:", response);
+                                options.success(response);
+                            },
+                            error: function (xhr, status, error) {
+                                console.error("Error reading data from the server:", error);
+                                options.error(xhr, status, error);
+                            }
+                        });
+                    },
+
+                    create: function (options) {
+                        console.log(options.data);
+                        $.ajax({
+                            url: '/ManagePolicy/CreateValueAddedService',
+                            type: 'POST',
+                            data: JSON.stringify(options.data),
+                            contentType: 'application/json; charset=utf-8',
+                            success: function (response) {
+                                console.log("Data sent to server:", response);
+                                options.success(response);
+                            },
+                            error: function (xhr, status, error) {
+                                console.error("Error sending data to the server:", error);
+                                options.error(xhr, status, error);
+                            }
+                        });
+                    },
+
+                    delete: function (options) {
+                        console.log("Deleting data from the server...");
+                        $.ajax({
+                            url: '/ManagePolicy/DeleteValueAddedService',
+                            type: 'DELETE',
+                            data: JSON.stringify(options.data),
+                            contentType: 'application/json; charset=utf-8',
+                            success: function (response) {
+                                console.log("Data deleted from server:", response);
+                                options.success(response);
+                            },
+                            error: function (xhr, status, error) {
+                                console.error("Error deleting data from the server:", error);
+                                options.error(xhr, status, error);
+                            }
+                        });
                     }
                 },
-              
 
                 pageSize: 7,
                 schema: {
                     model: {
                         id: "intAddOnID",
                         fields: {
-                           
-                            intAddOnID: {type : "number"},
+                            intAddOnID: { type: "number" },
                             strAddOnDescription: { type: "string" },
-                            monAddOnPrice: { type: "number" },
-                            intAddOnQty: {
-                                type: "number", validation: {
+                            monAddOnPrice: {
+                                type: "number",
+                                validation: {
                                     required: {
-                                        message: "Custom required validation message"
+                                        message: "hello this is rahul"
                                     }
                                 }
+                            },
+                            intAddOnQty: {
+                                type: "number",
+                               
                             },
                             monLineTotal: { type: "number", editable: false },
                             datStartDate: { type: "date" },
                             datEndDate: { type: "date" },
-                            strAddOnStatus: { type: "string" }
+                            strAddOnStatus: { type: "string" },
+                            intAOStatusID: {type: "number"}
                         }
                     }
                 }
             });
-            console.log(gridDataSource2)
-            $("#valueaddedservice").kendoGrid({
+
+             $("#valueaddedservice").kendoGrid({
                 dataSource: gridDataSource2,
                 height: 300,
                 sortable: true,
@@ -81,9 +125,9 @@
                     {
                         field: "strAddOnDescription",
                         title: "Description",
-                        type : "string",
-                        width : "270px",
-                        template: "#= strAddOnDescription #",
+                        type: "string",
+                        width: "270px",
+                        
                         editor: function (container, options) {
                             let encode = kendo.htmlEncode;
                             $('<input data-bind="value:' + options.field + '"/>')
@@ -91,8 +135,8 @@
                                 .kendoDropDownList({
                                     rounded: "large",
                                     optionLabel: 'Select Description Type',
-                                    dataTextField: "strAddOnDescription", 
-                                    dataValueField: "intAddOnID", 
+                                    dataTextField: "strAddOnDescription",
+                                    dataValueField: "intAddOnID",
                                     footerTemplate: ({ instance }) => `Total <strong>${encode(instance.dataSource.total())}</strong> items found`,
                                     dataSource: {
                                         transport: {
@@ -106,12 +150,37 @@
                         }
                     },
 
-                    { field: "monAddOnPrice", title: "Price", format: "{0:c}" },
-                    { field: "intAddOnQty", title: "Quantity" },
-                    { field: "monLineTotal", title: "Line Total", format: "{0:c}" },
-                    { field: "datStartDate", title: "Start Date", format: "{0:dd/MM/yyyy}", width:"200px" },
-                    { field: "datEndDate", title: "End Date", format: "{0:dd/MM/yyyy}", width: "200px"  },
-                    { field: "strAddOnStatus", title: "Status", width: "160px" }
+                    { field: "monAddOnPrice", title: "Price", format: "{0:c}", width: "170px" },
+                    { field: "intAddOnQty", title: "Quantity", width: "170px" },
+                    { field: "monLineTotal", title: "Line Total", format: "{0:c}", width: "170px" },
+                    { field: "datStartDate", title: "Start Date", format: "{0:dd/MM/yyyy}", width: "200px" },
+                    { field: "datEndDate", title: "End Date", format: "{0:dd/MM/yyyy}", width: "200px" },
+                    {
+                        field: "strAddOnStatus",
+                        title: "Status",
+                        width: "200px",
+                        editor: function (container, options) {
+                            let encode = kendo.htmlEncode;
+                            $('<input data-bind="value:' + options.field + '"/>')
+                                .appendTo(container)
+                                .kendoDropDownList({
+                                    rounded: "large",
+                                    optionLabel: 'Select Status',
+                                    dataTextField: "strAddOnStatus", 
+                                    dataValueField: "intAOStatusID", 
+                                    footerTemplate: ({ instance }) => `Total <strong>${encode(instance.dataSource.total())}</strong> items found`,
+                                    dataSource: {
+                                        transport: {
+                                            read: {
+                                                url: "/ManagePolicy/GetPolicyStatusList",
+                                                dataType: "json"
+                                            }
+                                        }
+                                    }
+                                });
+                        }
+                    }
+
 
                 ],
                 toolbar: [
@@ -120,7 +189,6 @@
                         template: "<a class='k-button k-button-icontext k-grid-add' style='background-color: darkorange;'><i class='fa fa-plus'></i>Add New Record</a>"
                     }
                 ],
-
                 save: function (e) {
                     if (e.model.isNew()) {
                         gridDataSource2.sync().then(function () {
@@ -130,8 +198,6 @@
                 }
 
             });
-
-
         });
     </script>
 

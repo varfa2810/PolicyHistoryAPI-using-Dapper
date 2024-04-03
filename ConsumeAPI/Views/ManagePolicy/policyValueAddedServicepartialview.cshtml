@@ -13,18 +13,20 @@
 
     <script>
         $(function () {
+           
             var gridDataSource2 = new kendo.data.DataSource({
                 transport: {
                     read: function (options) {
-                        console.log("Reading data from the server...");
+                      
 
                         $.ajax({
                             url: '/ManagePolicy/Getpolicyvalueaddedservice',
                             type: 'GET',
                             dataType: 'json',
                             success: function (response) {
-                                console.log("Data received from server:", response);
+                               
                                 options.success(response);
+                               
                             },
                             error: function (xhr, status, error) {
                                 console.error("Error reading data from the server:", error);
@@ -34,7 +36,9 @@
                     },
 
                     create: function (options) {
-                        console.log(options.data);
+                        console.log("Data sending to server: ",options.data);
+                      
+
                         $.ajax({
                             url: '/ManagePolicy/CreateValueAddedService',
                             type: 'POST',
@@ -43,6 +47,9 @@
                             success: function (response) {
                                 console.log("Data sent to server:", response);
                                 options.success(response);
+                                gridDataSource2.add(options.data); 
+                                gridDataSource2.sync(); 
+                                $("#valueaddedservice").data("kendoGrid").dataSource.read();
                             },
                             error: function (xhr, status, error) {
                                 console.error("Error sending data to the server:", error);
@@ -50,14 +57,11 @@
                             }
                         });
                     },
-
-                    delete: function (options) {
-                        console.log("Deleting data from the server...");
+                    destroy: function (options) {
                         $.ajax({
                             url: '/ManagePolicy/DeleteValueAddedService',
                             type: 'DELETE',
-                            data: JSON.stringify(options.data),
-                            contentType: 'application/json; charset=utf-8',
+                            data: {}, 
                             success: function (response) {
                                 console.log("Data deleted from server:", response);
                                 options.success(response);
@@ -68,6 +72,8 @@
                             }
                         });
                     }
+
+                  
                 },
 
                 pageSize: 7,
@@ -77,18 +83,8 @@
                         fields: {
                             intAddOnID: { type: "number" },
                             strAddOnDescription: { type: "string" },
-                            monAddOnPrice: {
-                                type: "number",
-                                validation: {
-                                    required: {
-                                        message: "hello this is rahul"
-                                    }
-                                }
-                            },
-                            intAddOnQty: {
-                                type: "number",
-                               
-                            },
+                            monAddOnPrice: { type: "number"  },
+                            intAddOnQty: { type: "number"  },
                             monLineTotal: { type: "number", editable: false },
                             datStartDate: { type: "date" },
                             datEndDate: { type: "date" },
@@ -115,21 +111,44 @@
                             },
                             {
                                 name: "destroy",
-                                template: "<a class='icon-delete k-button-icontext k-grid-delete fa-lg'><i class='fa fa-trash'></i></a>"
+                                template: "<a class='icon-delete k-button-icontext k-grid-delete fa-lg'><i class='fa fa-trash'></i></a>",
+                               
+
                             }
                         ],
 
                         title: "&nbsp;",
                         width: "150px"
                     },
+
                     {
-                        field: "strAddOnDescription",
-                        title: "Description",
-                        type: "string",
+                        field: "intAddOnID",
+                        title: "Description",  
                         width: "270px",
-                        
+                        template: function (dataItem) {
+                            var dynamicContent;
+                            $.ajax({
+                                url: "/ManagePolicy/GetAddOnDescriptionList",
+                                method: "GET",
+                                dataType: "json",
+                                async: false,
+                                success: function (response) {
+                                  
+                                    response.forEach(function (item) {
+                                        if (dataItem.intAddOnID === item.intAddOnID) {
+                                            dynamicContent = item.strAddOnDescription;
+                                            console.log(dynamicContent);
+                                        }
+                                    });
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error("Error:", error);
+                                }
+                            });
+                            return '<div>' + dynamicContent + '</div>';
+                        },
                         editor: function (container, options) {
-                            let encode = kendo.htmlEncode;
+                            
                             $('<input data-bind="value:' + options.field + '"/>')
                                 .appendTo(container)
                                 .kendoDropDownList({
@@ -137,7 +156,7 @@
                                     optionLabel: 'Select Description Type',
                                     dataTextField: "strAddOnDescription",
                                     dataValueField: "intAddOnID",
-                                    footerTemplate: ({ instance }) => `Total <strong>${encode(instance.dataSource.total())}</strong> items found`,
+                                   
                                     dataSource: {
                                         transport: {
                                             read: {
@@ -150,25 +169,47 @@
                         }
                     },
 
+
+
                     { field: "monAddOnPrice", title: "Price", format: "{0:c}", width: "170px" },
                     { field: "intAddOnQty", title: "Quantity", width: "170px" },
                     { field: "monLineTotal", title: "Line Total", format: "{0:c}", width: "170px" },
                     { field: "datStartDate", title: "Start Date", format: "{0:dd/MM/yyyy}", width: "200px" },
                     { field: "datEndDate", title: "End Date", format: "{0:dd/MM/yyyy}", width: "200px" },
                     {
-                        field: "strAddOnStatus",
+                        field: "intAOStatusID",
                         title: "Status",
                         width: "200px",
+                        template: function (dataItem) {
+                            var dynamicContent = '';
+
+                            $.ajax({
+                                url: "/ManagePolicy/GetPolicyStatusList",
+                                method: "GET",
+                                dataType: "json",
+                                async: false, // Perform the AJAX call synchronously
+                                success: function (response) {
+                                   
+                                    response.forEach(function (item) {
+                                        if (dataItem.intAOStatusID === item.intAOStatusID) {
+                                            dynamicContent = item.strAddOnStatus;
+                                        }
+                                    });
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error("Error:", error);
+                                }
+                            });
+
+                            return '<div>' + dynamicContent + '</div>';
+                        },
                         editor: function (container, options) {
-                            let encode = kendo.htmlEncode;
-                            $('<input data-bind="value:' + options.field + '"/>')
+                            $('<input name="' + options.field + '"/>')
                                 .appendTo(container)
                                 .kendoDropDownList({
-                                    rounded: "large",
                                     optionLabel: 'Select Status',
-                                    dataTextField: "strAddOnStatus", 
-                                    dataValueField: "intAOStatusID", 
-                                    footerTemplate: ({ instance }) => `Total <strong>${encode(instance.dataSource.total())}</strong> items found`,
+                                    dataTextField: "strAddOnStatus",
+                                    dataValueField: "intAOStatusID",
                                     dataSource: {
                                         transport: {
                                             read: {
@@ -182,6 +223,7 @@
                     }
 
 
+
                 ],
                 toolbar: [
                     {
@@ -189,16 +231,12 @@
                         template: "<a class='k-button k-button-icontext k-grid-add' style='background-color: darkorange;'><i class='fa fa-plus'></i>Add New Record</a>"
                     }
                 ],
-                save: function (e) {
-                    if (e.model.isNew()) {
-                        gridDataSource2.sync().then(function () {
-                            console.log("New record data:", e.model.toJSON());
-                        });
-                    }
-                }
+               
 
             });
         });
+
+       
     </script>
 
     <ul class="pagination justify-content-between">

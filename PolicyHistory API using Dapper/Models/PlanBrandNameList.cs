@@ -7,8 +7,7 @@ namespace PolicyHistory_API_using_Dapper.Models
     {
         public PlanBrandNameList() { }
 
-        [Required]
-        public string StrEnterpriseId { get; set; }
+        public int IntPlanID { get; set; }
         public string StrPlanBrandName { get; set; }    
 
     }

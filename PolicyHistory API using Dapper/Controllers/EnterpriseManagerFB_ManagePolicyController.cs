@@ -497,7 +497,7 @@ namespace PolicyHistory_API_using_Dapper.Controllers
 
         
         [HttpPost("InsertInvoice")]
-        public async Task<IActionResult> InsertInvoice([FromBody]PolicyInvoice policyInvoice)
+        public async Task<IActionResult> InsertInvoice([FromBody] PolicyInvoiceInsert policyInvoice)
         {
             try
             {
@@ -522,11 +522,11 @@ namespace PolicyHistory_API_using_Dapper.Controllers
 
 
         [HttpGet("GetPolicyInvoice")]
-        public async Task<IActionResult> GetInvoice(string enterpriseID, int policyNum, int invoiceNum)
+        public async Task<IActionResult> GetInvoice(string enterpriseID, int policyNum)
         {
             try
             {
-                var result = await _repo.GetInvoice(enterpriseID, policyNum, invoiceNum);
+                var result = await _repo.GetInvoice(enterpriseID, policyNum);
                 return Ok(result);
             }
             catch (Exception ex) 
@@ -607,6 +607,81 @@ namespace PolicyHistory_API_using_Dapper.Controllers
 
 
         }
+
+
+        [HttpPost("InsertPayments")]
+        public async Task<IActionResult> InsertPayments([FromBody] PolicyPaymentInsert policyPaymentInsert)
+        {
+            try
+            {
+                var result = await _repo.InsertPayments(policyPaymentInsert);
+                if (result > 0)
+                {
+
+                    return Ok(new { Message = "Payment inserted successfully." });
+                }
+                else
+                {
+
+                    return NotFound(new { Message = "Payment insertion failed." });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+
+
+        [HttpPost("InsertInvoice")]
+        public async Task<IActionResult> InsertClaims([FromBody] PolicyClaimsInsert policyClaimsInsert)
+        {
+            try
+            {
+                var result = await _repo.InsertClaims(policyClaimsInsert);
+                if (result > 0)
+                {
+
+                    return Ok(new { Message = "Claim inserted successfully." });
+                }
+                else
+                {
+
+                    return NotFound(new { Message = "Claim insertion failed." });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+
+
+
+
+
+        [HttpGet("GetCombinedPolicyClaims")]
+        public async Task<IActionResult> GetCombinedPolicyClaims(string enterpriseId, int policyNum)
+        {
+            try
+            {
+                var result = await _repo.GetCombinedPolicyClaims(enterpriseId, policyNum);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"{ex.Message}");
+            }
+        }
+
+
+
 
 
 

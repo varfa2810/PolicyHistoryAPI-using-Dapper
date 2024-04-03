@@ -2,7 +2,7 @@
 {
     public class PlanBrandList
     {
-        public string StrEnterpriseId { get; set; }
+        public int IntPlanID { get; set; }
         public string StrPlanBrandName { get; set; }
     }
 }

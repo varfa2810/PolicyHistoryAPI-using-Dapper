@@ -349,23 +349,7 @@ namespace PolicyHistory_API_using_Dapper.Repository
 
 
                 
-        public async Task<List<PolicyClaim>> GetClaims(string enterpriseID, int policyNum)
-           {
-      
-               using (var connection = _context.CreateConnection())
-               {
-                   var parameters = new
-                   {
-                       strEnterpriseID = enterpriseID,
-                       intPolicyNum = policyNum,
-                      
-                   };
-      
-                   var records = await connection.QueryAsync<PolicyClaim>("usp_Select_tblFP_PolicyMemberClaim_byEPID",  parameters,commandType:   CommandType.StoredProcedure);
-                   return records.ToList();
-               }
-      
-           }
+       
 
 
 
@@ -403,7 +387,7 @@ namespace PolicyHistory_API_using_Dapper.Repository
             }
         }
 
-        public async Task<int> InsertInvoice(PolicyInvoice policyInvoice)
+        public async Task<int> InsertInvoice(PolicyInvoiceInsert policyInvoice)
         {
             using( var connection = _context.CreateConnection()) {
 
@@ -412,7 +396,7 @@ namespace PolicyHistory_API_using_Dapper.Repository
             }
         }
 
-        public async Task<List<PolicyInvoice>> GetInvoice(string enterpriseID, int policyNum, int invoiceNum)
+        public async Task<List<PolicyInvoice>> GetInvoice(string enterpriseID, int policyNum)
         {
             using (var connection = _context.CreateConnection())
             {
@@ -420,10 +404,10 @@ namespace PolicyHistory_API_using_Dapper.Repository
                 {
                     strEnterpriseID = enterpriseID,
                     intPolicyNum = policyNum,
-                    intInvoiceNum = invoiceNum
+                    
                 };
 
-                var resultsFromStoredProcedure1 = await connection.QueryAsync<PolicyInvoice>("usp_Select_tblFP_PolicyInvoice_byEPIID", parameters, commandType: CommandType.StoredProcedure);
+                var resultsFromStoredProcedure1 = await connection.QueryAsync<PolicyInvoice>("usp_Select_tblFP_PolicyInvoice_byEPID", parameters, commandType: CommandType.StoredProcedure);
                 
                 return (resultsFromStoredProcedure1.ToList());
 
@@ -485,7 +469,118 @@ namespace PolicyHistory_API_using_Dapper.Repository
             }
         }
 
+        public async Task<int> InsertPayments(PolicyPaymentInsert policyPaymentInsert)
+        {
+            using (var connection = _context.CreateConnection())
+            {
+
+                return await connection.ExecuteAsync("usp_Insert_tblFP_PolicyPayment", policyPaymentInsert, commandType: CommandType.StoredProcedure);
+
+            }
+        }
+
+
+
+
+        public async Task<List<PolicyClaim>> GetClaims(string enterpriseID, int policyNum)
+        {
+
+            using (var connection = _context.CreateConnection())
+            {
+                var parameters = new
+                {
+                    strEnterpriseID = enterpriseID,
+                    intPolicyNum = policyNum,
+
+                };
+
+                var records = await connection.QueryAsync<PolicyClaim>("usp_Select_tblFP_PolicyMemberClaim_byEPID", parameters, commandType: CommandType.StoredProcedure);
+                return records.ToList();
+            }
+
+        }
+
+
+        public async Task<int> InsertClaims(PolicyClaimsInsert policyClaimsInsert)
+        {
+            using (var connection = _context.CreateConnection())
+            {
+                return await connection.ExecuteAsync("usp_Insert_tblFP_PolicyMemberClaim", policyClaimsInsert, commandType: CommandType.StoredProcedure);
+            }
+        }
+
       
+
+
+        public async Task<List<CombinedPolicyClaims>> GetCombinedPolicyClaims(string enterpriseID, int policyNum)
+        {
+            var claims = await GetClaims(enterpriseID, policyNum);
+            var members = await GetPolicyMembers(enterpriseID, policyNum);
+
+            var combinedClaims = new List<CombinedPolicyClaims>();
+
+            // Iterate through all members
+            foreach (var member in members)
+            {
+                var claim = claims.FirstOrDefault(c =>
+                    c.StrEnterpriseID == member.StrEnterpriseID &&
+                    c.IntPolicyNum == member.IntPolicyNum &&
+                    c.IntProfileID == member.IntProfileID);
+
+                // Create CombinedPolicyClaims object even if no claim is found
+                combinedClaims.Add(new CombinedPolicyClaims
+                {
+                    StrEnterpriseID = member.StrEnterpriseID,
+                    IntPolicyNum = member.IntPolicyNum,
+                    IntProfileID = member.IntProfileID,
+                    DatClaimDate = claim?.DatClaimDate ?? DateTime.MinValue,
+                    MonClaimAmt = claim?.MonClaimAmt ?? 0,
+                    IntClaimMethodID = claim?.IntClaimMethodID ?? 0,
+                    StrClaimMethod = claim?.StrClaimMethod ?? "",
+                    IntDeathCauseID = claim?.IntDeathCauseID ?? 0,
+                    StrDeathCause = claim?.StrDeathCause ?? "",
+                    DatDeathDate = claim?.DatDeathDate ?? DateTime.MinValue,
+                    BitDeathCertReceived = claim?.BitDeathCertReceived ?? false,
+                    StrRefNum = claim?.StrRefNum ?? "",
+                    BitApprovedYN = claim?.BitApprovedYN ?? false,
+                    DatPayOutDate = claim?.DatPayOutDate ?? DateTime.MinValue,
+                    StrLastCapturer = claim?.StrLastCapturer ?? "",
+                    DatDateModified = claim?.DatDateModified ?? DateTime.MinValue,
+                    CoverStatus = claim?.CoverStatus ?? "",
+
+                    IntMemberTypeID = member.IntMemberTypeID,
+                    StrMemberType = member.StrMemberType,
+                    StrIDPPNum = member.StrIDPPNum,
+                    StrMemberName = member.StrMemberName,
+                    DatBirthDate = member.DatBirthDate,
+                    IntRelationshipID = member.IntRelationshipID,
+                    IntAge_Calc = member.IntAge_Calc,
+                    IntAgeToday = member.IntAgeToday,
+                    IntAgeYesterday = member.IntAgeYesterday,
+                    MonPremiumAmt = member.MonPremiumAmt,
+                    MonCoverAmt = member.MonCoverAmt,
+                    DatDateEnrolled = member.DatDateEnrolled,
+                    StrRelationshipToMainMember = member.StrRelationshipToMainMember,
+                    IntBenProfileID = member.IntBenProfileID,
+                    StrBeneficiaryNameID = member.StrBeneficiaryNameID,
+                    IntBenRelationshipID = member.IntBenRelationshipID,
+                    StrBenRelationshipToPolMember = member.StrBenRelationshipToPolMember,
+                    BitConsentRecvdYN = member.BitConsentRecvdYN,
+                    BitRemovedYN = member.BitRemovedYN
+                });
+            }
+
+            return combinedClaims;
+        }
+
+       
     }
+
+
+
+
+
+
+
 
 }

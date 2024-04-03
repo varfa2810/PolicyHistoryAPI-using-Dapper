@@ -11,11 +11,10 @@ namespace ConsumeAPI.Models
         public string StrEnterpriseID { get; set; }
         public int IntPolicyNum { get; set; }
         public int IntProfileID { get; set; }
-        public string StrMemberName { get; set; }
-        public string StrIDPPNum { get; set; }
-        public int IntAge { get; set; }
-        public decimal MonCoverAmt { get; set; }
-        public string StrMemberType { get; set; }
+       
+       
+       
+       
         public DateTime DatClaimDate { get; set; }
         public decimal MonClaimAmt { get; set; }
         public int IntClaimMethodID { get; set; }

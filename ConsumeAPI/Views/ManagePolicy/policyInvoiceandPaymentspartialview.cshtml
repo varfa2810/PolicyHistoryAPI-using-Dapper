@@ -9,11 +9,197 @@
 
     <div class="table-caption-top text-white mb-3">  <h3 class="heading02 text-center">Inovice & Payments</h3> </div>
 
-    <div id="invoicandpaymets" style="margin-top:20px;"></div>
-        
-    
-   
-    
+    <div id="invoice" style="margin-top:20px;"></div>
+    <div id="payment" style="margin-top:20px;"></div>
+
+
+    <script>
+        $(function () {
+            var gridDataSource4 = new kendo.data.DataSource({
+                transport: {
+                    read: {
+                        url: "/ManagePolicy/Getpolicyinvoice",
+                        dataType: "json",
+                        type: "GET"
+                    },
+                    create: function (options) {
+                      
+                        $.ajax({
+                            url: '/ManagePolicy/CreateValueAddedService',
+                            type: 'POST',
+                            data: JSON.stringify(options.data),
+                            contentType: 'application/json; charset=utf-8',
+                            success: function (response) {
+                               
+                                options.success(response);
+                                // gridDataSource2.add(options.data);
+                                // gridDataSource2.sync();
+                                // $("#valueaddedservice").data("kendoGrid").dataSource.read();
+                            },
+                            error: function (xhr, status, error) {
+                                console.error("Error sending data to the server:", error);
+                                options.error(xhr, status, error);
+                            }
+                        });
+                    },
+                },
+                pageSize: 7,
+                schema: {
+                    model: {
+                        fields: {
+                            strEnterpriseID: { type: "string" },
+                            intPolicyNum: { type: "number" },
+                            intInvoiceNum: { type: "number", editable: false },
+                            datInvoiceDate: { type: "date" },
+                            monInvoiceTotal: { type: "number" },
+                            datDueByDate: { type: "date" },
+                            intPurposeID: { type: "number" },
+                            strPurpose: { type: "string" },
+                            intYearID: { type: "number" },
+                            intMonthID: { type: "number" },
+                            strLastCapturer: { type: "string" },
+                            datDateModified: { type: "date" },
+                            intAltRowID: { type: "number" },
+                            strCurrentStatus: { type: "string" }
+                        }
+                    }
+                }
+            });
+
+            $("#invoice").kendoGrid({
+                dataSource: gridDataSource4,
+                height: 200,
+                columns: [
+                    {
+                        command: [
+                            {
+                                name: "edit",
+                                template: "<a class='icon-pencil k-button-icontext k-grid-edit fa-lg' ><i class='fa fa-pencil-square-o '></i></a>",
+                                iconClass: { update: "fa fa-save fa-xl", cancel: "fa fa-close fa-lg" },
+                            },
+                            {
+                                name: "destroy",
+                                template: "<a class='icon-delete k-button-icontext k-grid-delete fa-lg'><i class='fa fa-trash'></i></a>"
+                            }
+                        ],
+                        title: "&nbsp;",
+                        width: "150px"
+                    },
+                    {
+                        title: "&nbsp;",
+                        width: "50px",
+                        template: "<input type='radio' class='rowRadio' name='selectedRowRadio' style='transform: scale(1.5); display: block; margin: 0 auto;'>"
+                    },
+                    { field: "intInvoiceNum", title: "Invoice Number" },
+                    { field: "datInvoiceDate", title: "Invoice Date", format: "{0:yyyy/MM/dd}" },
+                    { field: "strPurpose", title: "Purpose" },
+                    { field: "monInvoiceTotal", title: "Invoice Total" },
+                    { field: "datDueByDate", title: "Due By Date", format: "{0:yyyy/MM/dd}" },
+                    { field: "strCurrentStatus", title: "Current Status" }
+                ],
+                toolbar: [
+                    {
+                        name: "create",
+                        template: "<a class='k-button k-button-icontext k-grid-add' style='background-color: darkorange;'><i class='fa fa-plus'></i>Add New Record</a>"
+                    }
+                ]
+            });
+
+            var grid = $("#invoice").data("kendoGrid");
+
+            $("#invoice").on('click', '.rowRadio', function () {
+                var row = $(this).closest("tr");
+                var dataItem = grid.dataItem(row);
+                if (dataItem) {
+                    var intInvoiceNum = dataItem.intInvoiceNum;
+                    console.log("Selected Invoice Number:", intInvoiceNum);
+                    paymentGrid(intInvoiceNum);
+                    // var baseAddress = "https://localhost:7227/api";
+                    // var secondGridUrl = `${baseAddress}/EnterpriseManagerFB_ManagePolicy/Getpolicypayments?enterpriseID=aaaa&policyNum=1&invoiceNum=${intInvoiceNum}`;
+                    // $("#payment").data("kendoGrid").dataSource.transport.options.read.url = secondGridUrl;
+                    // $("#payment").data("kendoGrid").dataSource.read();
+                }
+            });
+
+            
+            
+        });
+
+        function paymentGrid(invoiceNum){
+            var gridDataSource5 = new kendo.data.DataSource({
+                transport: {
+                    read: {
+                        url: "/ManagePolicy/Getpolicypayments?intInvoiceNum="+invoiceNum,
+                        dataType: "json",
+                        type: "GET"
+                    }
+                },
+                pageSize: 7,
+                schema: {
+                    model: {
+                        fields: {
+                            strEnterpriseID: { type: "string" },
+                            intPolicyNum: { type: "number" },
+                            intInvoiceNum: { type: "number" },
+                            intReceiptNum: { type: "number" },
+                            monAmtPaid: { type: "number" },
+                            datDatePaid: { type: "date", format: "yyyy/MM/dd" },
+                            strRefNum: { type: "string" },
+                            intPayMethodID: { type: "number" },
+                            strPayMenthod: { type: "string" },
+                            intMonthID: { type: "number" },
+                            strMonth: { type: "string" },
+                            strComment: { type: "string" },
+                            intProviderID: { type: "number" },
+                            strProvider: { type: "string" },
+                            strStatusCode: { type: "string" },
+                            strPGResult: { type: "string" },
+                            strLastCapturer: { type: "string" },
+                            datDateModified: { type: "date", format: "yyyy/MM/dd" },
+                            intAltRowID: { type: "number" },
+                            
+                        }
+                    }
+                }
+            });
+
+            $("#payment").kendoGrid({
+                dataSource: gridDataSource5,
+                height: 200,
+                editable: "inline",
+                columns: [
+                    {
+                        command: [
+                            {
+                                name: "edit",
+                                template: "<a class='icon-pencil k-button-icontext k-grid-edit fa-lg' ><i class='fa fa-pencil-square-o '></i></a>",
+                                iconClass: { update: "fa fa-save fa-xl", cancel: "fa fa-close fa-lg" },
+                            },
+                            {
+                                name: "destroy",
+                                template: "<a class='icon-delete k-button-icontext k-grid-delete fa-lg'><i class='fa fa-trash'></i></a>"
+                            }
+                        ],
+                        title: "&nbsp;",
+                        width: "150px"
+                    },
+                    { field: "intReceiptNum", title: "Receipt Number" },
+                    { field: "monAmtPaid", title: "Amount Paid" },
+                    { field: "datDatePaid", title: "Date Paid", format: "{0:yyyy/MM/dd}" },
+                    { field: "strPayMenthod", title: "Payment Method" },
+                    { field: "strMonth", title: "Month" },
+                    { field: "strComment", title: "Comment" },
+                    { field: "strPGResult", title: "PG Result" },
+                ],
+                toolbar: [
+                    {
+                        name: "create",
+                        template: "<a class='k-button k-button-icontext k-grid-add' style='background-color: darkorange;'><i class='fa fa-plus'></i>Add New Record</a>"
+                    }
+                ]
+            });
+        }
+    </script>
 
 
     <ul class="pagination justify-content-between">

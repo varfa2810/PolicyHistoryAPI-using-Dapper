@@ -101,6 +101,10 @@
         .errormessage {
             border: 1px solid red; /* Example border color */
         }
+
+      /*   .k-header {
+            color: white;
+        } */
     </style>
    
 </head>
@@ -179,63 +183,95 @@
                                                         <span asp-validation-for="IntPolicyNum" class="text-danger"></span>
                                                     </div>
                                                 </div>
-                                                <div class="col-xl-3 col-md-6 my-2">
+                                                <div class="col-xl-3 col-md-7 my-2">
                                                     <div class="form-group">
-                                                        <label asp-for="StrPlanBrandName" class="form-label">Plan Brand Name:<strong style="color:red">*</strong></label>
-                                                       
-                                                        <option id="Planbrandname" style="width: 100%;"></option>
-                                                        <span asp-validation-for="StrPlanBrandName" class="text-danger"></span>
+                                                        <label for="Planbrandname" class="form-label">Plan Brand</label>
+                                                        <select id="Planbrandname" style="width: 100%; height: 100%;"></select>
                                                     </div>
+                                                </div>
 
-                                                    <script>
-                                                        let encode2 = kendo.htmlEncode;
-                                                        $("#Planbrandname").kendoDropDownList({
-                                                            rounded: "large",
-                                                            optionLabel: 'Select Plan Brand',
-                                                            dataTextField: "strPlanBrandName",
-                                                            dataValueField: "strPlanBrandName",
-                                                            footerTemplate: ({ instance }) => `Total <strong>${encode2(instance.dataSource.total())}</strong> items found`,
-                                                            dataSource: {
-                                                                transport: {
-                                                                    read: {
-                                                                        url: "/ManagePolicy/GetPlanBrandList",
-                                                                        dataType: "json",
-                                                                        type: "GET"
-                                                                    }
-                                                                }
+                                                <script>
+                                                    $(document).ready(function () {
+                                                        GetPlanBrandList();
+                                                    });
+
+                                                    function GetPlanBrandList() {
+                                                        $.ajax({
+                                                            url: "/ManagePolicy/GetPlanBrandList",
+                                                            type: "GET",
+                                                            success: function (data) {
+                                                                CreateDropdown1(data, "Planbrandname");
+                                                            },
+                                                            error: function () {
+                                                                $("#result").text("Error occurred while fetching Plan Brand data.");
                                                             }
                                                         });
+                                                    }
 
-                                                    </script>
-                                                </div>
+                                                    function CreateDropdown1(data, id) {
+                                                        const dropdown = document.getElementById(id);
+
+                                                        if (data && data.length > 0) {
+                                                            data.forEach(optionText => {
+                                                                const option = document.createElement('option');
+                                                               
+                                                                    option.text = optionText.strPlanBrandName;
+                                                                    option.value = optionText.intPlanID;
+                                                                
+                                                                dropdown.appendChild(option);
+                                                            });
+                                                        } else {
+                                                            console.log("No data available for dropdown.");
+                                                        }
+                                                    }
+                                                </script>
+
+
+
                                                 <div class="col-xl-3 col-md-7 my-2">
                                                     <div class="form-group">
                                                         <label for="agentDropdown" class="form-label">Agent</label>
-                                                        <option id="agentDropdown" style="width: 100%;"></option>
+                                                        <select id="agentDropdown" style="width: 100%; height: 100%;"></select>
                                                     </div>
+                                                </div>
 
-                                                    <script>
-                                                        let encode = kendo.htmlEncode;
-                                                        $("#agentDropdown").kendoDropDownList({
-                                                            rounded: "large",
-                                                            optionLabel: 'Select Agent',
-                                                            dataTextField: "strAgentNameID",
-                                                            dataValueField: "strAgentNameID",
-                                                            footerTemplate: ({ instance }) => `Total <strong>${encode(instance.dataSource.total())}</strong> items found`,
-                                                            dataSource: {
-                                                                transport: {
-                                                                    read: {
-                                                                        url: "/ManagePolicy/GetPolicyAgentList",
-                                                                        dataType: "json",
-                                                                        type: "GET"
-                                                                    }
-                                                                }
+                                                <script>
+                                                    $(document).ready(function () {
+                                                        GetPolicyAgentList();
+                                                    });
+
+                                                    function GetPolicyAgentList() {
+                                                        $.ajax({
+                                                            url: "/ManagePolicy/GetPolicyAgentList",
+                                                            type: "GET",
+                                                            success: function (data) {
+                                                                CreateDropdown(data, "agentDropdown", true);
+                                                            },
+                                                            error: function () {
+                                                                $("#result").text("Error occurred while fetching agent data.");
                                                             }
                                                         });
+                                                    }
 
-                                                    </script>
+                                                    function CreateDropdown(data, id, flag) {
+                                                        const dropdown = document.getElementById(id);
 
-                                                </div>
+                                                        if (data && data.length > 0) {
+                                                            data.forEach(optionText => {
+                                                                const option = document.createElement('option');
+                                                                if (flag) {
+                                                                    option.text = optionText.strAgentNameID;
+                                                                    option.value = optionText.strAgentID;
+                                                                }
+                                                                dropdown.appendChild(option);
+                                                            });
+                                                        } else {
+                                                            console.log("No data available for dropdown.");
+                                                        }
+                                                    }
+                                                </script>
+
+
                                                 <div class="col-xl-3 col-md-6 my-2">
                                                     <div class="form-group">
                                                         <label class="form-label">%Comm Rate:</label>
@@ -342,19 +378,46 @@
 
                                     <script>
                                         $(function () {
-                                            var gridDataSource = new kendo.data.DataSource({
-                                                transport: {
-                                                    read: {
-                                                        url: "/ManagePolicy/Getpolicymembers",
-                                                        datatype: "json",
-                                                        type: "GET"
+                                            var gridDataSource1 = new kendo.data.DataSource({
+                                                transport: {                                             
+                                                    read: function (options) {
+                                                        $.ajax({
+                                                            url: '/ManagePolicy/Getpolicymembers',
+                                                            type: 'GET',
+                                                            dataType: 'json',
+                                                            success: function (response) {
+                                                              
+                                                                options.success(response);
+
+                                                            },
+                                                            error: function (xhr, status, error) {
+                                                                console.error("Error reading data from the server:", error);
+                                                                options.error(xhr, status, error);
+                                                            }
+                                                        });
                                                     },
-                                                    create: {
-                                                        url: "/ManagePolicy/CreatePolicyMember",    
-                                                        type: "POST" ,
-                                                        contentType: "application/json",
-                                                        dataType: "json"
-                                                    }
+                                                    create: function (options) {
+                                                        console.log("Data sending to server: ", options.data);
+
+
+                                                        $.ajax({
+                                                            url: '/ManagePolicy/CreatePolicyMember',
+                                                            type: 'POST',
+                                                            data: JSON.stringify(options.data),
+                                                            contentType: 'application/json; charset=utf-8',
+                                                            success: function (response) {
+                                                                console.log("Data sent to server:", response);
+                                                                options.success(response);
+                                                                gridDataSource1.add(options.data);
+                                                                gridDataSource1.sync();
+                                                                $("#policydetails").data("kendoGrid").dataSource.read();
+                                                            },
+                                                            error: function (xhr, status, error) {
+                                                                console.error("Error sending data to the server:", error);
+                                                                options.error(xhr, status, error);
+                                                            }
+                                                        });
+                                                    },
                                                 },
                                                 pageSize: 7,
                                                 schema: {
@@ -392,8 +455,8 @@
 
 
                                            var grid =  $("#policydetails").kendoGrid({
-                                                dataSource: gridDataSource,
-                                                height: 300,
+                                                dataSource: gridDataSource1,
+                                                height: 250,
                                                 sortable: true,
                                                 filterable: true,
                                                 editable: "inline",
@@ -422,7 +485,7 @@
                                                         title: "Member Type",
                                                         type: "string",
                                                         width: "250px",
-                                                        template: "#= strMemberType #",
+                                                       
                                                         editor: function(container, options) {
                                                             let encode = kendo.htmlEncode;
                                                             $('<input data-bind="value:' + options.field + '"/>')
@@ -443,7 +506,7 @@
                                                                         }
                                                                     },
                                                                     change: function () {
-                                                                        // Call the function to fetch corresponding data based on the selected value
+                                                                       
                                                                         fetchDataAndUpdateOtherFields();
                                                                     }
                                                                 });
@@ -502,11 +565,11 @@
                                                         }
                                                     },
                                                     { field: "strMemberName", title: "Member Name", type: "string", width: "200px", editable: false },
-                                                    { field: "datBirthDate", title: "Birth Date", type: "date", format: "{0:dd-MMMM-yyyy}", width: "200px", editable: false },
+                                                    { field: "datBirthDate", title: "Birth Date", type: "date", format: "{0:yyyy-MM-dd}", width: "200px", editable: false },
                                                     { field: "intAge_Calc", title: "Age", type: "number", width: "200px", editable: false },
                                                     { field: "monPremiumAmt", title: "Premium Amount", type: "number", width: "200px" },
                                                     { field: "monCoverAmt", title: "Cover Amount", type: "number", width: "200px" },
-                                                    { field: "datDateEnrolled", title: "Date Enrolled", type: "date", format: "{0:dd-MMMM-yyyy}", width: "200px" },
+                                                    { field: "datDateEnrolled", title: "Date Enrolled", type: "date", format: "{0:yyyy-MM-dd}", width: "200px" },
                                                     { field: "coverStatus", title: "Cover Status", type: "string", width: "200px" },
 
 
@@ -602,14 +665,8 @@
                                                         name: "create",
                                                         template: "<a class='k-button k-button-icontext k-grid-add' style='background-color: darkorange;'><i class='fa fa-plus'></i>Add New Record</a>"
                                                     }
-                                                ],
-                                                save: function (e) {
-                                                    if (e.model.isNew()) {
-                                                        gridDataSource.sync().then(function () {
-                                                            console.log("New record data:", e.model.toJSON());
-                                                        });
-                                                    }
-                                                }
+                                                ]
+                                               
                                             }).data("kendoGrid")
 
                                            
@@ -625,10 +682,7 @@
                                             });
                                         });
 
-                                        $(document).ready(function () {
-                                            $("#strMemberType, #strIDPPNum").change(fetchDataAndUpdateOtherFields);
-                                        });
-
+                                      
                                         function fetchDataAndUpdateOtherFields() {
                                             var selectedMemberTypeID = $("#strMemberType").val();
                                             var selectedProfileID = $("#strIDPPNum").val();
@@ -645,17 +699,20 @@
                                                     success: function (data) {
                                                         console.log("Received data:", data);
 
-                                                        var grid = $("#grid").data("kendoGrid");
+                                                        var grid = $("#policydetails").data("kendoGrid");
                                                         if (grid) {
-                                                            grid.dataSource.data(data);
                                                             var rowData = data[0];
-                                                            grid.editRow(grid.tbody.find(">tr:first"));
-                                                            grid.tbody.find("input[name='strMemberName']").val(rowData.fullName);
-                                                            grid.tbody.find("input[name='datBirthDate']").val(rowData.birthDate);
-                                                            grid.tbody.find("input[name='intAgeToday']").val(rowData.age);
-                                                            grid.tbody.find("input[name='monPremiumAmt']").val(rowData.monPremiumAmtMU);
-                                                            grid.tbody.find("input[name='monCoverAmt']").val(rowData.monCoverAmtMU);
-                                                            grid.closeCell();
+                                                            var currentRow = grid.tbody.find(">tr.k-grid-edit-row");
+                                                            if (currentRow.length === 0) {
+                                                                currentRow = grid.addRow();
+                                                            }
+                                                            currentRow.find("input[name='strMemberName']").val(rowData.fullName);
+                                                            currentRow.find("input[name='datBirthDate']").val(formatDate(rowData.birthDate));
+                                                            currentRow.find("input[name='intAge_Calc']").val(rowData.age);
+                                                            currentRow.find("input[name='monPremiumAmt']").val(rowData.monPremiumAmtMU);
+                                                            currentRow.find("input[name='monCoverAmt']").val(rowData.monCoverAmtMU);
+                                                           
+                                                            grid.closeCell(currentRow);
                                                         } else {
                                                             console.error("Grid not found or initialized.");
                                                         }
@@ -671,8 +728,15 @@
 
 
 
-
-
+                                        function formatDate(dateString) {
+                                           
+                                            var date = new Date(dateString);
+                                            var year = date.getFullYear();
+                                            var month = ('0' + (date.getMonth() + 1)).slice(-2); 
+                                            var day = ('0' + date.getDate()).slice(-2);
+                                            var formattedDate = year + '-' + month + '-' + day;
+                                            return formattedDate;
+                                        }
 
 
                                     </script>
@@ -702,26 +766,21 @@
                                         </div>
                                     </div> *@
 
-                                   @*  <script>
-                                        $(document).ready(function () {
-                                            $('#submitButton').click(function (e) {
-                                                e.preventDefault(); 
+                                    <script>
+                                        document.getElementById("btnNext").addEventListener("click", function (event) {
+                                            event.preventDefault(); 
 
-                                                var isValid = $('#policyForm').valid(); 
-
-                                                if (isValid) {
-                                                  
-                                                    console.log('Form is valid, proceed to the next step');
-                                                   
-                                                } else {
-                                                    
-                                                    console.log('Form is invalid');
-                                                    
-                                                }
-                                            });
+                                            
+                                            if (document.getElementById("policyform").checkValidity()) {
+                                              
+                                                document.getElementById("policyform").submit();
+                                            } else {
+                                              
+                                                alert("Form is not valid!");
+                                              
+                                            }
                                         });
-                                    </script> *@
-                                  
+                                    </script>
 
                                 </div>
 

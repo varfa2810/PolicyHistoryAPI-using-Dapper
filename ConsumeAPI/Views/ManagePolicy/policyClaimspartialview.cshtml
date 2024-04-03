@@ -13,103 +13,357 @@
     <div class="table-caption-top text-white mb-3">  <h3 class="heading02 text-center">Claims</h3> </div>
 
     <div id="limitedGrid"></div>
-    <div id="claimgrid2"></div>
-
-
-    
-       
-    
-
-   @* 
-        <script>
-            $(function () {
-
-            var gridDataSource = new kendo.data.DataSource({
+  
+    <script>
+        $(function () {
+            var gridDataSource10 = new kendo.data.DataSource({
                 transport: {
                     read: {
-                        url: "/ManagePolicy/Getpolicymembers",
+                        url: "/ManagePolicy/GetCombinedPolicyClaims",
                         datatype: "json",
                         type: "GET"
                     }
-                   
                 },
                 pageSize: 7,
                 schema: {
                     model: {
                         id: "intProfileID",
                         fields: {
-                            intMemberTypeID: { type: "number" },
-                            strMemberType: { type: "string" },
-                            strIDPPNum: { type: "string" },
-                            strMemberName: { type: "string",/*  editable: false, nullable: true */ },
-                          
-                            intAge_Calc: { type: "number", /* editable: false, nullable: true */ },
-                            
-                            monCoverAmt: { type: "number", /* editable: false, nullable: true  */ },
-                           
-                            coverStatus: { type: "string", editable: false, nullable: true },
-                           
-                            strBenRelationshipToPolMember: { type: "string" },
-                            intBenRelationshipID: { type: "number" },
-                           
+                            strEnterpriseID: { type: "string" },
+                            intPolicyNum: { type: "number" },
                             intProfileID: { type: "number" },
-                            strName: { type: "string" },
-                           
-
-
+                            datClaimDate: { type: "date" },
+                            monClaimAmt: { type: "number" },
+                            intClaimMethodID: { type: "number" },
+                            strClaimMethod: { type: "string" },
+                            intDeathCauseID: { type: "number" },
+                            strDeathCause: {
+                                type: "string",
+                     
+                            },
+                            datDeathDate: { type: "date" },
+                            bitDeathCertReceived: { type: "boolean" },
+                            strRefNum: { type: "string" },
+                            bitApprovedYN: { type: "boolean" },
+                            datPayOutDate: { type: "date" },
+                            strLastCapturer: { type: "string" },
+                            datDateModified: { type: "date" },
+                            coverStatus: { type: "string", editable: false },
+                            intMemberTypeID: { type: "number" },
+                            strMemberType: { type: "string", editable: false },
+                            strIDPPNum: { type: "string", editable: false },
+                            strMemberName: { type: "string", editable: false },
+                            datBirthDate: { type: "date" },
+                            intRelationshipID: { type: "number" },
+                            intAge_Calc: { type: "number", editable: false },
+                            intAgeToday: { type: "number" },
+                            intAgeYesterday: { type: "number" },
+                            monPremiumAmt: { type: "number" },
+                            monCoverAmt: { type: "number", editable: false },
+                            datDateEnrolled: { type: "date" },
+                            strRelationshipToMainMember: { type: "string" },
+                            intBenProfileID: { type: "number" },
+                            strBeneficiaryNameID: { type: "string", editable: false },
+                            intBenRelationshipID: { type: "number" },
+                            strBenRelationshipToPolMember: { type: "string" },
+                            bitConsentRecvdYN: { type: "boolean" },
+                            bitRemovedYN: { type: "boolean" }
                         }
                     }
                 }
             });
 
-
-
-                $("#limitedGrid").kendoGrid({
-                    dataSource: gridDataSource,
-                    height: 300,
-                    sortable: true,
-                    filterable: true,
-                    scrollable: true,
-                   
-                    columns: [
-                    { field: "strMemberName", title: "Member Name", type: "string", width: "100px" },
-                    { field: "strIDPPNum", title: "IDPP Number", type: "string", width: "110px" },
-                    { field: "monCoverAmt", title: "Cover Amount", type: "number", width: "70px" },
-                    { field: "intAge_Calc", title: "Age", type: "string", width: "40px" },
-                    { field: "coverStatus", title: "Cover Status", type: "string", width: "90px" },
-                    { field: "strBenRelationshipToPolMember", title: "beneficiary", type: "string", width: "90px" },
-                   
-                    ]
-                    
-                  
-                });
-
-
-            $("#limitedGrid").kendoGrid({
-                dataSource: gridDataSource,
-                height: 300,
+            var grid = $("#limitedGrid").kendoGrid({
+                dataSource: gridDataSource10,
+                height: 400,
                 sortable: true,
                 filterable: true,
+                editable: "inline",
                 scrollable: true,
-
                 columns: [
-                    { field: "strMemberName", title: "Member Name", type: "string", width: "100px" },
-                    { field: "strIDPPNum", title: "IDPP Number", type: "string", width: "110px" },
-                    { field: "monCoverAmt", title: "Cover Amount", type: "number", width: "70px" },
-                    { field: "intAge_Calc", title: "Age", type: "string", width: "40px" },
-                    { field: "coverStatus", title: "Cover Status", type: "string", width: "90px" },
-                    { field: "strBenRelationshipToPolMember", title: "beneficiary", type: "string", width: "90px" },
+
+                    {
+                        command: [
+                            {
+                                name: "edit",
+                                template: "<a class='icon-pencil k-button-icontext k-grid-edit fa-lg' ><i class='fa fa-pencil-square-o '></i></a>",
+                                iconClass: { update: "fa fa-save fa-xl", cancel: "fa fa-close fa-lg" },
+                            },
+                            
+                        ],
+                        title: "&nbsp;",
+                        width: "150px"
+                    },
+                    {
+                        title: "&nbsp;",
+                        width: "80px",
+                        template: function (dataItem) {
+                            if (dataItem.bitDeathCertReceived) {
+                                return ""; 
+                            } else {
+                                return "<input type='radio' class='rowRadio' name='selectedRowRadio' style='transform: scale(1.5); display: block; margin: 0 auto;'>";
+                            }
+                        }
+                    },
+                    { field: "strMemberType", title: "Member Type", type: "string", width: 200 },
+                    { field: "strIDPPNum", title: "IDPP Number", type: "string", width: 200 },
+                    { field: "strMemberName", title: "Member Name", type: "string", width: 200 },
+                    { field: "coverStatus", title: "Cover Status", type: "string", width: 150 },
+                    { field: "intAge_Calc", title: "Age ", type: "number", width: 120 },
+                    { field: "monCoverAmt", title: "Cover Amt", type: "number", width: 200 },
+                    { field: "datClaimDate", title: "Claim Date", type: "date", format: "{0:yyyy-MM-dd}", width: 200 },
+                    { field: "monClaimAmt", title: "Claim Amount", type: "number", width: 200 },
+                    { field: "strDeathCause", title: "Death Cause", type: "string", width: 200 },
+                    { field: "datDeathDate", title: "Death Date", type: "date", format: "{0:yyyy-MM-dd}", width: 200 },
+                    {
+                        field: "bitDeathCertReceived", title: "Death Certificate Received", width: 200, template: function (dataItem) {
+                            return '<div class="form-check form-switch">' +
+                                '<input class="form-check-input" type="checkbox" ' + (dataItem.bitDeathCertReceived ? 'checked' : '') + ' disabled>' +
+                                '<label class="form-check-label" for="flexSwitchCheckDefault2"></label>' +
+                                '</div>';
+                        },
+                        editor: function (container, options) {
+                            $('<div class="form-check form-switch">' + '<input class="form-check-input" type="checkbox" name="' + options.field + '" data-type="boolean" />' + '<label class="form-check-label" for="flexSwitchCheckDefault2"></label>' +
+                                '</div>').appendTo(container);
+                        }
+                    },
+                    { field: "strRefNum", title: "Reference Number", type: "string", width: 200 },
+                    {
+                        field: "bitApprovedYN", title: "Approved", width: 200, template: function (dataItem) {
+                            return '<div class="form-check form-switch">' +
+                                '<input class="form-check-input" type="checkbox" ' + (dataItem.bitApprovedYN ? 'checked' : '') + ' disabled>' +
+                                '<label class="form-check-label" for="flexSwitchCheckDefault2"></label>' +
+                                '</div>';
+                        },
+                        editor: function (container, options) {
+                            $('<div class="form-check form-switch">' + '<input class="form-check-input" type="checkbox" name="' + options.field + '" data-type="boolean" />' + '<label class="form-check-label" for="flexSwitchCheckDefault2"></label>' +
+                                '</div>').appendTo(container);
+                        }
+                    },
+                    { field: "datPayOutDate", title: "Payout Date", type: "date", format: "{0:yyyy-MM-dd}", width: 200 },
+                    { field: "strBeneficiaryNameID", title: "Beneficiary Name ID", type: "string", width: 200 }
+                ],
+             
+               
+            });
+
+            
+            $("#limitedGrid").on("click", ".rowRadio", function () {
+                var grid = $("#limitedGrid").data("kendoGrid");
+                var selectedItem = grid.dataItem($(this).closest("tr"));
+
+                if (selectedItem) {
+                    grid.editRow($(this).closest("tr"));
+                }
+            });
+        });
+
+    </script>
+
+
+
+  @*   <script>
+        $(function () {
+        
+
+            var gridDataSource6 = new kendo.data.DataSource({
+                transport: {
+                    read: {
+                        url: "/ManagePolicy/Getpolicyclaims",
+                        datatype: "json",
+                        type: "GET"
+                    }
+                },
+                pageSize: 7,
+                schema: {
+                    model: {
+                        id: "intProfileID",
+                        fields: {
+
+                            strEnterpriseID: { type: "string" },
+                            intPolicyNum: { type: "number" },
+                            intProfileID: { type: "number" },
+                            datClaimDate: { type: "date" },
+                            monClaimAmt: { type: "number" },
+                            intClaimMethodID: { type: "number" },
+                            strClaimMethod: { type: "string" },
+                            intDeathCauseID: { type: "number" },
+                            strDeathCause: { type: "string" },
+                            datDeathDate: { type: "date" },
+                            bitDeathCertReceived: { type: "boolean" },
+                            strRefNum: { type: "string" },
+                            bitApprovedYN: { type: "boolean" },
+                            datPayOutDate: { type: "date" },
+                            strLastCapturer: { type: "string" },
+                            datDateModified: { type: "date" },
+                            coverStatus: { type: "string" }
+                        }
+                    }
+                }
+            });
+
+           
+
+            var grid = $("#claimgrid2").kendoGrid({
+                dataSource: gridDataSource6,
+                height: 250,
+                sortable: true,
+                filterable: true,
+                editable: "inline",
+                scrollable: true,
+                columns: [
+
+                    { field: "strEnterpriseID", title: "Enterprise ID", type: "string" },
+                    { field: "intPolicyNum", title: "Policy Number", type: "number" },
+                    { field: "intProfileID", title: "Profile ID", type: "number" },
+                    { field: "datClaimDate", title: "Claim Date", type: "date", format: "{0:yyyy/MM/dd}" },
+                    { field: "monClaimAmt", title: "Claim Amount", type: "number", format: "{0:c}" },
+                    { field: "intClaimMethodID", title: "Claim Method ID", type: "number" },
+                    { field: "strClaimMethod", title: "Claim Method", type: "string" },
+                    { field: "intDeathCauseID", title: "Death Cause ID", type: "number" },
+                    { field: "strDeathCause", title: "Death Cause", type: "string" },
+                    { field: "datDeathDate", title: "Death Date", type: "date", format: "{0:yyyy/MM/dd}" },
+                    { field: "bitDeathCertReceived", title: "Death Certificate Received", type: "boolean" },
+                    { field: "strRefNum", title: "Reference Number", type: "string" },
+                    { field: "bitApprovedYN", title: "Approved", type: "boolean" },
+                    { field: "datPayOutDate", title: "Payout Date", type: "date", format: "{0:yyyy/MM/dd}" },
+                    { field: "strLastCapturer", title: "Last Capturer", type: "string" },
+                    { field: "datDateModified", title: "Date Modified", type: "date", format: "{0:yyyy/MM/dd}" },
+                    { field: "coverStatus", title: "Cover Status", type: "string" }
 
                 ]
-
-
             });
-            });
-        </script> *@
-    
 
+        });
+    </script> *@
+
+
+@* 
+    <div id="combinedGrid"></div>
 
     <script>
+        $(function () {
+            // Define data sources
+            var gridDataSource1 = new kendo.data.DataSource({
+                transport: {
+                    read: {
+                        url: "/ManagePolicy/Getpolicymembers",
+                        dataType: "json",
+                        type: "GET"
+                    }
+                },
+                pageSize: 7,
+                schema: {
+                    model: {
+                        id: "intProfileID",
+                        fields: {
+                            intProfileID: { type: "number" },
+                            strMemberName: { type: "string" },
+                            strIDPPNum: { type: "string" },
+                            intAge_Calc: { type: "number" },
+                            monCoverAmt: { type: "number" },
+                            datDateEnrolled: { type: "date" },
+                            coverStatus: { type: "string" },
+                            strRelationshipToMainMember: { type: "string" },
+                            strBeneficiaryNameID: { type: "string" },
+                            strBenRelationshipToPolMember: { type: "string" },
+                            intBenRelationshipID: { type: "number" },
+                            bitConsentRecvdYN: { type: "boolean" },
+                            intRelationshipId: { type: "number" },
+                            strRelationship: { type: "string" },
+                            strName: { type: "string" },
+                            strIDPPNum: { type: "number" }
+                        }
+                    }
+                }
+            });
+
+            var gridDataSource6 = new kendo.data.DataSource({
+                transport: {
+                    read: {
+                        url: "/ManagePolicy/Getpolicyclaims",
+                        dataType: "json",
+                        type: "GET"
+                    }
+                },
+                pageSize: 7,
+                schema: {
+                    model: {
+                        id: "intProfileID",
+                        fields: {
+                            strEnterpriseID: { type: "string" },
+                            intPolicyNum: { type: "number" },
+                            intProfileID: { type: "number" },
+                            datClaimDate: { type: "date" },
+                            monClaimAmt: { type: "number" },
+                            intClaimMethodID: { type: "number" },
+                            strClaimMethod: { type: "string" },
+                            intDeathCauseID: { type: "number" },
+                            strDeathCause: { type: "string" },
+                            datDeathDate: { type: "date" },
+                            bitDeathCertReceived: { type: "boolean" },
+                            strRefNum: { type: "string" },
+                            bitApprovedYN: { type: "boolean" },
+                            datPayOutDate: { type: "date" },
+                            strLastCapturer: { type: "string" },
+                            datDateModified: { type: "date" },
+                            coverStatus: { type: "string" }
+                        }
+                    }
+                }
+            });
+
+            // Event handlers for successful data retrieval
+            gridDataSource1.bind("change", combineData);
+            gridDataSource6.bind("change", combineData);
+
+            function combineData() {
+                if (gridDataSource1.total() > 0 && gridDataSource6.total() > 0) {
+                    var combinedData = gridDataSource1.data().concat(gridDataSource6.data());
+
+                    // Create the combined grid
+                    $("#combinedGrid").kendoGrid({
+                        dataSource: combinedData,
+                        height: 400,
+                        sortable: true,
+                        filterable: true,
+                        scrollable: true,
+                        pageable: {
+                            pageSize: 7
+                        },
+                        columns: [
+                            // Define columns for the combined grid
+                            { field: "strMemberName", title: "Member Name" },
+                            { field: "strIDPPNum", title: "IDPP Number" },
+                            { field: "intAge_Calc", title: "Age" },
+                            { field: "monCoverAmt", title: "Cover Amount" },
+                            { field: "datDateEnrolled", title: "Date Enrolled", format: "{0:yyyy/MM/dd}" },
+                            { field: "coverStatus", title: "Cover Status" },
+                            { field: "strRelationshipToMainMember", title: "Relationship to Main Member" },
+                            { field: "strBeneficiaryNameID", title: "Beneficiary Name ID" },
+                            { field: "strBenRelationshipToPolMember", title: "Beneficiary Relationship to Policy Member" },
+                            { field: "strEnterpriseID", title: "Enterprise ID" },
+                            { field: "intPolicyNum", title: "Policy Number" },
+                            { field: "datClaimDate", title: "Claim Date", format: "{0:yyyy/MM/dd}" },
+                            { field: "monClaimAmt", title: "Claim Amount" },
+                            { field: "strClaimMethod", title: "Claim Method" },
+                            { field: "strDeathCause", title: "Death Cause" },
+                            { field: "datDeathDate", title: "Death Date", format: "{0:yyyy/MM/dd}" },
+                            { field: "bitDeathCertReceived", title: "Death Certificate Received" },
+                            { field: "strRefNum", title: "Reference Number" },
+                            { field: "bitApprovedYN", title: "Approved" },
+                            { field: "datPayOutDate", title: "Payout Date", format: "{0:yyyy/MM/dd}" },
+                            { field: "strLastCapturer", title: "Last Capturer" },
+                            { field: "datDateModified", title: "Date Modified", format: "{0:yyyy/MM/dd}" }
+                        ]
+                    });
+                }
+            }
+        });
+
+    </script> *@
+
+   @*  <script>
         $(function () {
             var gridDataSource5 = new kendo.data.DataSource({
                 transport: {
@@ -247,7 +501,7 @@
 
           
         });
-    </script>
+    </script> *@
 
 
 

@@ -52,16 +52,17 @@ namespace PolicyHistory_API_using_Dapper.Services
         Task<List<PolicyClaim>> GetClaims(string enterpriseID, int policyNum);
 
 
+        Task<int> InsertClaims(PolicyClaimsInsert policyClaimsInsert);
 
 
 
         Task<int> EditInvoice(PolicyInvoice policyInvoice);
 
         Task<int> DeleteInvoice(string enterpriseID, int policyNum, int invoiceNum);
-        Task<int> InsertInvoice(PolicyInvoice policyInvoice);
+        Task<int> InsertInvoice(PolicyInvoiceInsert policyInvoice);
 
 
-        Task<List<PolicyInvoice>> GetInvoice(string enterpriseID, int policyNum, int invoiceNum);
+        Task<List<PolicyInvoice>> GetInvoice(string enterpriseID, int policyNum);
 
 
 
@@ -72,8 +73,10 @@ namespace PolicyHistory_API_using_Dapper.Services
         Task<List<PolicyPayments>> GetPayments(string enterpriseID, int policyNum, int invoiceNum);
 
 
+        Task<int> InsertPayments(PolicyPaymentInsert policyPaymentInsert);
 
 
+        Task<List<CombinedPolicyClaims>> GetCombinedPolicyClaims(string enterpriseID, int policyNum);   
 
 
     }

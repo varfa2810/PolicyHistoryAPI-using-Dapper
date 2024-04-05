@@ -102,8 +102,16 @@
             border: 1px solid red; /* Example border color */
         }
 
-      /*   .k-header {
-            color: white;
+        /* Add red color to validation messages */
+        .k-tooltip-validation {
+            color: red;
+        }
+
+
+     /*    .k-grid-edit-row > td > .k-widget:not(.k-switch), .k-grid-edit-row > td > .text-box {
+            width: max-content;
+            color: red;
+            font-weight: bold;
         } */
     </style>
    
@@ -177,16 +185,29 @@
                                             <div class="row">
                                                 <div class="col-xl-3 col-md-6 my-2">
                                                     <div class="form-group">
-
-                                                        <label asp-for="IntPolicyNum" class="form-label">Policy Number:<strong style="color:red">*</strong></label>
-                                                        <input asp-for="IntPolicyNum" class="form-control">
-                                                        <span asp-validation-for="IntPolicyNum" class="text-danger"></span>
+                                                        <label asp-for="IntPolicyNum" class="form-label">Policy Number<strong style="color:red">*</strong></label>
+                                                        <input asp-for="IntPolicyNum" class="form-control" id="policyNum" readonly>
+                                                       @*  <span asp-validation-for="IntPolicyNum" class="text-danger"></span> *@
                                                     </div>
+                                                    <script>
+                                                        // Function to generate a random number between 1 and 10
+                                                        function getRandomInt(min, max) {
+                                                            return Math.floor(Math.random() * (max - min + 1)) + min;
+                                                        }
+
+                                                        // Set the random number to the input field on page load
+                                                        $(document).ready(function () {
+                                                            // Generate random number between 1 and 10
+                                                            var randomNum = getRandomInt(1, 10);
+                                                            // Set the generated number to the input field
+                                                            $('#policyNum').val(randomNum);
+                                                        });
+                                                    </script>
                                                 </div>
                                                 <div class="col-xl-3 col-md-7 my-2">
                                                     <div class="form-group">
-                                                        <label for="Planbrandname" class="form-label">Plan Brand</label>
-                                                        <select id="Planbrandname" style="width: 100%; height: 100%;"></select>
+                                                        <label for="Planbrandname" class="form-label">Plan Brand<strong style="color:red">*</strong></label>
+                                                        <select id="Planbrandname" class="form-control"></select>
                                                     </div>
                                                 </div>
 
@@ -214,16 +235,15 @@
                                                         if (data && data.length > 0) {
                                                             data.forEach(optionText => {
                                                                 const option = document.createElement('option');
-                                                               
-                                                                    option.text = optionText.strPlanBrandName;
-                                                                    option.value = optionText.intPlanID;
-                                                                
+                                                                option.text = optionText.strPlanBrandName;
+                                                                option.value = optionText.intPlanID;
                                                                 dropdown.appendChild(option);
                                                             });
                                                         } else {
                                                             console.log("No data available for dropdown.");
                                                         }
                                                     }
+
                                                 </script>
 
 
@@ -231,7 +251,7 @@
                                                 <div class="col-xl-3 col-md-7 my-2">
                                                     <div class="form-group">
                                                         <label for="agentDropdown" class="form-label">Agent</label>
-                                                        <select id="agentDropdown" style="width: 100%; height: 100%;"></select>
+                                                        <select id="agentDropdown" class="form-control"></select>
                                                     </div>
                                                 </div>
 
@@ -437,14 +457,15 @@
                                                             strRelationshipToMainMember: { type: "string" },
                                                             strBeneficiaryNameID: { type: "string" },
                                                             strBenRelationshipToPolMember: { type: "string" },
+                                                            intBenProfileID: {type : "number"},
                                                             intBenRelationshipID: {type: "number"},
                                                             bitConsentRecvdYN: { type: "boolean" },
-                                                            intRelationshipId: { type: "number" },
+                                                            intRelationshipID: { type: "number" },
                                                             strRelationship: { type: "string" },
                                                             intProfileID: { type: "number" },
                                                             strName: { type: "string" },
                                                             strIDPPNum: { type: "number" }
-
+                                                                                                    
                                                                                                     
                                                         }
                                                     }
@@ -456,7 +477,7 @@
 
                                            var grid =  $("#policydetails").kendoGrid({
                                                 dataSource: gridDataSource1,
-                                                height: 250,
+                                                height: 350,
                                                 sortable: true,
                                                 filterable: true,
                                                 editable: "inline",
@@ -480,14 +501,39 @@
                                                         title: "&nbsp;",
                                                         width: "150px"
                                                     },
+
+
+                                                   
                                                     {
-                                                        field: "strMemberType",
-                                                        title: "Member Type",
-                                                        type: "string",
+                                                        field: "intMemberTypeID",
+                                                        title: "Member Type",     
                                                         width: "250px",
+                                                        template: function (dataItem) {
+                                                            var dynamicContent = "";
+
+                                                            $.ajax({
+                                                                url: "/ManagePolicy/GetMemberTypeList",
+                                                                method: "GET",
+                                                                dataType: "json",
+                                                                async: false,
+                                                                success: function (response) {
+       
+                                                                    response.forEach(function (item) {
+                                                                        if (dataItem.intMemberTypeID === item.intMemberTypeID) {
+                                                                            dynamicContent = item.strMemberType;
+                                                                        }
+                                                                    });
+                                                                },
+                                                                error: function (xhr, status, error) {
+                                                                    console.error("Error:", error);
+                                                                }
+                                                            });
+
+                                                            return '<div>' + dynamicContent + '</div>';
+                                                        },
                                                        
                                                         editor: function(container, options) {
-                                                            let encode = kendo.htmlEncode;
+                                                           
                                                             $('<input data-bind="value:' + options.field + '"/>')
                                                                 .attr('id', 'strMemberType')
                                                                 .appendTo(container)
@@ -496,7 +542,6 @@
                                                                     optionLabel: 'Select Member Type',
                                                                     dataTextField: "strMemberType",
                                                                     dataValueField: "intMemberTypeID",
-                                                                    footerTemplate: ({ instance }) => `Total <strong>${encode(instance.dataSource.total())}</strong> items found`,
                                                                     dataSource: {
                                                                         transport: {
                                                                             read: {
@@ -505,8 +550,7 @@
                                                                             }
                                                                         }
                                                                     },
-                                                                    change: function () {
-                                                                       
+                                                                    change: function() {
                                                                         fetchDataAndUpdateOtherFields();
                                                                     }
                                                                 });
@@ -532,7 +576,32 @@
 
 
 
-                                                    { field: "strIDPPNum", title: "IDPP Number", type: "string", width: "400px" ,
+                                                    {
+                                                        field: "intProfileID", title: "IDPP Number", type: "string", width: "400px",
+                                                        template: function (dataItem) {
+                                                            var dynamicContent = "";
+
+                                                            $.ajax({
+                                                                url: "/ManagePolicy/GetIDPPNumberList",
+                                                                method: "GET",
+                                                                dataType: "json",
+                                                                async: false,
+                                                                success: function (response) {
+                                                                  
+                                                                 
+                                                                    response.forEach(function (item) {
+                                                                        if (dataItem.intProfileID === item.intProfileID) {
+                                                                            dynamicContent = item.strIDPPNum;
+                                                                        }
+                                                                    });
+                                                                },
+                                                                error: function (xhr, status, error) {
+                                                                    console.error("Error:", error);
+                                                                }
+                                                            });
+
+                                                            return '<div>' + dynamicContent + '</div>';
+                                                        },
                                                         editor: function (container, options) {
                                                            
                                                             $('<input data-bind="value:' + options.field + '"/>')
@@ -552,14 +621,13 @@
                                                                                 dataType: "json"
                                                                             }
                                                                         },
-                                                                        pageSize: 1000,
+                                                                     
                                                                         
                                                                     },
                                                                     change: function () {
-                                                                       
-                                                                        fetchDataAndUpdateOtherFields();
-                                                                    }
-
+   
+                                                                        fetchDataAndUpdateOtherFields( );
+                                                                    },
 
                                                                 });
                                                         }
@@ -574,12 +642,36 @@
 
 
                                                     {
-                                                        field: "strRelationshipToMainMember",
+                                                        field: "intRelationshipID",
                                                         title: "Relationship Main Member",
-                                                        type: "string",
+                                                       
                                                         width: "270px",
+                                                        template: function (dataItem) {
+                                                            var dynamicContent = "";
+
+                                                            $.ajax({
+                                                                url: "/ManagePolicy/GetRelationshipList",
+                                                                method: "GET",
+                                                                dataType: "json",
+                                                                async: false,
+                                                                success: function (response) {
+                                                                   
+                                                                   
+                                                                    response.forEach(function (item) {
+                                                                        if (dataItem.intRelationshipID === item.intRelationshipId) {
+                                                                            dynamicContent = item.strRelationship;
+                                                                        }
+                                                                    });
+                                                                },
+                                                                error: function (xhr, status, error) {
+                                                                    console.error("Error:", error);
+                                                                }
+                                                            });
+
+                                                            return '<div>' + dynamicContent + '</div>';
+                                                        },
                                                         editor: function (container, options) {
-                                                            let encode = kendo.htmlEncode;
+                                                           
                                                             $('<input data-bind="value:' + options.field + '"/>')
                                                                 .appendTo(container)
                                                                 .kendoDropDownList({
@@ -587,7 +679,7 @@
                                                                     optionLabel: 'Select Relationship Type',
                                                                     dataTextField: "strRelationship",
                                                                     dataValueField: "intRelationshipId",
-                                                                    footerTemplate: ({ instance }) => `Total <strong>${encode(instance.dataSource.total())}</strong> items found`,
+                                                                 
                                                                     dataSource: {
                                                                         transport: {
                                                                             read: {
@@ -605,7 +697,33 @@
 
 
                                                     
-                                                    { field: "strBeneficiaryNameID", title: "Beneficiary Name ID", type: "string", width: "270px",
+                                                    {
+                                                        field: "intBenProfileID", title: "Beneficiary Name ID", width: "270px",
+                                                        template: function (dataItem) {
+                                                            var dynamicContent = "";
+
+                                                            $.ajax({
+                                                                url: "/ManagePolicy/GetIDPPNumberList",
+                                                                method: "GET",
+                                                                dataType: "json",
+                                                                async: false,
+                                                                success: function (response) {
+                                                                   
+                                                                   
+                                                                    response.forEach(function (item) {
+                                                                        if (dataItem.intBenProfileID === item.intProfileID) {
+                                                                            dynamicContent = item.strName;
+                                                                        }
+                                                                    });
+                                                                },
+                                                                error: function (xhr, status, error) {
+                                                                    console.error("Error:", error);
+                                                                }
+                                                            });
+
+                                                            return '<div>' + dynamicContent + '</div>';
+                                                        },
+
                                                        editor: function(container, options) {
 
                                                             $('<input data-bind="value:' + options.field + '"/>')
@@ -623,7 +741,7 @@
                                                                                 dataType: "json"
                                                                             }
                                                                         },
-                                                                        pageSize: 1000,
+                                                                      
 
                                                                     }
 
@@ -634,7 +752,32 @@
                                                     },
 
 
-                                                    { field: "strBenRelationshipToPolMember", title: "Beneficiary Relationship", type: "string", width: "280px" ,
+                                                    {
+                                                        field: "intBenRelationshipID", title: "Beneficiary Relationship", width: "280px",
+
+                                                        template: function (dataItem) {
+                                                            var dynamicContent = "";
+
+                                                            $.ajax({
+                                                                url: "/ManagePolicy/GetRelationshipList",
+                                                                method: "GET",
+                                                                dataType: "json",
+                                                                async: false,
+                                                                success: function (response) {
+                                                                   
+                                                                    response.forEach(function (item) {
+                                                                        if (dataItem.intBenRelationshipID === item.intRelationshipId) {
+                                                                            dynamicContent = item.strRelationship;
+                                                                        }
+                                                                    });
+                                                                },
+                                                                error: function (xhr, status, error) {
+                                                                    console.error("Error:", error);
+                                                                }
+                                                            });
+
+                                                            return '<div>' + dynamicContent + '</div>';
+                                                        },
                                                         editor: function (container, options) {
                                                             let encode = kendo.htmlEncode;
                                                             $('<input data-bind="value:' + options.field + '"/>')
@@ -682,15 +825,18 @@
                                             });
                                         });
 
-                                      
+
+
+
+
                                         function fetchDataAndUpdateOtherFields() {
-                                            var selectedMemberTypeID = $("#strMemberType").val();
-                                            var selectedProfileID = $("#strIDPPNum").val();
+                                            var selectedMemberTypeID = $("#strMemberType").data("kendoDropDownList").value();
+                                            var selectedProfileID = $("#strIDPPNum").data("kendoDropDownList").value();
 
                                             console.log(selectedMemberTypeID);
                                             console.log(selectedProfileID);
 
-                                            if (selectedMemberTypeID !== null && selectedProfileID !== null) {
+                                            if (selectedMemberTypeID && selectedProfileID) {
                                                 $.ajax({
                                                     url: "/ManagePolicy/GetCorrespondingData",
                                                     type: "GET",
@@ -699,6 +845,7 @@
                                                     success: function (data) {
                                                         console.log("Received data:", data);
 
+                                                        debugger;
                                                         var grid = $("#policydetails").data("kendoGrid");
                                                         if (grid) {
                                                             var rowData = data[0];
@@ -711,7 +858,7 @@
                                                             currentRow.find("input[name='intAge_Calc']").val(rowData.age);
                                                             currentRow.find("input[name='monPremiumAmt']").val(rowData.monPremiumAmtMU);
                                                             currentRow.find("input[name='monCoverAmt']").val(rowData.monCoverAmtMU);
-                                                           
+
                                                             grid.closeCell(currentRow);
                                                         } else {
                                                             console.error("Grid not found or initialized.");
@@ -725,7 +872,6 @@
                                                 console.error("Selected member type ID or profile ID is empty.");
                                             }
                                         }
-
 
 
                                         function formatDate(dateString) {
@@ -745,42 +891,42 @@
                                  
 
 
-                                    <ul class="pagination justify-content-between">
+                                    @* <ul class="pagination justify-content-between">
                                         <li class="page-item ms-auto">
                                             <a href="#" class="btnNext">
-                                                <span class="me-2">Next</span>
-                                                <svg width="32" height="24" viewBox="0 0 32 24" fill="currentColor"
-                                                     xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M31.5061 22.9164V1.0284L31.5065 1.0264L31.5061 1.0244V0.930402H31.4965C31.4733 0.679676 31.3574 0.446613 31.1715 0.276773C30.9856 0.106933 30.7431 0.0125247 30.4913 0.0120026C30.4793 0.0120026 30.4681 0.0152021 30.4565 0.0156021H28.6289C28.6005 0.0132021 28.5729 0.00720215 28.5437 0.00720215C28.2745 0.00730816 28.0165 0.114258 27.8262 0.304547C27.6359 0.494836 27.529 0.752893 27.5289 1.022C27.5289 1.0688 27.5365 1.114 27.5429 1.1592V10.4156L14.2065 2.7156C14.1114 2.6216 13.9909 2.55744 13.8598 2.531C13.7287 2.50457 13.5928 2.51703 13.4687 2.56684C13.3446 2.61664 13.2377 2.70163 13.1613 2.81135C13.0849 2.92107 13.0422 3.05074 13.0385 3.1844H13.0361V9.284L1.65926 2.7152C1.56416 2.6212 1.44366 2.55704 1.31259 2.53061C1.18151 2.50418 1.04556 2.51663 0.921467 2.56644C0.797373 2.61625 0.690541 2.70123 0.614108 2.81095C0.537675 2.92067 0.494975 3.05034 0.491258 3.184H0.489258V20.7964C0.489451 20.933 0.530331 21.0664 0.606682 21.1796C0.683033 21.2929 0.79139 21.3808 0.917927 21.4321C1.04446 21.4835 1.18344 21.496 1.31712 21.4681C1.45079 21.4401 1.57311 21.373 1.66846 21.2752L13.0361 14.712V20.7968C13.0363 20.9334 13.0771 21.0668 13.1535 21.18C13.2298 21.2933 13.3382 21.3812 13.4647 21.4325C13.5913 21.4839 13.7302 21.4964 13.8639 21.4685C13.9976 21.4405 14.1199 21.3734 14.2153 21.2756L27.5429 13.5808V22.9336H27.5481C27.5473 22.9492 27.5433 22.9636 27.5433 22.9792C27.5434 23.2479 27.6501 23.5056 27.8399 23.6958C28.0298 23.886 28.2873 23.9931 28.5561 23.9936H30.4969V23.984C30.6301 23.984 30.7621 23.9578 30.8852 23.9068C31.0083 23.8558 31.1202 23.781 31.2144 23.6868C31.3087 23.5925 31.3834 23.4807 31.4344 23.3575C31.4854 23.2344 31.5117 23.1025 31.5117 22.9692C31.5113 22.9508 31.5069 22.934 31.5061 22.9164Z"
-                                                          fill="currentColor" />
-                                                </svg>
+                                                <span class="me-2">Next <i class="fas fa-arrow-right"></i></span>                             
                                             </a>
                                         </li>
-                                    </ul>
+                                    </ul> *@
 
-                                 @*    <div class="container">
+                                    <div class="container">
                                         <div class="row justify-content-end">
-                                            <div class="col-auto">
-                                                <button type="button" class="btn btn-primary btnNext" id="submitButton">NEXT</button>
+                                            <div class="col-auto pt-2">
+                                                <button type="button" class="btn btn-primary btnNext" id="submitButton">
+                                                    NEXT <i class="fas fa-arrow-right"></i>
+                                                </button>
+
                                             </div>
                                         </div>
-                                    </div> *@
-
+                                    </div>
                                     <script>
-                                        document.getElementById("btnNext").addEventListener("click", function (event) {
-                                            event.preventDefault(); 
+                                        // Use getElementsByClassName (note the plural 'Elements')
+                                        var btnNextElements = document.getElementsByClassName("btnNext");
 
-                                            
-                                            if (document.getElementById("policyform").checkValidity()) {
-                                              
-                                                document.getElementById("policyform").submit();
-                                            } else {
-                                              
-                                                alert("Form is not valid!");
-                                              
-                                            }
-                                        });
+                                        // Iterate over all elements with class "btnNext" and add event listener
+                                        for (var i = 0; i < btnNextElements.length; i++) {
+                                            btnNextElements[i].addEventListener("click", function (event) {
+                                                event.preventDefault();
+
+                                                if (document.getElementById("policyform").checkValidity()) {
+                                                    document.getElementById("policyform").submit();
+                                                } else {
+                                                    alert("Form is not valid!");
+                                                }
+                                            });
+                                        }
                                     </script>
+
 
                                 </div>
 

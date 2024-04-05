@@ -17,13 +17,25 @@
         $(function () {
             var gridDataSource4 = new kendo.data.DataSource({
                 transport: {
-                    read: {
-                        url: "/ManagePolicy/Getpolicyinvoice",
-                        dataType: "json",
-                        type: "GET"
+
+                    read: function (options) {
+                        $.ajax({
+                            url: "/ManagePolicy/Getpolicyinvoice",
+                            dataType: "json",
+                            type: "GET",
+                            success: function (response) {
+                                // console.log(response)
+                                options.success(response);
+
+                            },
+                            error: function (xhr, status, error) {
+                                console.error("Error reading data from the server:", error);
+                                options.error(xhr, status, error);
+                            }
+                        });
                     },
-                    create: function (options) {
-                      
+                   
+                    create: function (options) { 
                         $.ajax({
                             url: '/ManagePolicy/CreateValueAddedService',
                             type: 'POST',
@@ -42,10 +54,31 @@
                             }
                         });
                     },
+
+                    update: function (options) {
+                        $.ajax({
+                            url: '/ManagePolicy/EditPolicyInvoice',
+                            type: 'PUT',
+                            data: JSON.stringify(options.data),
+                            contentType: 'application/json; charset=utf-8',
+                            success: function (response) {
+                                console.log("Data updated on server:", response);
+                                options.success(response);
+                            },
+                            error: function (xhr, status, error) {
+                                console.error("Error updating data on the server:", error);
+                                options.error(xhr, status, error);
+                            }
+                        });
+                    }
+
+
+
                 },
                 pageSize: 7,
                 schema: {
                     model: {
+                        id: "intInvoiceNum",
                         fields: {
                             strEnterpriseID: { type: "string" },
                             intPolicyNum: { type: "number" },
@@ -68,6 +101,9 @@
 
             $("#invoice").kendoGrid({
                 dataSource: gridDataSource4,
+                sortable: true,
+                filterable: true,
+                editable: "inline",
                 height: 200,
                 columns: [
                     {
@@ -92,7 +128,54 @@
                     },
                     { field: "intInvoiceNum", title: "Invoice Number" },
                     { field: "datInvoiceDate", title: "Invoice Date", format: "{0:yyyy/MM/dd}" },
-                    { field: "strPurpose", title: "Purpose" },
+                    {
+                        field: "intPurposeID", title: "Purpose", template: function (dataItem) {
+                            var dynamicContent = "";
+
+                            $.ajax({
+                                url: "/ManagePolicy/GetPolicyPurposeList",
+                                method: "GET",
+                                dataType: "json",
+                                async: false,
+                                success: function (response) {
+
+                                    response.forEach(function (item) {
+                                        if (dataItem.intPurposeID === item.intPurposeID) {
+                                            dynamicContent = item.strPurpose;
+                                        }
+                                    });
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error("Error:", error);
+                                }
+                            });
+
+                            return '<div>' + dynamicContent + '</div>';
+                        },
+
+                        editor: function (container, options) {
+
+                            $('<input data-bind="value:' + options.field + '"/>')
+                                .attr('id', 'strMemberType')
+                                .appendTo(container)
+                                .kendoDropDownList({
+                                    rounded: "large",
+                                    optionLabel: 'Select Purpose',
+                                    dataTextField: "strPurpose",
+                                    dataValueField: "intPurposeID",
+                                    dataSource: {
+                                        transport: {
+                                            read: {
+                                                url: "/ManagePolicy/GetPolicyPurposeList",
+                                                dataType: "json"
+                                            }
+                                        }
+                                    }
+                                   
+                                });
+                        }
+
+                    },
                     { field: "monInvoiceTotal", title: "Invoice Total" },
                     { field: "datDueByDate", title: "Due By Date", format: "{0:yyyy/MM/dd}" },
                     { field: "strCurrentStatus", title: "Current Status" }
@@ -119,9 +202,7 @@
                     // $("#payment").data("kendoGrid").dataSource.transport.options.read.url = secondGridUrl;
                     // $("#payment").data("kendoGrid").dataSource.read();
                 }
-            });
-
-            
+            });   
             
         });
 
@@ -141,7 +222,7 @@
                             strEnterpriseID: { type: "string" },
                             intPolicyNum: { type: "number" },
                             intInvoiceNum: { type: "number" },
-                            intReceiptNum: { type: "number" },
+                            intReceiptNum: { type: "number", editable: false },
                             monAmtPaid: { type: "number" },
                             datDatePaid: { type: "date", format: "yyyy/MM/dd" },
                             strRefNum: { type: "string" },

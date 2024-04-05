@@ -6,7 +6,7 @@
         {
         }
 
-        public int IntAddonID { get; set; }
+        public int IntAddOnID { get; set; }
 
         public string StrAddOnDescription { get; set; }
     }

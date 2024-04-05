@@ -18,6 +18,26 @@ namespace PolicyHistory_API_using_Dapper.Controllers
         }
 
 
+
+        [HttpGet("GetPolicyPurposeList")]
+        public async Task<IActionResult> GetPolicyPurposeList()
+        {
+            try
+            {
+                var result = await _repo.GetPolicyPurposeList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+
+
+
+
         [HttpGet("GetPolicyAgent")]
         public async Task<IActionResult> GetPolicyAgentList()
         {
@@ -345,14 +365,23 @@ namespace PolicyHistory_API_using_Dapper.Controllers
 
 
         [HttpPut("EditValueAddedService")]
-        public async Task<IActionResult> EditValueAddedService(int policyNum, [FromBody]PolicyValueAddedService policyValueAddedService)
+        public async Task<IActionResult> EditValueAddedService( [FromBody] PolicyValueAddedServiceInsert valueAddedServiceInsert)
         {
          
             try
             {
-                var result =  await _repo.EditValueAddedService(policyNum, policyValueAddedService);
-                return Ok(result);
-                
+                var result =  await _repo.EditValueAddedService(valueAddedServiceInsert);
+                if (result > 0)
+                {
+
+                    return Ok(new { Message = "Value Added Service edited successfully." });
+                }
+                else
+                {
+
+                    return NotFound(new { Message = "Value Added Service not found." });
+                }
+
             }
             catch(Exception ex)
             {
@@ -447,12 +476,12 @@ namespace PolicyHistory_API_using_Dapper.Controllers
 
 
         [HttpPut("EditInvoice")]
-        public async Task<IActionResult> EditInvoice( [FromBody]PolicyInvoice policyInvoice)
+        public async Task<IActionResult> EditInvoice( [FromBody] PolicyInvoiceUpdate policyInvoiceUpdate)
         {
          
             try
             {
-                int affectedRows = await _repo.EditInvoice(policyInvoice);
+                int affectedRows = await _repo.EditInvoice(policyInvoiceUpdate);
 
                 if (affectedRows > 0)
                 {
@@ -481,7 +510,7 @@ namespace PolicyHistory_API_using_Dapper.Controllers
 
                 if (affectedRows > 0)
                 {
-                    return Ok(new { Message = "Invoice edited successfully" });
+                    return Ok(new { Message = "Invoice deleted successfully" });
                 }
                 else
                 {
@@ -636,7 +665,7 @@ namespace PolicyHistory_API_using_Dapper.Controllers
 
 
 
-        [HttpPost("InsertInvoice")]
+        [HttpPost("InsertClaims")]
         public async Task<IActionResult> InsertClaims([FromBody] PolicyClaimsInsert policyClaimsInsert)
         {
             try

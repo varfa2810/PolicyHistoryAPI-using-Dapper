@@ -7,11 +7,7 @@ namespace PolicyHistory_API_using_Dapper.Models
 
         public string StrEnterpriseID { get; set; }
 
-        [Required]
         public int IntPolicyNum { get; set; }
-
-
-        [Required]
         public int IntAddOnID { get; set; }
 
         public int IntAddOnQty { get; set; }

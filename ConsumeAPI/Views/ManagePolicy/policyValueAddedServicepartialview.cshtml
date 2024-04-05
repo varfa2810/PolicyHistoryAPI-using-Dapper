@@ -17,14 +17,12 @@
             var gridDataSource2 = new kendo.data.DataSource({
                 transport: {
                     read: function (options) {
-                      
-
                         $.ajax({
                             url: '/ManagePolicy/Getpolicyvalueaddedservice',
                             type: 'GET',
                             dataType: 'json',
                             success: function (response) {
-                               
+                               // console.log(response)
                                 options.success(response);
                                
                             },
@@ -37,7 +35,6 @@
 
                     create: function (options) {
                         console.log("Data sending to server: ",options.data);
-                      
 
                         $.ajax({
                             url: '/ManagePolicy/CreateValueAddedService',
@@ -58,20 +55,40 @@
                         });
                     },
                     destroy: function (options) {
+                        debugger;
+                        var addonID = options.data.intAddOnID;
                         $.ajax({
-                            url: '/ManagePolicy/DeleteValueAddedService',
+                            url: '/ManagePolicy/DeleteValueAddedService?addonID=' + addonID,
                             type: 'DELETE',
-                            data: {}, 
                             success: function (response) {
-                                console.log("Data deleted from server:", response);
+                              
                                 options.success(response);
                             },
                             error: function (xhr, status, error) {
+                               
                                 console.error("Error deleting data from the server:", error);
                                 options.error(xhr, status, error);
                             }
                         });
-                    }
+                    },
+                    update: function (options) {
+
+                        $.ajax({
+                            url: '/ManagePolicy/EditValueAddedService',
+                            type: 'PUT',
+                            data: JSON.stringify(options.data),
+                            contentType: 'application/json; charset=utf-8',
+                            success: function (response) {
+                                console.log("Data updated on server:", response);
+                                options.success(response);
+                            },
+                            error: function (xhr, status, error) {
+                                console.error("Error updating data on the server:", error);
+                                options.error(xhr, status, error);
+                            }
+                        });
+                    },
+
 
                   
                 },
@@ -81,15 +98,28 @@
                     model: {
                         id: "intAddOnID",
                         fields: {
-                            intAddOnID: { type: "number" },
+                            intAddOnID: { type: "number"},
                             strAddOnDescription: { type: "string" },
                             monAddOnPrice: { type: "number"  },
-                            intAddOnQty: { type: "number"  },
+                            intAddOnQty: {
+                                type: "number", validation: {
+                                    required: { message: "Quantity is required." }, min: 1, max: 10,
+                                    intagetovalidation: function (input) {
+                                        if (input.is("[name='intAddOnQty']")) {
+                                            if (input.val() < 0) { }
+                                            input.attr("data-intagetovalidation-msg", "Quantity should be greater than 1 ");
+                                            return  input.closest("tr").find("input[name='intAddOnQty']").val();
+                                        }
+                                        return true;
+                                    }
+                                },
+                                defaultValue: null
+                            },
                             monLineTotal: { type: "number", editable: false },
                             datStartDate: { type: "date" },
                             datEndDate: { type: "date" },
                             strAddOnStatus: { type: "string" },
-                            intAOStatusID: {type: "number"}
+                            intAOStatusID: { type: "number" }
                         }
                     }
                 }
@@ -133,11 +163,11 @@
                                 dataType: "json",
                                 async: false,
                                 success: function (response) {
-                                  
+                                   // console.log(response)
                                     response.forEach(function (item) {
                                         if (dataItem.intAddOnID === item.intAddOnID) {
                                             dynamicContent = item.strAddOnDescription;
-                                            console.log(dynamicContent);
+                                           
                                         }
                                     });
                                 },
@@ -156,7 +186,6 @@
                                     optionLabel: 'Select Description Type',
                                     dataTextField: "strAddOnDescription",
                                     dataValueField: "intAddOnID",
-                                   
                                     dataSource: {
                                         transport: {
                                             read: {
@@ -171,8 +200,13 @@
 
 
 
-                    { field: "monAddOnPrice", title: "Price", format: "{0:c}", width: "170px" },
-                    { field: "intAddOnQty", title: "Quantity", width: "170px" },
+                    { field: "monAddOnPrice", title: "Price", format: "{0:c}", width: "200px" },
+                    {
+                        field: "intAddOnQty",
+                        title: "Quantity",
+                        width: "200px"
+                    },
+
                     { field: "monLineTotal", title: "Line Total", format: "{0:c}", width: "170px" },
                     { field: "datStartDate", title: "Start Date", format: "{0:dd/MM/yyyy}", width: "200px" },
                     { field: "datEndDate", title: "End Date", format: "{0:dd/MM/yyyy}", width: "200px" },
@@ -181,15 +215,15 @@
                         title: "Status",
                         width: "200px",
                         template: function (dataItem) {
-                            var dynamicContent = '';
+                            var dynamicContent = "";
 
                             $.ajax({
                                 url: "/ManagePolicy/GetPolicyStatusList",
                                 method: "GET",
                                 dataType: "json",
-                                async: false, // Perform the AJAX call synchronously
+                                async: false,
                                 success: function (response) {
-                                   
+                                    // console.log(response)
                                     response.forEach(function (item) {
                                         if (dataItem.intAOStatusID === item.intAOStatusID) {
                                             dynamicContent = item.strAddOnStatus;
@@ -221,6 +255,7 @@
                                 });
                         }
                     }
+
 
 
 

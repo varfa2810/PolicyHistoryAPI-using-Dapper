@@ -20,6 +20,15 @@ namespace PolicyHistory_API_using_Dapper.Repository
         }
 
 
+        public async Task<List<PolicyPurposeList>> GetPolicyPurposeList()
+        {
+            using (var connection = _context.CreateConnection())
+            {
+                var result = await connection.QueryAsync<PolicyPurposeList>("usp_select_tblFP_PolicyPurpose_List", commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+        }
+
         public async Task<List<PolicyAgentList>> GetPolicyAgentList()
         {
             using(var connection = _context.CreateConnection())
@@ -280,25 +289,25 @@ namespace PolicyHistory_API_using_Dapper.Repository
 
 
 
-        public async Task<int> EditValueAddedService(int policyNum, PolicyValueAddedService _policyValueAddedService)
+        public async Task<int> EditValueAddedService( PolicyValueAddedServiceInsert valueAddedServiceInsert)
         {
             using( var connection = _context.CreateConnection())
             {
-                var parameters = new {
-                    strEnterpriseID = _policyValueAddedService.StrEnterpriseID,
-                    intPolicyNum = _policyValueAddedService.IntPolicyNum,
-                    intAddOnID = _policyValueAddedService.IntAddOnID,
-                    intAddOnQty = _policyValueAddedService.IntAddOnQty,
-                    monAddOnPrice = _policyValueAddedService.MonAddOnPrice,
-                    datStartDate = _policyValueAddedService.DatStartDate,
-                    datEndDate = _policyValueAddedService.DatEndDate,
-                    intAOStatusID = _policyValueAddedService.IntAOStatusID,
-                    strLastCapturer = _policyValueAddedService.StrLastCapturer,
-                    datDateModified = _policyValueAddedService.DatDateModified
+                //var parameters = new {
+                //    strEnterpriseID = valueAddedServiceInsert.StrEnterpriseID,
+                //    intPolicyNum = valueAddedServiceInsert.IntPolicyNum,
+                //    intAddOnID = valueAddedServiceInsert.IntAddOnID,
+                //    intAddOnQty = valueAddedServiceInsert.IntAddOnQty,
+                //    monAddOnPrice = valueAddedServiceInsert.MonAddOnPrice,
+                //    datStartDate = valueAddedServiceInsert.DatStartDate,
+                //    datEndDate = valueAddedServiceInsert.DatEndDate,
+                //    intAOStatusID = valueAddedServiceInsert.IntAOStatusID,
+                //    strLastCapturer = valueAddedServiceInsert.StrLastCapturer,
+                //    datDateModified = valueAddedServiceInsert.DatDateModified
 
 
-                };
-                 return await connection.ExecuteAsync("usp_Update_tblFP_PolicyAddOn", parameters, commandType: CommandType.StoredProcedure);
+                //};
+                 return await connection.ExecuteAsync("usp_Update_tblFP_PolicyAddOn", valueAddedServiceInsert, commandType: CommandType.StoredProcedure);
                 
             }
         }
@@ -356,13 +365,13 @@ namespace PolicyHistory_API_using_Dapper.Repository
 
 
 
-        public async Task<int> EditInvoice(PolicyInvoice policyInvoice)
+        public async Task<int> EditInvoice(PolicyInvoiceUpdate policyInvoiceUpdate)
         {
             using (var connection = _context.CreateConnection())
             {
                 
 
-                return await connection.ExecuteAsync("usp_Update_tblFP_PolicyInvoice", policyInvoice, commandType: CommandType.StoredProcedure);
+                return await connection.ExecuteAsync("usp_Update_tblFP_PolicyInvoice", policyInvoiceUpdate, commandType: CommandType.StoredProcedure);
                
      
             }
@@ -536,17 +545,17 @@ namespace PolicyHistory_API_using_Dapper.Repository
                     DatClaimDate = claim?.DatClaimDate ?? DateTime.MinValue,
                     MonClaimAmt = claim?.MonClaimAmt ?? 0,
                     IntClaimMethodID = claim?.IntClaimMethodID ?? 0,
-                    StrClaimMethod = claim?.StrClaimMethod ?? "",
+                    StrClaimMethod = claim?.StrClaimMethod ?? "N/A",
                     IntDeathCauseID = claim?.IntDeathCauseID ?? 0,
-                    StrDeathCause = claim?.StrDeathCause ?? "",
+                    StrDeathCause = claim?.StrDeathCause ?? "N/A",
                     DatDeathDate = claim?.DatDeathDate ?? DateTime.MinValue,
                     BitDeathCertReceived = claim?.BitDeathCertReceived ?? false,
-                    StrRefNum = claim?.StrRefNum ?? "",
+                    StrRefNum = claim?.StrRefNum ?? "N/A",
                     BitApprovedYN = claim?.BitApprovedYN ?? false,
                     DatPayOutDate = claim?.DatPayOutDate ?? DateTime.MinValue,
-                    StrLastCapturer = claim?.StrLastCapturer ?? "",
+                    StrLastCapturer = claim?.StrLastCapturer ?? "N/A",
                     DatDateModified = claim?.DatDateModified ?? DateTime.MinValue,
-                    CoverStatus = claim?.CoverStatus ?? "",
+                    CoverStatus = claim?.CoverStatus ?? "N/A",
 
                     IntMemberTypeID = member.IntMemberTypeID,
                     StrMemberType = member.StrMemberType,
@@ -568,6 +577,7 @@ namespace PolicyHistory_API_using_Dapper.Repository
                     BitConsentRecvdYN = member.BitConsentRecvdYN,
                     BitRemovedYN = member.BitRemovedYN
                 });
+
             }
 
             return combinedClaims;

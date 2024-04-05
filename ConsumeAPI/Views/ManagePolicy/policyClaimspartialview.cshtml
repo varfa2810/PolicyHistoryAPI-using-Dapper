@@ -18,10 +18,41 @@
         $(function () {
             var gridDataSource10 = new kendo.data.DataSource({
                 transport: {
-                    read: {
-                        url: "/ManagePolicy/GetCombinedPolicyClaims",
-                        datatype: "json",
-                        type: "GET"
+                    read: function (options) {
+                        $.ajax({
+                            url: '/ManagePolicy/GetCombinedPolicyClaims',
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (response) {
+
+                                options.success(response);
+
+                            },
+                            error: function (xhr, status, error) {
+                                console.error("Error reading data from the server:", error);
+                                options.error(xhr, status, error);
+                            }
+                        });
+                    },
+                    create: function (options) {
+                        console.log("Data sending to server: ", options.data);
+                        $.ajax({
+                            url: '/ManagePolicy/InsertPolicyClaims',
+                            type: 'POST',
+                            data: JSON.stringify(options.data),
+                            contentType: 'application/json; charset=utf-8',
+                            success: function (response) {
+                                console.log("Data sent to server:", response);
+                                options.success(response);
+                                gridDataSource10.add(options.data);
+                                gridDataSource10.sync();
+                                $("#limitedGrid").data("kendoGrid").dataSource.read();
+                            },
+                            error: function (xhr, status, error) {
+                                console.error("Error sending data to the server:", error);
+                                options.error(xhr, status, error);
+                            }
+                        });
                     }
                 },
                 pageSize: 7,
@@ -75,7 +106,7 @@
 
             var grid = $("#limitedGrid").kendoGrid({
                 dataSource: gridDataSource10,
-                height: 400,
+                height: 600,
                 sortable: true,
                 filterable: true,
                 editable: "inline",
@@ -83,23 +114,21 @@
                 columns: [
 
                     {
-                        command: [
-                            {
-                                name: "edit",
-                                template: "<a class='icon-pencil k-button-icontext k-grid-edit fa-lg' ><i class='fa fa-pencil-square-o '></i></a>",
-                                iconClass: { update: "fa fa-save fa-xl", cancel: "fa fa-close fa-lg" },
-                            },
-                            
-                        ],
-                        title: "&nbsp;",
-                        width: "150px"
+                        title: "Actions",
+                        width: "200px",
+                        template: function () {
+                            return "<a class='icon-save k-button-icontext k-grid-save fa-lg' style='display: none; text-align: center; margin-right: 10px;'><i class='fa fa-save' style='font-size: 20px; display: block; margin: auto;'></i></a>" +
+                                "<a class='icon-cancel k-button-icontext k-grid-cancel fa-lg' style='display: none; text-align: center;'><i class='fa fa-times' style='font-size: 20px; display: block; margin: auto;'></i></a>";
+                        }
                     },
+                    
+                    
                     {
                         title: "&nbsp;",
                         width: "80px",
                         template: function (dataItem) {
                             if (dataItem.bitDeathCertReceived) {
-                                return ""; 
+                                return "";
                             } else {
                                 return "<input type='radio' class='rowRadio' name='selectedRowRadio' style='transform: scale(1.5); display: block; margin: 0 auto;'>";
                             }
@@ -113,49 +142,84 @@
                     { field: "monCoverAmt", title: "Cover Amt", type: "number", width: 200 },
                     { field: "datClaimDate", title: "Claim Date", type: "date", format: "{0:yyyy-MM-dd}", width: 200 },
                     { field: "monClaimAmt", title: "Claim Amount", type: "number", width: 200 },
+
+
                     { field: "strDeathCause", title: "Death Cause", type: "string", width: 200 },
+
+
                     { field: "datDeathDate", title: "Death Date", type: "date", format: "{0:yyyy-MM-dd}", width: 200 },
                     {
-                        field: "bitDeathCertReceived", title: "Death Certificate Received", width: 200, template: function (dataItem) {
+                        field: "bitDeathCertReceived", title: "Death Certificate Received", width: 200,
+                        template: function (dataItem) {
                             return '<div class="form-check form-switch">' +
                                 '<input class="form-check-input" type="checkbox" ' + (dataItem.bitDeathCertReceived ? 'checked' : '') + ' disabled>' +
                                 '<label class="form-check-label" for="flexSwitchCheckDefault2"></label>' +
                                 '</div>';
                         },
                         editor: function (container, options) {
-                            $('<div class="form-check form-switch">' + '<input class="form-check-input" type="checkbox" name="' + options.field + '" data-type="boolean" />' + '<label class="form-check-label" for="flexSwitchCheckDefault2"></label>' +
+                            $('<div class="form-check form-switch">' +
+                                '<input class="form-check-input" type="checkbox" name="' + options.field + '" data-type="boolean" />' +
+                                '<label class="form-check-label" for="flexSwitchCheckDefault2"></label>' +
                                 '</div>').appendTo(container);
                         }
                     },
                     { field: "strRefNum", title: "Reference Number", type: "string", width: 200 },
                     {
-                        field: "bitApprovedYN", title: "Approved", width: 200, template: function (dataItem) {
+                        field: "bitApprovedYN", title: "Approved", width: 200,
+                        template: function (dataItem) {
                             return '<div class="form-check form-switch">' +
                                 '<input class="form-check-input" type="checkbox" ' + (dataItem.bitApprovedYN ? 'checked' : '') + ' disabled>' +
                                 '<label class="form-check-label" for="flexSwitchCheckDefault2"></label>' +
                                 '</div>';
                         },
                         editor: function (container, options) {
-                            $('<div class="form-check form-switch">' + '<input class="form-check-input" type="checkbox" name="' + options.field + '" data-type="boolean" />' + '<label class="form-check-label" for="flexSwitchCheckDefault2"></label>' +
+                            $('<div class="form-check form-switch">' +
+                                '<input class="form-check-input" type="checkbox" name="' + options.field + '" data-type="boolean" />' +
+                                '<label class="form-check-label" for="flexSwitchCheckDefault2"></label>' +
                                 '</div>').appendTo(container);
                         }
                     },
                     { field: "datPayOutDate", title: "Payout Date", type: "date", format: "{0:yyyy-MM-dd}", width: 200 },
-                    { field: "strBeneficiaryNameID", title: "Beneficiary Name ID", type: "string", width: 200 }
+                    { field: "strBeneficiaryNameID", title: "Beneficiary Name ID", type: "string", width: 200 },
+                   
+                   
                 ],
-             
-               
             });
 
-            
-            $("#limitedGrid").on("click", ".rowRadio", function () {
-                var grid = $("#limitedGrid").data("kendoGrid");
-                var selectedItem = grid.dataItem($(this).closest("tr"));
 
-                if (selectedItem) {
-                    grid.editRow($(this).closest("tr"));
+            $("#limitedGrid").on("click", ".rowRadio", function () {
+                var selectedRow = $(this).closest("tr");
+                var grid = $("#limitedGrid").data("kendoGrid");
+                var dataItem = grid.dataItem(selectedRow);
+
+                // Check if the row exists and the data item is valid
+                if (selectedRow.length && dataItem) {
+                    // Check if the row is not in edit mode and the death certificate is not received
+                    if (!selectedRow.hasClass("k-grid-edit-row") && !dataItem.bitDeathCertReceived) {
+                        // Activate edit mode for the row
+                        grid.editRow(selectedRow);
+
+                        // Show the save button for the edited row
+                        $(".icon-save", selectedRow).show();
+
+                        // Show the cancel button for the edited row
+                        $(".icon-cancel", selectedRow).show();
+                    }
                 }
             });
+
+            $("#limitedGrid").on("click", ".icon-cancel", function () {
+                var editedRow = $(this).closest("tr.k-grid-edit-row");
+                var grid = $("#limitedGrid").data("kendoGrid");
+
+                // Close the editor without saving changes
+                grid.closeRow(editedRow);
+            });
+
+
+         
+         
+
         });
 
     </script>

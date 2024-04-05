@@ -1,0 +1,361 @@
+﻿
+@{
+    ViewData["Title"] = "policylistview";
+}
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon.png">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/datepicker.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2022.1.301/styles/kendo.common.min.css">
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2022.1.301/styles/kendo.default.min.css">
+    <title>Funeralbiz</title>
+</head>
+
+<body>
+    <header class="dashboard-header">
+        <div class="container">
+            <div class="header-inner d-flex align-items-center">
+                <div class="header-logo">
+                    <a href="">
+                        <img src="images/logo.png" alt="">
+                    </a>
+                </div>
+                <nav class="navbar-full d-flex align-items-center">
+                    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample">
+                        <div class="offcanvas-header d-flex align-items-center justify-content-end d-lg-none border-bottom">
+                            <span data-bs-dismiss="offcanvas" aria-label="Close"><i class="bi bi-x-lg"></i></span>
+                        </div>
+                        <div class="offcanvas-body">
+                            <nav>
+                                <ul class="navbar-nav">
+                                    <li class="nav-item dropdown">
+                                        <a href="" class="nav-link" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Manage Enterprise Users
+                                            <i class="bi bi-chevron-down"></i>
+                                        </a>
+                                        <ul class="dropdown-menu submenus">
+                                            <li><a href="#">Add User</a></li>
+                                            <li><a href="#">Edit User</a></li>
+                                            <li><a href="#">Delete User</a></li>
+                                            <li><a href="#">Add Login</a></li>
+                                            <li><a href="#">Reset Passwd</a></li>
+                                            <li><a href="#">Lock Out User</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="nav-item dropdown">
+                                        <a href="" class="nav-link" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Member Details <i class="bi bi-chevron-down"></i>
+                                        </a>
+                                        <ul class="dropdown-menu submenus">
+                                            <li><a href="#">Member Details</a></li>
+                                            <li><a href="#">Address &Contact</a></li>
+                                            <li><a href="#">Member Documents</a></li>
+                                            <li><a href="#">Bank Account</a></li>
+                                            <li><a href="#">Member Login</a></li>
+                                            <li><a href="#">Related Members</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="nav-item"><a href="" class="nav-link">Manage Reprots</a></li>
+                                    <li class="nav-item dropdown">
+                                        <a href="javascript:void(0)" class="nav-link" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Manage Enterprise Users <i class="bi bi-chevron-down"></i>
+                                        </a>
+                                        <ul class="dropdown-menu submenus">
+                                            <li><a href="#">Add User</a></li>
+                                            <li><a href="#">Edit User</a></li>
+                                            <li><a href="#">Delete User</a></li>
+                                            <li><a href="#">Add Login </a></li>
+                                            <li><a href="#">Reset Passwd</a></li>
+                                            <li><a href="#">Lock Out User</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="nav-item dropdown">
+                                        <a href="javascript:void(0)" class="nav-link" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Manage Policies <i class="bi bi-chevron-down"></i>
+                                        </a>
+                                        <ul class="dropdown-menu submenus">
+                                            <li><a href="#">Policy Details</a></li>
+                                            <li><a href="#">Status History</a></li>
+                                            <li><a href="#">Policy Add-Ons</a></li>
+                                            <li><a href="#">Invoices &Payment </a></li>
+                                            <li><a href="#">Member Profiles</a></li>
+                                            <li><a href="#">Beneficiary Profiles </a></li>
+                                            <li><a href="#">Claims</a></li>
+                                            <li><a href="#">Agents</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="nav-item dropdown">
+                                        <a href="javascript:void(0)" class="nav-link" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Dashboards <i class="bi bi-chevron-down"></i>
+                                        </a>
+                                        <ul class="dropdown-menu submenus">
+                                            <li class="dropdown">
+                                                <a href="javascript:void(0)" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Policies <i class="bi bi-chevron-right"></i>
+                                                </a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">Active</a></li>
+                                                    <li><a href="#">Suspended </a></li>
+                                                    <li><a href="#">Lapsed </a></li>
+                                                </ul>
+                                            </li>
+                                            <li class="dropdown">
+                                                <a href="javascript:void(0)" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Invoices<i class="bi bi-chevron-right"></i>
+                                                </a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">Issued</a></li>
+                                                    <li><a href="#">Suspended </a></li>
+                                                    <li><a href="#">Lapsed </a></li>
+                                                </ul>
+                                            </li>
+                                            <li class="dropdown">
+                                                <a href="javascript:void(0)" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Members<i class="bi bi-chevron-right"></i>
+                                                </a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">New Deceased</a></li>
+                                                    <li><a href="#">Cancelled </a></li>
+                                                </ul>
+                                            </li>
+                                            <li class="dropdown">
+                                                <a href="javascript:void(0)" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Child Members<i class="bi bi-chevron-right"></i>
+                                                </a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">Under 21</a></li>
+                                                    <li><a href="#">Over 21 </a></li>
+                                                </ul>
+                                            </li>
+                                            <li class="dropdown">
+                                                <a href="javascript:void(0)" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Agents<i class="bi bi-chevron-right"></i>
+                                                </a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">New </a></li>
+                                                    <li><a href="#">Cancelled</a></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </nav>
+                <div class="user-auth ms-auto">
+                    <div class="user-single-info">
+                        <a href="">
+                            <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
+                                <path d="M12 5V3C12 2.46957 11.7893 1.96086 11.4142 1.58579C11.0391 1.21071 10.5304 1 10 1H3C2.46957 1 1.96086 1.21071 1.58579 1.58579C1.21071 1.96086 1 2.46957 1 3V15C1 15.5304 1.21071 16.0391 1.58579 16.4142C1.96086 16.7893 2.46957 17 3 17H10C10.5304 17 11.0391 16.7893 11.4142 16.4142C11.7893 16.0391 12 15.5304 12 15V13"
+                                      stroke="#E3322C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M7 9H19M19 9L16 6M19 9L16 12" stroke="#E3322C" stroke-width="2" stroke-linecap="round"
+                                      stroke-linejoin="round" />
+                            </svg> Log out
+                        </a>
+                    </div>
+                </div>
+                <div class="toggle-button d-block d-lg-none" data-bs-toggle="offcanvas" href="#offcanvasExample">
+                    <div class="bar1 bg-white"></div>
+                    <div class="bar2 bg-white"></div>
+                    <div class="bar3 bg-white"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="dashaboard-main">
+        <div class="container">
+            <div class="dashaboard-content">
+                <div class="dashaboard-inner">
+                    <div class="page-header">
+                        <div class="d-lg-flex">
+                            <div class="flex-grow-1">
+                                <h2 class="heading01 mb-3 mb-lg-0 text-lg-start text-center">Manage Policy Plans</h2>
+                            </div>
+                            <div class="col-auto">
+                                <div class="d-flex flex-column flex-lg-row align-items-center justify-content-center justify-content-lg-end">
+                                    <div class="dropdown filter-area mb-3 mb-lg-0">
+                                        <button class="btn shadow-none" type="button" id="dropdownMenu2" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                            <i class="bi bi-funnel-fill"></i> Filter
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenu2">
+                                            <li><a href="" class="dropdown-item">Action</a></li>
+                                            <li><a href="" class="dropdown-item">Another action</a></li>
+                                            <li><a href="" class="dropdown-item">Something else here</a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="d-flex flex-column flex-lg-row align-items-stretch top-search-area ms-lg-4">
+                                        <input type="text" class="form-control" placeholder="Search Policy">
+                                        <button class="btn btn-primary ms-lg-3" type="button" id="policyButton">
+                                            <i class="bi bi-plus-lg"></i> Policy Plan
+                                        </button>
+                                        <script>
+                                            document.getElementById("policyButton").addEventListener("click", function () { window.location.href = "policyDetailsView"; });
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-caption-top text-white mb-3">
+                        <h3 class="heading02 text-center">Policies List</h3>
+                    </div>
+                    <div class="content-wrapper">
+                        <div class="d-lg-flex">
+                            <div class="content-area no-side-bar">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-bordered table-main">
+                                        <thead>
+                                            <tr>
+                                                <th>&nbsp;</th>
+                                                <th>Policy No.</th>
+                                                <th>Plan Brand Name</th>
+                                                <th>Main Member Name</th>
+                                                <th>Date Open</th>
+                                                <th>Inception Date</th>
+                                                <th>Policy Status</th>
+                                                <th>Insurer</th>
+                                                <th>Agent Name</th>
+                                                <th>Premium Bal</th>
+                                                <th># Members</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <div class="d-flex gap-2">
+                                                        <a href="" class="icon-eye"><i class="fa fa-eye"></i></a>
+                                                        <a href="" class="icon-pencil"><i class="fa fa-pencil-square-o"></i></a>
+                                                        <a href="" class="icon-delete"><i class="fa fa-trash"></i></a>
+                                                    </div>
+                                                </td>
+                                                <td>1</td>
+                                                <td>Family Plan A</td>
+                                                <td>Taylor JT</td>
+                                                <td>2024-01-02</td>
+                                                <td>2024-01-02</td>
+                                                <td><span class="color text-success">Active</span></td>
+                                                <td>ABC Life</td>
+                                                <td>Martins J</td>
+                                                <td>R0.00</td>
+                                                <td>4</td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div class="d-flex gap-2">
+                                                        <a href="" class="icon-eye"><i class="fa fa-eye"></i></a>
+                                                        <a href="" class="icon-pencil"><i class="fa fa-pencil-square-o"></i></a>
+                                                        <a href="" class="icon-delete"><i class="fa fa-trash"></i></a>
+                                                    </div>
+                                                </td>
+                                                <td>2</td>
+                                                <td>Family Plan B</td>
+                                                <td>Manson MT</td>
+                                                <td>2024-01-02</td>
+                                                <td>2024-01-02</td>
+                                                <td><span class="color text-success">Active</span></td>
+                                                <td>ABC Life</td>
+                                                <td>Martins J</td>
+                                                <td>R0.00</td>
+                                                <td>6</td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div class="d-flex gap-2">
+                                                        <a href="" class="icon-eye"><i class="fa fa-eye"></i></a>
+                                                        <a href="" class="icon-pencil"><i class="fa fa-pencil-square-o"></i></a>
+                                                        <a href="" class="icon-delete"><i class="fa fa-trash"></i></a>
+                                                    </div>
+                                                </td>
+                                                <td>3</td>
+                                                <td>Single Plan A</td>
+                                                <td>Dlamini KK</td>
+                                                <td>2024-01-02</td>
+                                                <td>2024-01-02</td>
+                                                <td><span class="color text-success">Active</span></td>
+                                                <td>ABC Life</td>
+                                                <td>Steenkamp PP</td>
+                                                <td>R0.00</td>
+                                                <td>1</td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div class="d-flex gap-2">
+                                                        <a href="" class="icon-eye"><i class="fa fa-eye"></i></a>
+                                                        <a href="" class="icon-pencil"><i class="fa fa-pencil-square-o"></i></a>
+                                                        <a href="" class="icon-delete"><i class="fa fa-trash"></i></a>
+                                                    </div>
+                                                </td>
+                                                <td>4</td>
+                                                <td>Middle Class</td>
+                                                <td>Jones JK</td>
+                                                <td>2024-01-02</td>
+                                                <td>2024-01-02</td>
+                                                <td><span class="color text-success">Active</span></td>
+                                                <td>Old Mutual</td>
+                                                <td>Steenkamp PP</td>
+                                                <td>R0.00</td>
+                                                <td>4</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <ul class="pagination justify-content-between">
+                                    <li class="page-item me-auto">
+                                        <a href="#" class="btnPrevious">
+                                            <svg width="32" height="24" viewBox="0 0 32 24" fill="currentColor">
+                                                <path d="M0.494003 22.9164V1.0284L0.493603 1.0264L0.494003 1.0244V0.930402H0.503603C0.526802 0.679676 0.642672 0.446613 0.828564 0.276773C1.01446 0.106933 1.25701 0.0125247 1.5088 0.0120026C1.5208 0.0120026 1.532 0.0152021 1.5436 0.0156021H3.3712C3.3996 0.0132021 3.4272 0.00720215 3.4564 0.00720215C3.72551 0.00730816 3.98357 0.114258 4.17386 0.304547C4.36415 0.494836 4.4711 0.752893 4.4712 1.022C4.4712 1.0688 4.4636 1.114 4.4572 1.1592V10.4156L17.7936 2.7156C17.8887 2.6216 18.0092 2.55744 18.1403 2.531C18.2714 2.50457 18.4073 2.51703 18.5314 2.56684C18.6555 2.61664 18.7623 2.70163 18.8388 2.81135C18.9152 2.92107 18.9579 3.05074 18.9616 3.1844H18.964V9.284L30.3408 2.7152C30.4359 2.6212 30.5564 2.55704 30.6875 2.53061C30.8186 2.50418 30.9545 2.51663 31.0786 2.56644C31.2027 2.61625 31.3095 2.70123 31.386 2.81095C31.4624 2.92067 31.5051 3.05034 31.5088 3.184H31.5108V20.7964C31.5106 20.933 31.4697 21.0664 31.3934 21.1796C31.317 21.2929 31.2087 21.3808 31.0821 21.4321C30.9556 21.4835 30.8166 21.496 30.6829 21.4681C30.5493 21.4401 30.4269 21.373 30.3316 21.2752L18.964 14.712V20.7968C18.9638 20.9334 18.9229 21.0668 18.8466 21.18C18.7702 21.2933 18.6619 21.3812 18.5353 21.4325C18.4088 21.4839 18.2698 21.4964 18.1361 21.4685C18.0025 21.4405 17.8801 21.3734 17.7848 21.2756L4.4572 13.5808V22.9336H4.452C4.4528 22.9492 4.4568 22.9636 4.4568 22.9792C4.4567 23.2479 4.35001 23.5056 4.16014 23.6958C3.97027 23.886 3.71273 23.9931 3.444 23.9936H1.5032V23.984C1.36994 23.984 1.23798 23.9578 1.11485 23.9068C0.991734 23.8558 0.879866 23.781 0.785631 23.6868C0.691399 23.5925 0.616648 23.4807 0.565649 23.3575C0.51465 23.2344 0.488403 23.1025 0.488403 22.9692C0.488802 22.9508 0.493202 22.934 0.494003 22.9164Z"
+                                                      fill="currentColor" />
+                                            </svg>
+                                            <span class="ms-2">Previous</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item ms-auto">
+                                        <a href="#" class="btnNext">
+                                            <span class="me-2">Next</span>
+                                            <svg width="32" height="24" viewBox="0 0 32 24" fill="currentColor"
+                                                 xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M31.5061 22.9164V1.0284L31.5065 1.0264L31.5061 1.0244V0.930402H31.4965C31.4733 0.679676 31.3574 0.446613 31.1715 0.276773C30.9856 0.106933 30.7431 0.0125247 30.4913 0.0120026C30.4793 0.0120026 30.4681 0.0152021 30.4565 0.0156021H28.6289C28.6005 0.0132021 28.5729 0.00720215 28.5437 0.00720215C28.2745 0.00730816 28.0165 0.114258 27.8262 0.304547C27.6359 0.494836 27.529 0.752893 27.5289 1.022C27.5289 1.0688 27.5365 1.114 27.5429 1.1592V10.4156L14.2065 2.7156C14.1114 2.6216 13.9909 2.55744 13.8598 2.531C13.7287 2.50457 13.5928 2.51703 13.4687 2.56684C13.3446 2.61664 13.2377 2.70163 13.1613 2.81135C13.0849 2.92107 13.0422 3.05074 13.0385 3.1844H13.0361V9.284L1.65926 2.7152C1.56416 2.6212 1.44366 2.55704 1.31259 2.53061C1.18151 2.50418 1.04556 2.51663 0.921467 2.56644C0.797373 2.61625 0.690541 2.70123 0.614108 2.81095C0.537675 2.92067 0.494975 3.05034 0.491258 3.184H0.489258V20.7964C0.489451 20.933 0.530331 21.0664 0.606682 21.1796C0.683033 21.2929 0.79139 21.3808 0.917927 21.4321C1.04446 21.4835 1.18344 21.496 1.31712 21.4681C1.45079 21.4401 1.57311 21.373 1.66846 21.2752L13.0361 14.712V20.7968C13.0363 20.9334 13.0771 21.0668 13.1535 21.18C13.2298 21.2933 13.3382 21.3812 13.4647 21.4325C13.5913 21.4839 13.7302 21.4964 13.8639 21.4685C13.9976 21.4405 14.1199 21.3734 14.2153 21.2756L27.5429 13.5808V22.9336H27.5481C27.5473 22.9492 27.5433 22.9636 27.5433 22.9792C27.5434 23.2479 27.6501 23.5056 27.8399 23.6958C28.0298 23.886 28.2873 23.9931 28.5561 23.9936H30.4969V23.984C30.6301 23.984 30.7621 23.9578 30.8852 23.9068C31.0083 23.8558 31.1202 23.781 31.2144 23.6868C31.3087 23.5925 31.3834 23.4807 31.4344 23.3575C31.4854 23.2344 31.5117 23.1025 31.5117 22.9692C31.5113 22.9508 31.5069 22.934 31.5061 22.9164Z"
+                                                      fill="currentColor" />
+                                            </svg>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+    <script src="https://kendo.cdn.telerik.com/2022.1.301/js/kendo.all.min.js"></script>
+   @*  <script src="js/jquery-3.2.1.slim.min.js"></script>
+    <script src="js/bootstrap-datepicker.js"></script>
+    <script src="js/bootstrap.bundle.js"></script>
+    <script src="js/custom.js"></script>
+    <script>
+        $('#datepicker1').datepicker({
+        });
+    </script> *@
+</body>
+
+</html>
+

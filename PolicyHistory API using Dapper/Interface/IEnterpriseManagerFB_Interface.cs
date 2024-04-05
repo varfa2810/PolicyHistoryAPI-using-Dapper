@@ -18,6 +18,8 @@ namespace PolicyHistory_API_using_Dapper.Services
 
         Task<List<PolicyStatusList>> GetPolicyStatusList();
 
+        Task<List<PolicyPurposeList>> GetPolicyPurposeList();
+
         Task<List<PolicyDetailsCorrespondingDetails>> GetPolicyDetailsCorrespondingDetails( int membertypeID,int profileID);
 
 
@@ -39,7 +41,7 @@ namespace PolicyHistory_API_using_Dapper.Services
 
 
 
-        Task <int> EditValueAddedService(int policyNum, PolicyValueAddedService _policyValueAddedService);
+        Task <int> EditValueAddedService( PolicyValueAddedServiceInsert valueAddedServiceInsert);
         Task<int> DeleteValueAddedService(string enterpriseID, int policyNum, int addonID);
 
         Task<int> InsertValueAddedService(PolicyValueAddedServiceInsert policyValueAddedService);
@@ -56,7 +58,7 @@ namespace PolicyHistory_API_using_Dapper.Services
 
 
 
-        Task<int> EditInvoice(PolicyInvoice policyInvoice);
+        Task<int> EditInvoice(PolicyInvoiceUpdate policyInvoiceUpdate);
 
         Task<int> DeleteInvoice(string enterpriseID, int policyNum, int invoiceNum);
         Task<int> InsertInvoice(PolicyInvoiceInsert policyInvoice);
